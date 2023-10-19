@@ -1,0 +1,5 @@
+statistic cstat
+abun aspl
+data 1:1 path/pnS003-back-SDSSTG828_bkg.pi
+response 1:1 path/../pn-diag.rsp
+ign **-0.5 14.-** 7.-9.2

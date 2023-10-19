@@ -1,0 +1,7 @@
+statistic cstat
+data 1:1 path/pnS003-obj-oot-SDSSTG828_bkg-grp.pi
+response  1:1 path/pnS003-SDSSTG828_bkg.rmf
+arf 1:1 path/pnS003-SDSSTG828_bkg.arf
+backgrnd 1 path/pnS003-back-SDSSTG828_bkg.pi
+ignore 1:1-5,18-23,74-146
+@/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/xspec-fitting-pipeline/sample_models/sample_oot_mdl.xcm
