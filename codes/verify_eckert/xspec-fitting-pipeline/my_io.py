@@ -91,7 +91,7 @@ class IO:
         # Find and extract parameter lines
         matches = re.findall(pattern, input_text)
 
-        names = ['lhb-n', 'gh-t', 'gh-n', 'cxb-n', 'icm-t', 'icm-Z', 'icm-n', 'spf-m1-n', 'spf-m2-n', 'spf-pn-n']
+        names = ['lhb-n', 'gh-t', 'gh-n', 'cxb-n', 'icm-t', 'icm-n', 'spf-m1-n', 'spf-m2-n', 'spf-pn-n']
         # Organize extracted data into a list of dictionaries
         for i, match in enumerate(matches):
             value, error = match[1], match[2]
@@ -194,13 +194,15 @@ class IO:
 
 
 if __name__ == '__main__':
-    root_dir = glob("/Users/eusracenorth/Documents/work/XGAP-ABUN/data/ID828/eckert/ID828/*")[0]
+    
     date = 231019
 
     # Some basic prefixes
-    srcnum = '828'
+    srcnum = '3460'
     srcname1 = f'ID{srcnum}'
     srcname2 = f'SDSSTG{srcnum}'
+
+    root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
 
     # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2)

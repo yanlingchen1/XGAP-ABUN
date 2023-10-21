@@ -103,8 +103,8 @@ new icm:15=27
 new icm:3=7
 
 new icm:5 0.3
-new icm:6 0.046
 new icm:7 1e-5
+free icm:5,6
 
 #### oot ####
 new oot:2 0.063
