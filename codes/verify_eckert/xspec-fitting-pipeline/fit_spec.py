@@ -209,8 +209,7 @@ pl dat
 wenv bkg_{self.regname}
 exit
 log none
-save all bins/bkg_{self.regname}.xcm
-y
+save all bins/bkg_{self.regname}_2nd.xcm
 log >logs/bkg_{self.regname}_allpar.log
 sho par
 log none
@@ -238,12 +237,12 @@ mv bkg_{self.regname}.qdp dats
                 return 0
             else:
                 return norm
-        dict = {}
+        outdict = {}
         for i, name in enumerate(df['Name']):
-            dict[name] = df['value'][i]
-        dict['spf-m1-n'] = judge_spf(dict['spf-m1-n'])
-        dict['spf-m2-n'] = judge_spf(dict['spf-m2-n'])
-        dict['spf-pn-n'] = judge_spf(dict['spf-pn-n'])
+            outdict[name] = df['value'][i]
+        outdict['spf-m1-n'] = judge_spf(outdict['spf-m1-n'])
+        outdict['spf-m2-n'] = judge_spf(outdict['spf-m2-n'])
+        outdict['spf-pn-n'] = judge_spf(outdict['spf-pn-n'])
         return dict
 
     def fit_data(self):
@@ -325,8 +324,7 @@ pl dat
 wenv annu_{self.regname}
 exit
 log none
-save all bins/annu_{self.regname}.xcm
-y
+save all bins/annu_{self.regname}_2nd.xcm
 log >logs/annu_{self.regname}_allpar.log
 sho par
 log none
@@ -354,91 +352,3 @@ mv annu_{self.regname}_chain1000.out logs
         print(f'annu fitting for {self.regname} has finished!')
 
 
-def fit_data_withqpb(self):
-        self.bkg_dict = self.load_bkgpar()
-        print(self.regname)
-        # Alter the inputs in sample_bkg.xcm
-        with open(f'{self.pipeline_path}/sample_models/sample_data.xcm') as f:
-            lines = f.readlines()
-        newlines = [re.sub(r'SDSSTG828', self.srcname2, line) for line in lines]
-        newlines = [re.sub(r'bkg', self.regname, line) for line in newlines]
-        newlines = [re.sub(r'path', self.subdir, line) for line in newlines]
-        with open(f'{self.savepath}/bins/annu_{self.regname}.xcm', 'w') as newf:
-            for line in newlines:
-                newf.write(f'{line}\n')
-
-        # Begin fitting
-        os.chdir(self.savepath)
-        os.system(f'''xspec<<EOT
-log >logs/annu_{self.regname}_fit.log
-@bins/annu_{self.regname}.xcm
-
-#### skybkg ####
-# extract region area
-new 1 {self.inst_dict['mos1S001']}
-new 18 {self.inst_dict['mos2S002']}
-new 35 {self.inst_dict['pnS003']}
-new 7 {self.nH}
-new oot:2 0.063
-
-#### LHB ####
-new 6 {self.bkg_dict['lhb-n']}
-free 3,6
-
-#### GH ####
-new 8 {self.bkg_dict['gh-t']}
-new 11 {self.bkg_dict['gh-n']}
-free 8,11
-
-#### cxb ####
-new 17 {self.bkg_dict['cxb-n']}
-free 16,17
-
-#### spf ####
-new spf:6 0
-new spf:12 0
-new spf:18 0
-free spf:6,12,18
-#### icm ####
-new 12 1
-new 15 1e-4
-new 14 {self.reds}
-free 14
-thaw 12,13,15
-
-### fit ###
-fit 200 1e-2
-setp energy
-pl dat rat
-ipl
-pl dat
-wenv annu_{self.regname}
-exit
-log none
-save all bins/annu_{self.regname}.xcm
-y
-log >logs/annu_{self.regname}_allpar.log
-sho par
-log none
-log >logs/annu_{self.regname}_freepar.log
-sho fre
-log none
-chain length 1000
-chain run annu_{self.regname}_chain1000.out
-log >logs/annu_{self.regname}_chain1000_par.log
-err 12,13,15
-log none
-cpd annu_{self.regname}.ps/ocps
-setp rebin 3 30
-pl lda ra
-exit
-EOT''')
-        os.system(f'''
-ps2pdf annu_{self.regname}.ps
-rm annu_{self.regname}.ps
-mv annu_{self.regname}.pdf figs
-mv annu_{self.regname}.pco dats
-mv annu_{self.regname}.qdp dats 
-mv annu_{self.regname}_chain200.out logs
-''')
-        print(f'annu fitting for {self.regname} has finished!')
