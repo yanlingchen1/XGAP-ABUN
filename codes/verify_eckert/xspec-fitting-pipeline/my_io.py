@@ -2,6 +2,16 @@ import os
 from glob import glob
 import pandas as pd
 import re
+import numpy as np
+
+def sort_files(flist):
+    pattern = r'_reg(\d+)'
+    idxlst = []
+    for file_name in flist:
+        match = re.search(pattern, file_name)
+        number = match.group(1)
+        idxlst.append(number)
+    return np.argsort(idxlst)
 
 class IO:
     def __init__(self, date, rootdir, srcname1, srcname2, insts=['mos1S001', 'mos2S002', 'pnS003']):
@@ -75,10 +85,8 @@ class IO:
         f.close()
         # Initialize a list to store the extracted data
         data = []
-
         # Define a regular expression pattern to match parameter lines
         pattern = r'(\w+)\s+([-+]?\d*\.\d+(?:[Ee][-+]?\d+)?)\s+\+/-\s+([-+]?\d*\.\d+(?:[Ee][-+]?\d+)?)\s+'
-
 
         # Find and extract parameter lines
         matches = re.findall(pattern, input_text)
@@ -100,11 +108,103 @@ class IO:
 
     
 
-    def tidy_outputs():
+    def tidy_outputs(self):
         '''
-        1. Get the bkg logged parameter to a csv
-        2. Get all the oot logged parameter to a csv
-        3. Get all the qpb logged parameter to a csv
-        4. Get all the annuli logged parameter to a csv
+        Get all the annuli logged parameter to a csv
+        1. read mcmc err from *_chain1000_par.log
+        2. read value from *freepar.log
+
+        Output
+        ----------
+        {self.srcname2}_annuli_par.csv in csvs dir with columns
+        'reg', 'T-value', 'T-errlo', 'T-errhi', 'T-status', 'Z-value', ..., 'n-value', ...
         
+        status has two flags: 'u' or 'c', 
+        'u' stands for unconstrained, 'c' stands for constrained.
+        constrained means the min error is <=75% for the value & the value is reasonable
         '''
+
+        reson_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2]}
+        ## initialize the output dictionary
+        keyslst = ['value', 'errlo', 'errhi']
+        bigkeys = ['T', 'Z', 'n']
+        output_dict = {}
+        output_dict['reg'] = []
+        for bigkey in bigkeys:
+            for seckey in keyslst:
+                output_dict[f'{bigkey}-{seckey}'] = []
+
+
+        # read mcmc errors
+        par_files = glob(f'{self.savepath}/logs/annu_reg*_chain1000_par.log')
+        par_files = np.array(par_files)[sort_files(par_files)]
+        for regnum, file in enumerate(par_files):
+            output_dict[f'reg'].append(f'reg{regnum}')
+            with open(file) as f:
+                lines = f.readlines()[6:9]
+                for i, line in enumerate(lines):
+                    errlo = line.split('(')[-1].split(',')[0][1:]
+                    errhi = line.split('(')[-1].split(',')[-1][:-2]
+                    output_dict[f'{bigkeys[i]}-errlo'].append(float(errlo))
+                    output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
+
+        # read value
+        files = glob(f'{self.savepath}/logs/annu_reg*_freepar.log')
+        files = np.array(files)[sort_files(files)]
+        for file in files:
+            with open(file) as f:
+                lines = f.readlines()[11:14]
+            for i, line in enumerate(lines):
+                value = line.split('+/-')[0].split()[-1]
+                output_dict[f'{bigkeys[i]}-value'].append(float(value))
+
+        # # read in bkg ICM row
+        # file = glob(f'{self.savepath}/logs/bkg_bkg_freepar.log')[0]
+        # with open(file) as f:
+        #     lines = f.readlines()[25:28]
+        #     for i, line in enumerate(lines):
+        #         value = line.split('+/-')[0].split()[-1]
+        #         output_dict[f'{bigkeys[i]}-value'].append(float(value))
+
+        print(output_dict)
+        # Create a Pandas DataFrame from the extracted data
+        df = pd.DataFrame(output_dict)
+        print(df)
+        # judge if the value is unconstrained
+        for bigkey in bigkeys:
+            errlo = np.array(df[f'{bigkey}-errlo'])
+            errhi = np.array(df[f'{bigkey}-errhi'])
+            value = np.array(df[f'{bigkey}-value'])
+
+            cond1 = np.min([errlo, errhi], axis=0) > (0.75 * value)
+            cond2 = (df[f'{bigkey}-value'] < reson_vrange[bigkey][1]) & (df[f'{bigkey}-value'] > reson_vrange[bigkey][0])
+            print(cond2)
+            status = np.where((cond1 | ~cond2), 'u', 'c')
+
+            df[f'{bigkey}-status'] = status
+
+        # Save the DataFrame to a CSV file
+        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar.csv"
+        df.to_csv(output_file, index=False)
+
+        print(f"Annuli data saved to {output_file} !")
+
+
+        
+
+
+if __name__ == '__main__':
+    root_dir = glob("/Users/eusracenorth/Documents/work/XGAP-ABUN/data/ID828/eckert/ID828/*")[0]
+    date = 231019
+
+    # Some basic prefixes
+    srcnum = '828'
+    srcname1 = f'ID{srcnum}'
+    srcname2 = f'SDSSTG{srcnum}'
+
+    # # io issues
+    io_instance = IO(date, root_dir, srcname1, srcname2)
+
+    io_instance.tidy_outputs()
+
+

@@ -8,6 +8,7 @@ import pandas as pd
 
 
 class FitSpec(IO):
+
     def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts = ['mos1S001', 'mos2S002', 'pnS003']):
         super().__init__(date, rootdir, srcname1, srcname2, insts)
         self.regname = regname
@@ -145,7 +146,7 @@ mv qpb_pn_{self.regname}.qdp dats
     def fit_qpb_mos(self):
         pass
 
-    def fit_bkg(self, nH):
+    def fit_bkg(self):
         # check rosat file
         if (not glob(f'{self.subdir}/rosat.pi')) or (not glob(f'{self.subdir}/rosat.rsp')):
             raise ValueError('Rosat spectrum and rmf has not been downloaded in bkg dir!')
@@ -249,9 +250,30 @@ mv bkg_{self.regname}.qdp dats
         newlines = [re.sub(r'SDSSTG828', self.srcname2, line) for line in lines]
         newlines = [re.sub(r'bkg', self.regname, line) for line in newlines]
         newlines = [re.sub(r'path', self.subdir, line) for line in newlines]
-        with open(f'{self.savepath}/bins/annu_{self.regname}.xcm', 'w') as newf:
-            for line in newlines:
-                newf.write(f'{line}\n')
+        newf = open(f'{self.savepath}/bins/annu_{self.regname}.xcm', 'w')
+        for line in newlines:
+            newf.write(f'{line}\n')
+        
+        #### oot ####
+        value_data = []
+        with open(f'{self.savepath}/logs/oot_{self.regname}_par.log', 'r') as file:
+            lines = file.readlines()
+        for line in lines:
+            if line.startswith('# '):
+                if re.search(r'\d', line): 
+                    columns = line.split()
+                    if 'frozen' in line:
+                        value = columns[-2]
+                    else:
+                        value = columns[-3]
+                    value_data.append(value)
+
+                    
+        # Write the Value data
+        for i, value in enumerate(value_data):
+            newf.write(f'new oot:{int(i+1)} {value}\n' )
+        newf.write(f'free oot:1-14\n')
+        newf.close()
 
         # Begin fitting
         os.chdir(self.savepath)
@@ -266,7 +288,6 @@ new 18 {self.inst_dict['mos2S002']}
 new 35 {self.inst_dict['pnS003']}
 new 7 {self.nH}
 new oot:2 0.063
-
 
 #### LHB ####
 new 6 {self.bkg_dict['lhb-n']}
@@ -307,9 +328,99 @@ log none
 log >logs/annu_{self.regname}_freepar.log
 sho fre
 log none
-chain length 200
-chain run annu_{self.regname}_chain200.out
-log >logs/annu_{self.regname}_chain200_par.log
+chain length 1000
+chain run annu_{self.regname}_chain1000.out
+log >logs/annu_{self.regname}_chain1000_par.log
+err 12,13,15
+log none
+cpd annu_{self.regname}.ps/ocps
+setp rebin 3 30
+pl lda ra
+exit
+EOT''')
+        os.system(f'''
+ps2pdf annu_{self.regname}.ps
+rm annu_{self.regname}.ps
+mv annu_{self.regname}.pdf figs
+mv annu_{self.regname}.pco dats
+mv annu_{self.regname}.qdp dats 
+mv annu_{self.regname}_chain1000.out logs
+''')
+        print(f'annu fitting for {self.regname} has finished!')
+
+
+def fit_data_withqpb(self):
+        self.bkg_dict = self.load_bkgpar()
+        print(self.regname)
+        # Alter the inputs in sample_bkg.xcm
+        with open(f'{self.pipeline_path}/sample_models/sample_data.xcm') as f:
+            lines = f.readlines()
+        newlines = [re.sub(r'SDSSTG828', self.srcname2, line) for line in lines]
+        newlines = [re.sub(r'bkg', self.regname, line) for line in newlines]
+        newlines = [re.sub(r'path', self.subdir, line) for line in newlines]
+        with open(f'{self.savepath}/bins/annu_{self.regname}.xcm', 'w') as newf:
+            for line in newlines:
+                newf.write(f'{line}\n')
+
+        # Begin fitting
+        os.chdir(self.savepath)
+        os.system(f'''xspec<<EOT
+log >logs/annu_{self.regname}_fit.log
+@bins/annu_{self.regname}.xcm
+
+#### skybkg ####
+# extract region area
+new 1 {self.inst_dict['mos1S001']}
+new 18 {self.inst_dict['mos2S002']}
+new 35 {self.inst_dict['pnS003']}
+new 7 {self.nH}
+new oot:2 0.063
+
+#### LHB ####
+new 6 {self.bkg_dict['lhb-n']}
+free 3,6
+
+#### GH ####
+new 8 {self.bkg_dict['gh-t']}
+new 11 {self.bkg_dict['gh-n']}
+free 8,11
+
+#### cxb ####
+new 17 {self.bkg_dict['cxb-n']}
+free 16,17
+
+#### spf ####
+new spf:6 0
+new spf:12 0
+new spf:18 0
+free spf:6,12,18
+#### icm ####
+new 12 1
+new 15 1e-4
+new 14 {self.reds}
+free 14
+thaw 12,13,15
+
+### fit ###
+fit 200 1e-2
+setp energy
+pl dat rat
+ipl
+pl dat
+wenv annu_{self.regname}
+exit
+log none
+save all bins/annu_{self.regname}.xcm
+y
+log >logs/annu_{self.regname}_allpar.log
+sho par
+log none
+log >logs/annu_{self.regname}_freepar.log
+sho fre
+log none
+chain length 1000
+chain run annu_{self.regname}_chain1000.out
+log >logs/annu_{self.regname}_chain1000_par.log
 err 12,13,15
 log none
 cpd annu_{self.regname}.ps/ocps
@@ -326,4 +437,3 @@ mv annu_{self.regname}.qdp dats
 mv annu_{self.regname}_chain200.out logs
 ''')
         print(f'annu fitting for {self.regname} has finished!')
-

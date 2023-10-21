@@ -29,9 +29,11 @@ def main():
     # fit_pipeline.fit_bkg(0.0303)
     # io_instance.tidy_bkgpar()
 
-    fit_pipeline = FitSpec(date, root_dir, srcname1, srcname2, 'reg1', 0.0303, 0.046) # last two: nH and reds
-    # fit_pipeline.fit_oot()
-    fit_pipeline.fit_data()
+
+    for i in range(13):
+        fit_pipeline = FitSpec(date, root_dir, srcname1, srcname2, f'reg{i}', 0.0303, 0.046) # last two: nH and reds
+        fit_pipeline.fit_oot()
+        fit_pipeline.fit_data()
 
 if __name__ == "__main__":
     main()
