@@ -1,4 +1,26 @@
-# my-pipeline
-axs[0].errorbar(binmid, df_pip['T-value'], xerr = binstep, yerr = np.array(df_pip['T-errlo'], df_pip['T-errhi']),alpha = 0.6, label = 'yanling')
-axs[1].errorbar(binmid, df_pip['Z-value'], xerr = binstep, yerr = np.array(df_pip['Z-errlo'], df_pip['Z-errhi']),alpha = 0.6)
-axs[2].errorbar(binmid, df_pip['n-value'], xerr = binstep, yerr = np.array(df_pip['n-errlo'], df_pip['n-errhi']),alpha = 0.6)
+from glob import glob
+import numpy as np
+import re
+
+savepath = '/Users/eusracenorth/Documents/work/XGAP-ABUN/data/ID828/eckert/ID828/0904720501/fit_231019'
+
+def sort_files(flist):
+    pattern = r'_reg(\d+)'
+    idxlst = []
+    for file_name in flist:
+        match = re.search(pattern, file_name)
+        number = match.group(1)
+        idxlst.append(int(number))
+    print(idxlst)
+    print(np.sort(idxlst))
+    return np.argsort(idxlst)
+
+files = glob(f'{savepath}/logs/annu_reg*_freepar.log')
+files = np.array(files)[sort_files(files)]
+# print(files)
+# for file in files:
+#     with open(file) as f:
+#         lines = f.readlines()[11:14]
+#         for i, line in enumerate(lines):
+#                 value = line.split('+/-')[0].split()[-1]
+#                 print(value)

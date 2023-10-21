@@ -10,7 +10,7 @@ def sort_files(flist):
     for file_name in flist:
         match = re.search(pattern, file_name)
         number = match.group(1)
-        idxlst.append(number)
+        idxlst.append(int(number))
     return np.argsort(idxlst)
 
 class IO:
