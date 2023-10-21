@@ -47,32 +47,32 @@ class IO:
 
         # Initialize a list to store missing files
         missing_files = []
-        f = open(f'{self.rootdir}/logs/missing_files.log', 'w')
+        f = open(f'{self.savepath}/logs/missing_files.log', 'w')
 
         for subdir in subdir_lst:
-            os.chdir(f'{subdir}')
-
+            regname = f'{subdir.split(".")[0].split("_")[-1]}'
             # define the files I want to check
             file_names = []
             for inst in self.insts:
-                file_names.append(f'{inst}-{self.srcname2}_{self.regname}.rmf')
-                file_names.append(f'{inst}-{self.srcname2}_{self.regname}.arf')
-                file_names.append(f'{inst}-back-{self.srcname2}_{self.regname}.pi')
-                file_names.append(f'{inst}-obj-{self.srcname2}_{self.regname}-grp.pi')
-                file_names.append(f'{inst}-obj-{self.srcname2}_{self.regname}.pi')
-                file_names.append(f'pnS003-obj-oot-{self.srcname2}_{self.regname}-grp.pi')
-                file_names.append(f'pnS003-obj-oot-{self.srcname2}_{self.regname}.pi')
+                file_names.append(f'{subdir}/{inst}-{self.srcname2}_{regname}.rmf')
+                file_names.append(f'{subdir}/{inst}-{self.srcname2}_{regname}.arf')
+                file_names.append(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}-grp.pi')
+                file_names.append(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}-grp.pi')
+                file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi')
+            
 
+            print(file_names)
             for file_name in file_names:
                 if not glob(file_name):
-                    missing_files.append(f'{subdir}/file_name')
-                    f.write(f'{subdir}/file_name \n')
+                    missing_files.append(f'{file_name}')
+                    f.write(f'{file_name} \n')
         
         # Check for missing files
         if missing_files:
-            print("The following files are missing:")
-            for missing_file in missing_files:
-                print(missing_file)
+            raise ValueError(f"Files are missing. Check {subdir}missing_files.txt")
+
         else:
             print("All required files are present in the directory and its subdirectories.")
 
