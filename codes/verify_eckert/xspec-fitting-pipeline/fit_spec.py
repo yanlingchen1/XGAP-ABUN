@@ -25,6 +25,11 @@ class FitSpec(IO):
             inst_dict[name] = np.round(f[1].header['BACKSCAL'] * (0.05/60) ** 2, 3)
         return inst_dict
 
+    def update_inst_dict(self, new_regname):
+        self.regname = new_regname
+        self.subdir = f'{self.rootdir}/{self.srcname2}_{new_regname}'
+        self.inst_dict = self.get_backscal()
+
     def fit_oot(self):
         # Alter the inputs in sample_oot.xcm
         with open(f'{self.pipeline_path}/sample_models/sample_oot.xcm') as f:
@@ -268,7 +273,7 @@ mv bkg_{self.regname}.qdp dats
                         value = columns[-3]
                     value_data.append(value)
 
-                    
+
         # Write the Value data
         for i, value in enumerate(value_data):
             newf.write(f'new oot:{int(i+1)} {value}\n' )

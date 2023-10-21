@@ -23,7 +23,7 @@ def main():
     # io_instance.check_files()
 
     ## fit the spectrums
-    # fit_pipeline = FitSpec(date, root_dir, srcname1, srcname2, 'bkg', 0.0303, 0.046) # last two: nH and reds
+    fit_pipeline = FitSpec(date, root_dir, srcname1, srcname2, 'bkg', 0.0303, 0.046) # last two: nH and reds
     # fit_pipeline.fit_oot()
     # fit_pipeline.fit_qpb_pn()
     # fit_pipeline.fit_bkg(0.0303)
@@ -31,7 +31,7 @@ def main():
 
 
     for i in range(13):
-        fit_pipeline = FitSpec(date, root_dir, srcname1, srcname2, f'reg{i}', 0.0303, 0.046) # last two: nH and reds
+        fit_pipeline.update_inst_dict(f'reg{i}')
         fit_pipeline.fit_oot()
         fit_pipeline.fit_data()
 
