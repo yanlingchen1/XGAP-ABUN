@@ -3,6 +3,7 @@ from my_io import IO
 from fit_other import FitOther
 from fit_annu import FitAnnu
 from datetime import datetime
+from fit_frame import FitFrame
 
 def main():
     
@@ -34,6 +35,7 @@ def main():
     io_instance.check_files()
 
     ## fit the spectrums
+    fit_frame = FitFrame(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
     fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds) 
     fit_other.fit_oot()
     fit_other.fit_qpb_pn()
