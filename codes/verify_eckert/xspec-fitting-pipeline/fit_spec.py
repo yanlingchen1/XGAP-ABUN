@@ -233,13 +233,15 @@ mv bkg_{self.regname}.qdp dats
     def load_bkgpar(self):
         df = pd.read_csv(f'{self.savepath}/csvs/cxb_par.csv')
         def judge_spf(norm):
+            # ! always set spf to 0 for now
             if float(norm) < 1e-6:
                 return 0
             else:
-                return norm
+                return 0
         outdict = {}
         for i, name in enumerate(df['Name']):
             outdict[name] = df['value'][i]
+        
         outdict['spf-m1-n'] = judge_spf(outdict['spf-m1-n'])
         outdict['spf-m2-n'] = judge_spf(outdict['spf-m2-n'])
         outdict['spf-pn-n'] = judge_spf(outdict['spf-pn-n'])
