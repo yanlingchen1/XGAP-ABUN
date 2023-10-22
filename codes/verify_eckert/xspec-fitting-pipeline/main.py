@@ -1,6 +1,6 @@
 from glob import glob
 from my_io import IO
-from fit_spec import FitSpec
+from fit_other import FitOther
 from datetime import datetime
 
 def main():
@@ -18,28 +18,34 @@ def main():
     # root_dir = f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/RGH80/eckert/0105860101"
 
     #### IDxxx ####
-    srcnum = '9647'
+    srcnum = '3460'
     srcname1 = f'ID{srcnum}'
     srcname2 = f'SDSSTG{srcnum}'
     root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
 
+    ### Some preliminary parameters
+    nH = 0.024
+    reds = 0.043
+
+
     # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2)
-    # io_instance.make_output_dir()
-    # io_instance.check_files()
+    io_instance.make_output_dir()
+    io_instance.check_files()
 
     ## fit the spectrums
-    fit_pipeline = FitSpec(date, root_dir, srcname1, srcname2, 'bkg', 0.0201, 0.023) # last two: nH and reds
-    # fit_pipeline.fit_oot()
-    # fit_pipeline.fit_qpb_pn()
-    # fit_pipeline.fit_bkg()
-    # io_instance.tidy_bkgpar()
+    fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds) 
+    fit_other.fit_oot()
+    fit_other.fit_qpb_pn()
+    fit_other.fit_bkg()
+    io_instance.tidy_bkgpar()
 
-
+    fit_annu = FitOther(date, root_dir, srcname1, srcname2, 'reg0', nH, reds) 
     for i in range(13):
-        fit_pipeline.update_inst_dict(f'reg{i}')
-        fit_pipeline.fit_oot()
-        fit_pipeline.fit_data()
+        fit_other.update_inst_dict(f'reg{i}')
+        fit_annu.update_inst_dict(f'reg{i}')
+        fit_other.fit_oot()
+        fit_annu.fit_1T()
 
     io_instance.tidy_outputs()
 
