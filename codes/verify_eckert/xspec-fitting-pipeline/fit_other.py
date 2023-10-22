@@ -57,12 +57,12 @@ pl dat
 wenv oot_{self.regname}
 exit
 log none
-save all bins/oot_{self.regname}.xcm
-y
+save all bins/oot_{self.regname}_2nd.xcm
 log >logs/oot_{self.regname}_par.log
 sho par
 log none
 cpd oot_{self.regname}.ps/ocps
+setp rebin 3 20
 pl lda ra
 exit
 EOT''')

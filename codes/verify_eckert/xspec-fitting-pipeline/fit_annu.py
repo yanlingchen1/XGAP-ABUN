@@ -7,9 +7,9 @@ import os
 from glob import glob
 import pandas as pd
 
-fit_spec = FitOther()
 
-class FitSpecICM(IO):
+
+class FitAnnu(IO):
     def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts = ['mos1S001', 'mos2S002', 'pnS003']):
         super().__init__(date, rootdir, srcname1, srcname2, insts)
         self.regname = regname
@@ -18,9 +18,13 @@ class FitSpecICM(IO):
         self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/xspec-fitting-pipeline'
         self.nH = nH
         self.reds = reds
-    
+        fit_spec = FitOther(date, rootdir, srcname1, srcname2, self.regname, self.nH, self.reds)
+
     def get_backscal(self):
         return fit_spec.get_backscal()
+        
+    def update_inst_dict(self, new_regname):
+        fit_spec.update_inst_dict()
 
     def fit_1T(self):
         self.bkg_dict = self.load_bkgpar()

@@ -1,6 +1,7 @@
 from glob import glob
 from my_io import IO
 from fit_other import FitOther
+from fit_annu import FitAnnu
 from datetime import datetime
 
 def main():
@@ -11,7 +12,7 @@ def main():
     # date = current_date.strftime("%y%m%d")
     date = 231019
 
-    # Some basic prefixes
+    ####  Some basic prefixes
     # ### RGH80 ####
     # srcname1 = ''
     # srcname2 = 'RGH80'
@@ -23,10 +24,9 @@ def main():
     srcname2 = f'SDSSTG{srcnum}'
     root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
 
-    ### Some preliminary parameters
+    ### Some mandatory parameters
     nH = 0.024
     reds = 0.043
-
 
     # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2)
@@ -40,7 +40,8 @@ def main():
     fit_other.fit_bkg()
     io_instance.tidy_bkgpar()
 
-    fit_annu = FitOther(date, root_dir, srcname1, srcname2, 'reg0', nH, reds) 
+    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg0', nH, reds) 
+
     for i in range(13):
         fit_other.update_inst_dict(f'reg{i}')
         fit_annu.update_inst_dict(f'reg{i}')
