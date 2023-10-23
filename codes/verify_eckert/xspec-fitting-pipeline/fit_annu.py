@@ -103,8 +103,10 @@ log none
 log >logs/annu_{self.regname}_freepar_{appendix}.log
 sho fre
 log none
+log >logs/annu_{self.regname}_chain1000_fit_{appendix}.log
 chain length 1000
 chain run annu_{self.regname}_chain1000_{appendix}.out
+log none
 log >logs/annu_{self.regname}_chain1000_par_{appendix}.log
 err 12,13,15
 log none

@@ -63,8 +63,6 @@ class IO:
                 file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}-grp.pi')
                 file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi')
             
-
-            print(file_names)
             for file_name in file_names:
                 if not glob(file_name):
                     missing_files.append(f'{file_name}')
@@ -107,7 +105,7 @@ class IO:
 
         print(f"Data saved to {output_file}")
 
-    def tidy_dict2df(self, output_dict, appendix, bigkeys = ['T', 'Z', 'n'], ):
+    def tidy_dict2df(self, output_dict, appendix, bigkeys = ['T', 'Z', 'n']):
 
         """
         input output_dict
@@ -118,24 +116,31 @@ class IO:
         par_files = glob(f'{self.savepath}/logs/annu_reg*_chain1000_par_{appendix}.log')
         par_files = np.array(par_files)[sort_files(par_files)]
         for regnum, file in enumerate(par_files):
+            print(regnum)
             output_dict[f'reg'].append(f'reg{regnum}')
             with open(file) as f:
-                lines = f.readlines()[6:int(6+len(bigkeys))]
-                for i, line in enumerate(lines):
-                    errlo = line.split('(')[-1].split(',')[0][1:]
-                    errhi = line.split('(')[-1].split(',')[-1][:-2]
-                    output_dict[f'{bigkeys[i]}-errlo'].append(float(errlo))
-                    output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
+                lines = f.readlines()
+            for i in range(len(bigkeys)):
+                if len(lines)> 20:
+                    errlo = 999
+                    errhi = 999
+                else:
+                    errlo = abs(lines[int(6+i)].split('(')[-1].split(',')[0])
+                    errhi = lines[int(6+i)].split('(')[-1].split(',')[-1][:-2]
+
+                output_dict[f'{bigkeys[i]}-errlo'].append(float(errlo))
+                output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
 
         # read value
         files = glob(f'{self.savepath}/logs/annu_reg*_freepar_{appendix}.log')
         files = np.array(files)[sort_files(files)]
         for file in files:
             with open(file) as f:
-                lines = f.readlines()[11:int(11+len(bigkeys))]
-            for i, line in enumerate(lines):
-                value = line.split('+/-')[0].split()[-1]
-                output_dict[f'{bigkeys[i]}-value'].append(float(value))
+                text = f.read()
+            pattern = r'([+-]?[\d]*\.?[\d]+(?:[eE][-+]?\d+)?)\s+\+/-'
+            values = re.findall(pattern, text)
+            for i in range(len(bigkeys)):
+                output_dict[f'{bigkeys[i]}-value'].append(float(values[i]))
 
         # # read in bkg ICM row
         # file = glob(f'{self.savepath}/logs/bkg_bkg_freepar.log')[0]
@@ -226,10 +231,11 @@ class IO:
             # read value
             file = f'{self.savepath}/logs/annu_{regname}_freepar_{appendix}_{appendix2}.log'
             with open(file) as f:
-                lines = f.readlines()[11:int(11+len(bigkeys))]
-            for i, line in enumerate(lines):
-                value = line.split('+/-')[0].split()[-1]
-                df[f'{bigkeys[i]}-value'][regnum] = value
+                text = f.read()
+            pattern = r'([+-]?[\d]*\.?[\d]+(?:[eE][-+]?\d+)?)\s+\+/-'
+            values = re.findall(pattern, text)
+            for i in range(len(bigkeys)):
+                df[f'{bigkeys[i]}-value'].append(float(values[i]))
             df[f'Z-value'][regnum] = 0.3
 
         # Save the DataFrame to a CSV file

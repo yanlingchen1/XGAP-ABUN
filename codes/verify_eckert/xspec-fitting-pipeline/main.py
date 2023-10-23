@@ -22,7 +22,7 @@ def main():
     # srcname2 = f'SDSSTG{srcnum}'
     # root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
 
-    ### Some mandatory parameters
+    ## Some mandatory parameters
     # ## ID3460
     # nH = 0.024
     # reds = 0.043
@@ -51,19 +51,19 @@ def main():
     # fit_other.fit_bkg()
     # io_instance.tidy_bkgpar()
 
-    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg0', nH, reds) 
-    for i in range(13):
-    #     fit_other.update_inst_dict(f'reg{i}')
-        fit_annu.update_inst_dict(f'reg{i}')
-    #     fit_other.fit_oot()
-    #     fit_annu.fit_1T()
-        fit_annu.fit_2T()
+    # fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg0', nH, reds) 
+    # for i in range(13):
+    # #     fit_other.update_inst_dict(f'reg{i}')
+    #     fit_annu.update_inst_dict(f'reg{i}')
+    # #     fit_other.fit_oot()
+    # #     fit_annu.fit_1T()
+    #     fit_annu.fit_2T()
 
     #### for 2T model ####
-    bigkeys = ['T', 'Z', 'n', 'T2', 'n2'], 
+    bigkeys = ['T', 'Z', 'n', 'T2', 'n2']
     resonable_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2], 'T2':[0,5] , 'n2':[0,1e-2] }
     io_instance.tidy_outputs('2T', bigkeys = bigkeys, reson_vrange = resonable_vrange)
-
+    
     # fit_annu.refit_1T_Z_uc()
     # io_instance.tidy_outputs_2nd()
 
