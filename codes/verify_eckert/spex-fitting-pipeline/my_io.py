@@ -23,9 +23,8 @@ class IO:
         self.insts = insts
         self.savepath = self.make_output_dir()
         
-
     def make_output_dir(self):
-        savepath = f'{self.rootdir}/fit_{self.date}'
+        savepath = f'{self.rootdir}/fit_spex_{self.date}'
         os.makedirs(savepath, exist_ok=True)
         os.makedirs(f'{savepath}/logs', exist_ok = True)
         os.makedirs(f'{savepath}/bins', exist_ok = True)
@@ -34,7 +33,6 @@ class IO:
         os.makedirs(f'{savepath}/dats', exist_ok = True)
         return savepath
     
-
     def check_files(self):
         '''
         Iterate among the subdir in main source dir 
@@ -259,6 +257,31 @@ class IO:
         df.to_csv(output_file, index=False)
 
         print(f"Annuli data saved to {output_file} !")
+
+    def load_bkgpar(self):
+        df = pd.read_csv(f'{self.savepath}/csvs/cxb_par.csv')
+        def judge_spf(norm):
+            # ! always set spf to 0 for now
+            return 0
+            # if float(norm) < 1e-6:
+            #     return 0
+            # else:
+            #     return norm
+        outdict = {}
+        for i, name in enumerate(df['Name']):
+            outdict[name] = df['value'][i]
+        
+        outdict['spf-m1-n'] = judge_spf(outdict['spf-m1-n'])
+        outdict['spf-m2-n'] = judge_spf(outdict['spf-m2-n'])
+        outdict['spf-pn-n'] = judge_spf(outdict['spf-pn-n'])
+        return outdict
+
+    def get_backscal(self):
+        inst_dict = {}
+        for name in self.insts:
+            f = fits.open(f'{self.subdir}/{name}-back-{self.srcname2}_{self.regname}.pi')
+            inst_dict[name] = np.round(f[1].header['BACKSCAL'] * (0.05/60) ** 2, 3)
+        return inst_dict
 
 
 if __name__ == '__main__':
