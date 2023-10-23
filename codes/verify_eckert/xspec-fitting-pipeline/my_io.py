@@ -240,8 +240,8 @@ class IO:
                     errhi = line.split('(')[-1].split(',')[-1][:-2]
                     df[f'{bigkeys[i]}-errlo'][regnum] = errlo
                     df[f'{bigkeys[i]}-errhi'][regnum] = errhi
-                df.loc[regnum, f'Z-errlo'] = 0.0
-                df.loc[regnum, f'Z-errhi'] = 0.0
+                df[f'Z-errlo'][regnum] = 0.0
+                df[f'Z-errhi'][regnum] = 0.0
 
 
             # read value
@@ -251,8 +251,8 @@ class IO:
             pattern = r'([+-]?[\d]*\.?[\d]+(?:[eE][-+]?\d+)?)\s+\+/-'
             values = re.findall(pattern, text)
             for i in range(len(bigkeys)):
-                df.at[0, f'{bigkeys[i]}-value'] = values[i]
-            df.loc[regnum, f'Z-value'] = 0.3
+                df[f'{bigkeys[i]}-value'][regnum] = values[i]
+            df[f'Z-value'][regnum] = 0.3
 
         # Save the DataFrame to a CSV file
         output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar{appendix}_{appendix2}.csv"
