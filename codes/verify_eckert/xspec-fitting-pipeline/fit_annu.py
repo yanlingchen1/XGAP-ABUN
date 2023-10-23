@@ -61,15 +61,15 @@ save all bins/annu_{self.regname}_2nd_{appendix}.xcm
 log >logs/annu_{self.regname}_allpar_{appendix}.log
 sho par
 log none
-log >logs/annu_{self.regname}_freepar_{appendix}.log
-sho fre
-log none
 log >logs/annu_{self.regname}_chain1000_fit_{appendix}.log
 chain length 1000
 chain run annu_{self.regname}_chain1000_{appendix}.out
 log none
 log >logs/annu_{self.regname}_chain1000_par_{appendix}.log
 err 12,13,15
+log none
+log >logs/annu_{self.regname}_freepar_{appendix}.log
+sho fre
 log none
 cpd annu_{self.regname}_{appendix}.ps/ocps
 setp rebin 3 30
@@ -189,6 +189,16 @@ thaw 12,15
         fit_text, sav_text = self.gen_text('2T_fixT2')
         self.edit_run_xcm('sample_data_2T_fixT2.xcm', '2T_fixT2')
         replace_text = f'''err 12,13,15,icm2:7'''
+        newfit_text = re.sub(r'err\s+12,13,15', replace_text, fit_text)
+        os.system(newfit_text)
+        os.system(sav_text)
+        print(f'annu fitting for {self.regname} has finished!')
+    
+    def fit_gadem(self):
+        os.chdir(self.savepath)
+        fit_text, sav_text = self.gen_text('GADEM')
+        self.edit_run_xcm('sample_data_GADEM.xcm', 'GADEM')
+        replace_text = f'''err gadem:4,gadem:5,gadem:7,gadem:10'''
         newfit_text = re.sub(r'err\s+12,13,15', replace_text, fit_text)
         os.system(newfit_text)
         os.system(sav_text)

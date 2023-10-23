@@ -57,12 +57,20 @@ def main():
         fit_annu.update_inst_dict(f'reg{i}')
     #     fit_other.fit_oot()
     #     fit_annu.fit_1T()
-        fit_annu.fit_2T_fixT2()
+        # fit_annu.fit_2T_fixT2()
+        fit_annu.fit_gadem()
 
-    # #### for 2T model ####
-    bigkeys = ['T', 'Z', 'n', 'n2']
-    resonable_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2], 'n2':[0,1e-2] }
-    io_instance.tidy_outputs('_2T_fixT2', bigkeys = bigkeys, reson_vrange = resonable_vrange)
+
+    # #### for GADEM model ####
+    bigkeys = ['T', 'Tsig', 'Z', 'n']
+    resonable_vrange = {'T':[0,5] , 'Tsig':[0,10], 'Z':[0,2] ,'n':[0,1e-2]}
+    io_instance.tidy_outputs('_GADEM', bigkeys = bigkeys, reson_vrange = resonable_vrange)
+
+
+    # # #### for 2T model ####
+    # bigkeys = ['T', 'Z', 'n', 'n2']
+    # resonable_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2], 'n2':[0,1e-2] }
+    # io_instance.tidy_outputs('_2T_fixT2', bigkeys = bigkeys, reson_vrange = resonable_vrange)
 
     #### for 1T model ####
     # io_instance.tidy_outputs('')
