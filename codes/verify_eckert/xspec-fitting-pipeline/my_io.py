@@ -112,12 +112,22 @@ class IO:
         return df
         
         """
+        # add col to output_dict
+        output_dict['reg'] = []
+        output_dict['rhi'] = []
+        output_dict['rlo'] = []
+
         # read mcmc errors
-        par_files = glob(f'{self.savepath}/logs/annu_reg*_chain1000_par_{appendix}.log')
+        par_files = glob(f'{self.savepath}/logs/annu_reg*_chain1000_par{appendix}.log')
         par_files = np.array(par_files)[sort_files(par_files)]
         for regnum, file in enumerate(par_files):
-            print(regnum)
             output_dict[f'reg'].append(f'reg{regnum}')
+            # read the annuli from eckert regionfile
+            regpath = f'{self.savepath}/../regions'
+            with open(f'{regpath}/{self.srcname2}_reg{regnum}.reg') as f:
+                line = f.readlines()[-1]
+                output_dict[f'rhi'].append(line.split(',')[-1][:-3])
+
             with open(file) as f:
                 lines = f.readlines()
             for i in range(len(bigkeys)):
@@ -125,14 +135,15 @@ class IO:
                     errlo = 999
                     errhi = 999
                 else:
-                    errlo = lines[int(6+i)].split('(')[-1].split(',')[0]
-                    errhi = lines[int(6+i)].split('(')[-1].split(',')[-1][:-2]
+                    start_idx = next((index for index, line in enumerate(lines) if '(90%)' in line), None)
+                    errlo = lines[int(start_idx+1+i)].split('(')[-1].split(',')[0]
+                    errhi = lines[int(start_idx+1+i)].split('(')[-1].split(',')[-1][:-2]
 
                 output_dict[f'{bigkeys[i]}-errlo'].append(abs(float(errlo)))
                 output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
 
         # read value
-        files = glob(f'{self.savepath}/logs/annu_reg*_freepar_{appendix}.log')
+        files = glob(f'{self.savepath}/logs/annu_reg*_freepar{appendix}.log')
         files = np.array(files)[sort_files(files)]
         for file in files:
             with open(file) as f:
@@ -150,6 +161,8 @@ class IO:
         #         value = line.split('+/-')[0].split()[-1]
         #         output_dict[f'{bigkeys[i]}-value'].append(float(value))
 
+        # define rlo column
+        output_dict['rlo'] = np.insert(np.array(output_dict['rhi'][:-1]), 0, 0)
         # Create a Pandas DataFrame from the extracted data
         df = pd.DataFrame(output_dict)
 
@@ -174,7 +187,7 @@ class IO:
         ## initialize the output dictionary
         keyslst = ['value', 'errlo', 'errhi']
         output_dict = {}
-        output_dict['reg'] = []
+        
         for bigkey in bigkeys:
             for seckey in keyslst:
                 output_dict[f'{bigkey}-{seckey}'] = []
@@ -196,7 +209,7 @@ class IO:
             df[f'{bigkey}-status'] = status
 
         # Save the final DataFrame to a CSV file
-        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar_{appendix}.csv"
+        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar{appendix}.csv"
         df.to_csv(output_file, index=False)
         
         print(f"Annuli data saved to {output_file} !")
@@ -212,34 +225,37 @@ class IO:
         '''
         
         # load the 1st para csv
-        df = pd.read_csv(f'{self.savepath}/csvs/{self.srcname2}_annuli_mypar_{appendix}.csv')
+        df = pd.read_csv(f'{self.savepath}/csvs/{self.srcname2}_annuli_mypar{appendix}.csv')
         for regname in df['reg'][df['Z-status'] == 'u']:
             regnum = int(regname.split('g')[-1])
 
             # read mcmc errors
-            file = f'{self.savepath}/logs/annu_{regname}_chain1000_par_{appendix}_{appendix2}.log'
+            file = f'{self.savepath}/logs/annu_{regname}_chain1000_par{appendix}_{appendix2}.log'
             with open(file) as f:
-                lines = f.readlines()[6:int(6+len(bigkeys))]
+                lines = f.readlines()
+                start_idx = next((index for index, line in enumerate(lines) if '(90%)' in line), None)
+                lines = lines[int(start_idx+1):int(start_idx+1+len(bigkeys))]
                 for i, line in enumerate(lines):
                     errlo = line.split('(')[-1].split(',')[0][1:]
                     errhi = line.split('(')[-1].split(',')[-1][:-2]
                     df[f'{bigkeys[i]}-errlo'][regnum] = errlo
                     df[f'{bigkeys[i]}-errhi'][regnum] = errhi
-                df[f'Z-errlo'][regnum] = 0.0
-                df[f'Z-errhi'][regnum] = 0.0
+                df.loc[regnum, f'Z-errlo'] = 0.0
+                df.loc[regnum, f'Z-errhi'] = 0.0
+
 
             # read value
-            file = f'{self.savepath}/logs/annu_{regname}_freepar_{appendix}_{appendix2}.log'
+            file = f'{self.savepath}/logs/annu_{regname}_freepar{appendix}_{appendix2}.log'
             with open(file) as f:
                 text = f.read()
             pattern = r'([+-]?[\d]*\.?[\d]+(?:[eE][-+]?\d+)?)\s+\+/-'
             values = re.findall(pattern, text)
             for i in range(len(bigkeys)):
-                df[f'{bigkeys[i]}-value'].append(float(values[i]))
-            df[f'Z-value'][regnum] = 0.3
+                df.at[0, f'{bigkeys[i]}-value'] = values[i]
+            df.loc[regnum, f'Z-value'] = 0.3
 
         # Save the DataFrame to a CSV file
-        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar_{appendix}_{appendix2}.csv"
+        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar{appendix}_{appendix2}.csv"
         df.to_csv(output_file, index=False)
 
         print(f"Annuli data saved to {output_file} !")

@@ -17,7 +17,7 @@ def main():
     root_dir = f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/RGH80/eckert/0105860101"
 
     # #### IDxxx ####
-    # srcnum = '9647'
+    # srcnum = '3460'
     # srcname1 = f'ID{srcnum}'
     # srcname2 = f'SDSSTG{srcnum}'
     # root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
@@ -59,13 +59,15 @@ def main():
     # #     fit_annu.fit_1T()
     #     fit_annu.fit_2T()
 
-    #### for 2T model ####
+    # #### for 2T model ####
     bigkeys = ['T', 'Z', 'n', 'T2', 'n2']
     resonable_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2], 'T2':[0,5] , 'n2':[0,1e-2] }
-    io_instance.tidy_outputs('2T', bigkeys = bigkeys, reson_vrange = resonable_vrange)
-    
+    io_instance.tidy_outputs('_2T', bigkeys = bigkeys, reson_vrange = resonable_vrange)
+
+    #### for 1T model ####
+    io_instance.tidy_outputs('')
     # fit_annu.refit_1T_Z_uc()
-    # io_instance.tidy_outputs_2nd()
+    io_instance.tidy_outputs_2nd('', 'refit_Z_uc')
 
 
 if __name__ == "__main__":
