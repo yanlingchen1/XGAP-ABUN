@@ -107,9 +107,50 @@ class IO:
 
         print(f"Data saved to {output_file}")
 
-    
+    def tidy_dict2df(self, output_dict, appendix, bigkeys = ['T', 'Z', 'n'], ):
 
-    def tidy_outputs(self):
+        """
+        input output_dict
+        return df
+        
+        """
+        # read mcmc errors
+        par_files = glob(f'{self.savepath}/logs/annu_reg*_chain1000_par_{appendix}.log')
+        par_files = np.array(par_files)[sort_files(par_files)]
+        for regnum, file in enumerate(par_files):
+            output_dict[f'reg'].append(f'reg{regnum}')
+            with open(file) as f:
+                lines = f.readlines()[6:int(6+len(bigkeys))]
+                for i, line in enumerate(lines):
+                    errlo = line.split('(')[-1].split(',')[0][1:]
+                    errhi = line.split('(')[-1].split(',')[-1][:-2]
+                    output_dict[f'{bigkeys[i]}-errlo'].append(float(errlo))
+                    output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
+
+        # read value
+        files = glob(f'{self.savepath}/logs/annu_reg*_freepar_{appendix}.log')
+        files = np.array(files)[sort_files(files)]
+        for file in files:
+            with open(file) as f:
+                lines = f.readlines()[11:int(11+len(bigkeys))]
+            for i, line in enumerate(lines):
+                value = line.split('+/-')[0].split()[-1]
+                output_dict[f'{bigkeys[i]}-value'].append(float(value))
+
+        # # read in bkg ICM row
+        # file = glob(f'{self.savepath}/logs/bkg_bkg_freepar.log')[0]
+        # with open(file) as f:
+        #     lines = f.readlines()[25:28]
+        #     for i, line in enumerate(lines):
+        #         value = line.split('+/-')[0].split()[-1]
+        #         output_dict[f'{bigkeys[i]}-value'].append(float(value))
+
+        # Create a Pandas DataFrame from the extracted data
+        df = pd.DataFrame(output_dict)
+
+        return df
+
+    def tidy_outputs(self, appendix, bigkeys = ['T', 'Z', 'n'], reson_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2]}):
         '''
         Get all the annuli logged parameter to a csv
         1. read mcmc err from *_chain1000_par.log
@@ -124,68 +165,75 @@ class IO:
         'u' stands for unconstrained, 'c' stands for constrained.
         constrained means the min error is <=75% for the value & the value is reasonable
         '''
-
-        reson_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2]}
+        
         ## initialize the output dictionary
         keyslst = ['value', 'errlo', 'errhi']
-        bigkeys = ['T', 'Z', 'n']
         output_dict = {}
         output_dict['reg'] = []
         for bigkey in bigkeys:
             for seckey in keyslst:
                 output_dict[f'{bigkey}-{seckey}'] = []
+        
+        # tidy para to a dataframe
+        df = self.tidy_dict2df(output_dict, appendix, bigkeys = bigkeys)
 
-
-        # read mcmc errors
-        par_files = glob(f'{self.savepath}/logs/annu_reg*_chain1000_par.log')
-        par_files = np.array(par_files)[sort_files(par_files)]
-        for regnum, file in enumerate(par_files):
-            output_dict[f'reg'].append(f'reg{regnum}')
-            with open(file) as f:
-                lines = f.readlines()[6:9]
-                for i, line in enumerate(lines):
-                    errlo = line.split('(')[-1].split(',')[0][1:]
-                    errhi = line.split('(')[-1].split(',')[-1][:-2]
-                    output_dict[f'{bigkeys[i]}-errlo'].append(float(errlo))
-                    output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
-
-        # read value
-        files = glob(f'{self.savepath}/logs/annu_reg*_freepar.log')
-        files = np.array(files)[sort_files(files)]
-        for file in files:
-            with open(file) as f:
-                lines = f.readlines()[11:14]
-            for i, line in enumerate(lines):
-                value = line.split('+/-')[0].split()[-1]
-                output_dict[f'{bigkeys[i]}-value'].append(float(value))
-
-        # # read in bkg ICM row
-        # file = glob(f'{self.savepath}/logs/bkg_bkg_freepar.log')[0]
-        # with open(file) as f:
-        #     lines = f.readlines()[25:28]
-        #     for i, line in enumerate(lines):
-        #         value = line.split('+/-')[0].split()[-1]
-        #         output_dict[f'{bigkeys[i]}-value'].append(float(value))
-
-        print(output_dict)
-        # Create a Pandas DataFrame from the extracted data
-        df = pd.DataFrame(output_dict)
-        print(df)
-        # judge if the value is unconstrained
+        # judge if the value is unconstrained, 
+        # add the status columns to df
         for bigkey in bigkeys:
             errlo = np.array(df[f'{bigkey}-errlo'])
             errhi = np.array(df[f'{bigkey}-errhi'])
             value = np.array(df[f'{bigkey}-value'])
 
-            cond1 = np.min([errlo, errhi], axis=0) > (0.75 * value)
+            cond1 = np.min([errlo, errhi], axis=0) > (0.5 * value)
             cond2 = (df[f'{bigkey}-value'] < reson_vrange[bigkey][1]) & (df[f'{bigkey}-value'] > reson_vrange[bigkey][0])
-            print(cond2)
             status = np.where((cond1 | ~cond2), 'u', 'c')
 
             df[f'{bigkey}-status'] = status
 
+        # Save the final DataFrame to a CSV file
+        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar_{appendix}.csv"
+        df.to_csv(output_file, index=False)
+        
+        print(f"Annuli data saved to {output_file} !")
+    
+    def tidy_outputs_2nd(self, appendix, appendix2, bigkeys = ['T', 'n']):
+        '''
+        Read the csv of previous parameter
+        if Z is unconstrained, load the refit par file 
+        and save all the para to new csv.
+
+        appendix refer to ICM model, 
+        appendix2 refer to 2nd refit when fix Z
+        '''
+        
+        # load the 1st para csv
+        df = pd.read_csv(f'{self.savepath}/csvs/{self.srcname2}_annuli_mypar_{appendix}.csv')
+        for regname in df['reg'][df['Z-status'] == 'u']:
+            regnum = int(regname.split('g')[-1])
+
+            # read mcmc errors
+            file = f'{self.savepath}/logs/annu_{regname}_chain1000_par_{appendix}_{appendix2}.log'
+            with open(file) as f:
+                lines = f.readlines()[6:int(6+len(bigkeys))]
+                for i, line in enumerate(lines):
+                    errlo = line.split('(')[-1].split(',')[0][1:]
+                    errhi = line.split('(')[-1].split(',')[-1][:-2]
+                    df[f'{bigkeys[i]}-errlo'][regnum] = errlo
+                    df[f'{bigkeys[i]}-errhi'][regnum] = errhi
+                df[f'Z-errlo'][regnum] = 0.0
+                df[f'Z-errhi'][regnum] = 0.0
+
+            # read value
+            file = f'{self.savepath}/logs/annu_{regname}_freepar_{appendix}_{appendix2}.log'
+            with open(file) as f:
+                lines = f.readlines()[11:int(11+len(bigkeys))]
+            for i, line in enumerate(lines):
+                value = line.split('+/-')[0].split()[-1]
+                df[f'{bigkeys[i]}-value'][regnum] = value
+            df[f'Z-value'][regnum] = 0.3
+
         # Save the DataFrame to a CSV file
-        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar.csv"
+        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar_{appendix}_{appendix2}.csv"
         df.to_csv(output_file, index=False)
 
         print(f"Annuli data saved to {output_file} !")
