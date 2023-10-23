@@ -51,23 +51,23 @@ def main():
     # fit_other.fit_bkg()
     # io_instance.tidy_bkgpar()
 
-    # fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg0', nH, reds) 
-    # for i in range(13):
-    # #     fit_other.update_inst_dict(f'reg{i}')
-    #     fit_annu.update_inst_dict(f'reg{i}')
-    # #     fit_other.fit_oot()
-    # #     fit_annu.fit_1T()
-    #     fit_annu.fit_2T()
+    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg0', nH, reds) 
+    for i in range(13):
+    #     fit_other.update_inst_dict(f'reg{i}')
+        fit_annu.update_inst_dict(f'reg{i}')
+    #     fit_other.fit_oot()
+    #     fit_annu.fit_1T()
+        fit_annu.fit_2T_fixT2()
 
     # #### for 2T model ####
-    bigkeys = ['T', 'Z', 'n', 'T2', 'n2']
-    resonable_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2], 'T2':[0,5] , 'n2':[0,1e-2] }
-    io_instance.tidy_outputs('_2T', bigkeys = bigkeys, reson_vrange = resonable_vrange)
+    bigkeys = ['T', 'Z', 'n', 'n2']
+    resonable_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2], 'n2':[0,1e-2] }
+    io_instance.tidy_outputs('_2T_fixT2', bigkeys = bigkeys, reson_vrange = resonable_vrange)
 
     #### for 1T model ####
-    io_instance.tidy_outputs('')
+    # io_instance.tidy_outputs('')
     # fit_annu.refit_1T_Z_uc()
-    io_instance.tidy_outputs_2nd('', 'refit_Z_uc')
+    # io_instance.tidy_outputs_2nd('', 'refit_Z_uc')
 
 
 if __name__ == "__main__":
