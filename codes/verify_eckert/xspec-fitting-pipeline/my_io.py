@@ -125,10 +125,10 @@ class IO:
                     errlo = 999
                     errhi = 999
                 else:
-                    errlo = abs(lines[int(6+i)].split('(')[-1].split(',')[0])
+                    errlo = lines[int(6+i)].split('(')[-1].split(',')[0]
                     errhi = lines[int(6+i)].split('(')[-1].split(',')[-1][:-2]
 
-                output_dict[f'{bigkeys[i]}-errlo'].append(float(errlo))
+                output_dict[f'{bigkeys[i]}-errlo'].append(abs(float(errlo)))
                 output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
 
         # read value
