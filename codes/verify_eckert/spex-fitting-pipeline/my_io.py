@@ -258,30 +258,55 @@ class IO:
 
         print(f"Annuli data saved to {output_file} !")
 
-    def load_bkgpar(self):
-        df = pd.read_csv(f'{self.savepath}/csvs/cxb_par.csv')
-        def judge_spf(norm):
-            # ! always set spf to 0 for now
-            return 0
-            # if float(norm) < 1e-6:
-            #     return 0
-            # else:
-            #     return norm
-        outdict = {}
-        for i, name in enumerate(df['Name']):
-            outdict[name] = df['value'][i]
-        
-        outdict['spf-m1-n'] = judge_spf(outdict['spf-m1-n'])
-        outdict['spf-m2-n'] = judge_spf(outdict['spf-m2-n'])
-        outdict['spf-pn-n'] = judge_spf(outdict['spf-pn-n'])
-        return outdict
 
-    def get_backscal(self):
+
+    def get_keyvalue(self, key):
         inst_dict = {}
         for name in self.insts:
             f = fits.open(f'{self.subdir}/{name}-back-{self.srcname2}_{self.regname}.pi')
-            inst_dict[name] = np.round(f[1].header['BACKSCAL'] * (0.05/60) ** 2, 3)
+            inst_dict[name] = np.round(f[1].header[key] * (0.05/60) ** 2, 3)
         return inst_dict
+    
+    def edit_header(self, fits_file, ext, key, newvalue):
+        """
+        Edit a keyword in the FITS header of a given file.
+
+        Parameters:
+        fits_file (str): The path to the FITS file.
+        ext (int): The fits extension
+        key (str): The keyword to edit.
+        newvalue: The new value to set for the keyword.
+        """
+        # Open the FITS file for editing
+        hdulist = fits.open(fits_file, mode='update')
+        # Get the header (primary header in this example)
+        header = hdulist[ext].header
+        # Check if the key exists in the header
+        if key in header:
+            # Update the value for the specified key
+            header[key] = newvalue
+            print(f"Updated header keyword '{key}' to '{newvalue}'.")
+        else:
+            print(f"Header keyword '{key}' not found.")
+        # Save the changes
+        hdulist.flush()
+        hdulist.close()
+
+    def edit_hduclas3(self):
+        # get all the subdirectories in root dir
+        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
+        # print(subdir_lst)
+        for subdir in subdir_lst:
+            regname = f'{subdir.split(".")[0].split("_")[-1]}'
+            for inst in self.insts:
+                self.edit_header(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+            for inst in ['mos1S001', 'mos2S002']:
+                self.edit_header(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+            
+            self.edit_header(f'{subdir}/pnS003-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'RATE')
+            self.edit_header(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+    def xspec2spex(self):
+        exp_dict = self.get_keyvalue('EXPOSURE')
 
 
 if __name__ == '__main__':

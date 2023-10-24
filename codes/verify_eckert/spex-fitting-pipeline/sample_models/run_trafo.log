@@ -1,0 +1,59 @@
+(spex) eusracenorth@Eusraces-Air SDSSTG828_bkg % trafo
+Program trafo: transform data to SPEX 2.0 format
+This is version 1.04, of trafo
+
+ Are your data in OGIP format            : type=1
+ Old (Version 1.10 and below) SPEX format: type=2
+ New (Version 2.00 and above) SPEX format: type=3
+
+ Enter the type: 1
+ Enter the number of spectra you want to transform: 1
+ Enter the maximum number of response groups per energy per spectrum: 1
+
+ How should the matrix be partioned? 
+ Option 1: keep as provided (1 component, no re-arrangements)
+ Option 2: rearrange into contiguous groups
+ Option 3: split into N roughly equal-sized components
+ Enter your preferred option (1,2,3): 1
+ Do you want to calculate the response derivatives (if not available)? (y/n) [no]:n
+ Enter filename spectrum to be read: mos1S001-obj-SDSSTG828_bkg.pi
+ Exposure time (s): 8.03186325E+03
+ Assuming Poissonian Errors
+ Areascal: 1.00000000E+00
+ Backscal: 1.20548104E+08
+ Backfile: NONE
+ Corrscal: 1.00000000E+00
+ No CORRFILE keyword found
+ Respfile: NONE
+ Ancrfile: NONE
+ No background specified in pha-file.
+
+ Read nevertheless a background file? (y/n) [no]: y
+ Enter filename background spectrum to be read: mos1S001-back-SDSSTG828_bkg.pi
+ Exposure time (s): 8.03190000E+03
+ Will read errors from file
+ Areascal: 1.00000000E+00
+ Backscal: 1.20550000E+08
+ Backfile: none
+ Corrscal: 1.00000000E+00
+ No CORRFILE keyword found
+ Respfile: /srv/beegfs/scratch/shares/astro/xmm/esas_caldb/mos1-diag.rsp.gz
+ Ancrfile: none
+ TLMIN keyword for FCHAN value not found
+ Default value of FCHAN is 1
+ Checking data quality and grouping ...
+ Ogip files have quality flags. Quality 0 means okay
+ Your spectrum file has          0 bins with bad quality
+ Your background file has        0 bins with bad quality
+ Your combined file has          0 bins with bad quality
+ Shall we use these quality flags to ignore bad channels? (y/n) [no]:y
+ Determining background subtracted spectra ...
+ No response matrix file specified in pha-file.
+ Enter filename response matrix to be read: mos1S001-SDSSTG828_bkg.rmf
+ Reading response matrix ...
+ Warning, ebounds data started at channel    0
+ Warning, response data started at channel 0
+ Number of matrix extensions found:           1
+ Lower model bin boundary for bin        1 must be positive; current values:   0.000000E+00  5.000000E-03
+ Enter new bin boundary values manually: n
+ Enter new bin boundary values manually: 1e-3

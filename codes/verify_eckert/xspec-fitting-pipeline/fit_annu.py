@@ -7,8 +7,6 @@ import os
 from glob import glob
 import pandas as pd
 
-
-
 class FitAnnu(FitFrame):
     def gen_text(self, appendix):
         self.bkg_dict = self.load_bkgpar()
@@ -42,12 +40,8 @@ new spf:12 0
 new spf:18 0
 free spf:6,12,18
 #### icm ####
-new 12 1
-new 15 1e-4
 new 14 {self.reds}
 free 14
-thaw 12,13,15
-
 ### fit ###
 fit 200 1e-2
 setp energy

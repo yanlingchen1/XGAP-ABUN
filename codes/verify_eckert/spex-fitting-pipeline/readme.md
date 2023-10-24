@@ -6,6 +6,7 @@ Design for X-COP samples.
 # Getting started
 
 ## Dependencies
+conda activate spex
 brew install ghostscript
 
 ## Input files structure
