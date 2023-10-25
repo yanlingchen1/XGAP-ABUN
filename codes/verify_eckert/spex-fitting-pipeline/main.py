@@ -10,39 +10,33 @@ def main():
     # date = current_date.strftime("%y%m%d")
     date = 231019
 
-    ####  Some basic prefixes
+    ## Some mandatory parameters
+    nH_dict = {'SDSSTG3460':0.024, 'SDSSTG9647':0.0201, 'SDSSTG828':0.0303, 'RGH80':0.0131}
+    reds_dict = {'SDSSTG3460':0.043, 'SDSSTG9647':0.023, 'SDSSTG828':0.046, 'RGH80':0.037}
+
+    ###  Some basic prefixes
     ### RGH80 ####
     srcname1 = ''
     srcname2 = 'RGH80'
     root_dir = f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/RGH80/eckert/0105860101"
+    nH = nH_dict[srcname2]
+    reds = reds_dict[srcname2]
 
     # #### IDxxx ####
-    # srcnum = '3460'
-    # srcname1 = f'ID{srcnum}'
-    # srcname2 = f'SDSSTG{srcnum}'
-    # root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
+    # for srcnum in ['3460', '9647', '828']:
+    #     srcname1 = f'ID{srcnum}'
+    #     srcname2 = f'SDSSTG{srcnum}'
+    #     root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
 
-    ## Some mandatory parameters
-    # ## ID3460
-    # nH = 0.024
-    # reds = 0.043
-
-    # ## ID9647
-    # nH = 0.0201
-    # reds = 0.023
-
-    # ## ID828
-    # nH = 0.0303
-    # reds = 0.046
-
-    ## RGH80
-    nH = 0.0131
-    reds = 0.037
+        # nH = nH_dict[srcname2]
+        # reds = reds_dict[srcname2]
 
     # # io issues
-    io_instance = IO(date, root_dir, srcname1, srcname2)
+    # io_instance = IO(date, root_dir, srcname1, srcname2)
     # io_instance.make_output_dir()
     # io_instance.check_files()
+    # io_instance.edit_hduclas3()
+    # io_instance.xspec2spex()
 
     # ## fit the spectrums
     # fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds) 
@@ -65,7 +59,6 @@ def main():
     bigkeys = ['T', 'Tsig', 'Z', 'n']
     resonable_vrange = {'T':[0,5] , 'Tsig':[0,10], 'Z':[0,2] ,'n':[0,1e-2]}
     io_instance.tidy_outputs('_GADEM', bigkeys = bigkeys, reson_vrange = resonable_vrange)
-
 
     # # #### for 2T model ####
     # bigkeys = ['T', 'Z', 'n', 'n2']

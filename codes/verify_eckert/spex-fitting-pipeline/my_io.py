@@ -22,6 +22,7 @@ class IO:
         self.srcname2 = srcname2
         self.insts = insts
         self.savepath = self.make_output_dir()
+        self.pippath = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/spex-fitting-pipeline'
         
     def make_output_dir(self):
         savepath = f'{self.rootdir}/fit_spex_{self.date}'
@@ -53,11 +54,11 @@ class IO:
             # define the files I want to check
             file_names = []
             for inst in self.insts:
-                file_names.append(f'{subdir}/{inst}-{self.srcname2}_{regname}.rmf')
-                file_names.append(f'{subdir}/{inst}-{self.srcname2}_{regname}.arf')
-                file_names.append(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi')
-                file_names.append(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}-grp.pi')
-                file_names.append(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{inst}-{self.srcname2}_{regname}.rmf')
+                file_names.append(f'{inst}-{self.srcname2}_{regname}.arf')
+                file_names.append(f'{inst}-back-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{inst}-obj-{self.srcname2}_{regname}-grp.pi')
+                file_names.append(f'{inst}-obj-{self.srcname2}_{regname}.pi')
                 file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}-grp.pi')
                 file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi')
             
@@ -299,14 +300,66 @@ class IO:
         for subdir in subdir_lst:
             regname = f'{subdir.split(".")[0].split("_")[-1]}'
             for inst in self.insts:
-                self.edit_header(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+                self.edit_header(f'{inst}-obj-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
             for inst in ['mos1S001', 'mos2S002']:
-                self.edit_header(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+                self.edit_header(f'{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
             
             self.edit_header(f'{subdir}/pnS003-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'RATE')
             self.edit_header(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+    
     def xspec2spex(self):
-        exp_dict = self.get_keyvalue('EXPOSURE')
+        """
+        trafo works for mos
+        ogip2spex works for pn in pipeline
+        
+        """
+        # get all the subdirectories in root dir
+        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
+        # print(subdir_lst)
+        for subdir in subdir_lst:
+            regname = f'{subdir.split(".")[0].split("_")[-1]}'
+            for inst in self.insts:
+                if 'mos' in inst:
+                    with open(f'{self.pippath}/sample_models/trafo_mos.sh') as f:
+                        text = f.read()
+                else:
+                    with open(f'{self.pippath}/sample_models/trafo_pn.sh') as f:
+                        text = f.read()
+                    with open(f'{self.pippath}/sample_models/ogip2spex.sh') as f:
+                        text2 = f.read()
+                    
+                replace_dict = {
+'PHAFILE':f'{subdir}/{inst}-obj-{self.srcname2}_{regname}.pi',
+'BKGFILE':f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',
+'RMFFILE':f'{subdir}/{inst}-{self.srcname2}_{regname}.rmf',
+'ARFFILE':f'{subdir}/{inst}-{self.srcname2}_{regname}.arf',
+'SPOFILE':f'{subdir}/{inst}-{self.srcname2}_{regname}',
+'../mos1-diag':f'{subdir}/../{inst.split("S")[0]}-diag'
+}
+                def replace_text(text, oldv, newv):
+                    return text.replace(oldv, newv)
+                for key, value in replace_dict.items():
+                    text = replace_text(text, key, value)
+                with open(f'{subdir}/trafo_{inst}.sh', 'w') as f:
+                    f.write(text)
+            ### for pn oot ###
+            replace_dict['PHAFILE'] = f'pnS003-obj-oot-{self.srcname2}_{regname}.pi'
+            replace_dict['SPOFILE'] = f'pnS003-pn-oot-{self.srcname2}_{regname}.pi'
+            for key, value in replace_dict.items():
+                text2 = replace_text(text2, key, value)
+            with open(f'{subdir}/trafo_pnS003-oot.sh', 'w') as f:
+                f.write(text2)
+            os.makedirs(f'{subdir}/spex_single', exist_ok=True)
+            os.system(f'mv {subdir}/*.spo {subdir}/spex_single')
+            os.system(f'mv {subdir}/*.res {subdir}/spex_single')
+        with open(f'{self.rootdir}/run_all_trafo.sh', 'w') as f:
+            f.write(f'''for f in */trafo_*.sh
+do
+sh $f
+done''')
+        
+        print(f'cd {self.rootdir}\n sh run_all_trafo.sh')
+                    
 
 
 if __name__ == '__main__':
