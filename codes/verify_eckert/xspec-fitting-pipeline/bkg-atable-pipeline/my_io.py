@@ -22,10 +22,10 @@ class IO:
         self.srcname2 = srcname2
         self.insts = insts
         self.savepath = self.make_output_dir()
-        self.pipelinepath = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/spex-fitting-pipeline'
         
+
     def make_output_dir(self):
-        savepath = f'{self.rootdir}/fit_spex_{self.date}'
+        savepath = f'{self.rootdir}/fit_{self.date}'
         os.makedirs(savepath, exist_ok=True)
         os.makedirs(f'{savepath}/logs', exist_ok = True)
         os.makedirs(f'{savepath}/bins', exist_ok = True)
@@ -34,6 +34,7 @@ class IO:
         os.makedirs(f'{savepath}/dats', exist_ok = True)
         return savepath
     
+
     def check_files(self):
         '''
         Iterate among the subdir in main source dir 
@@ -54,11 +55,11 @@ class IO:
             # define the files I want to check
             file_names = []
             for inst in self.insts:
-                file_names.append(f'{inst}-{self.srcname2}_{regname}.rmf')
-                file_names.append(f'{inst}-{self.srcname2}_{regname}.arf')
-                file_names.append(f'{inst}-back-{self.srcname2}_{regname}.pi')
-                file_names.append(f'{inst}-obj-{self.srcname2}_{regname}-grp.pi')
-                file_names.append(f'{inst}-obj-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{subdir}/{inst}-{self.srcname2}_{regname}.rmf')
+                file_names.append(f'{subdir}/{inst}-{self.srcname2}_{regname}.arf')
+                file_names.append(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}-grp.pi')
+                file_names.append(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}.pi')
                 file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}-grp.pi')
                 file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi')
             
@@ -258,110 +259,6 @@ class IO:
         df.to_csv(output_file, index=False)
 
         print(f"Annuli data saved to {output_file} !")
-
-
-
-    def get_keyvalue(self, key):
-        inst_dict = {}
-        for name in self.insts:
-            f = fits.open(f'{self.subdir}/{name}-back-{self.srcname2}_{self.regname}.pi')
-            inst_dict[name] = np.round(f[1].header[key] * (0.05/60) ** 2, 3)
-        return inst_dict
-    
-    def edit_header(self, fits_file, ext, key, newvalue):
-        """
-        Edit a keyword in the FITS header of a given file.
-
-        Parameters:
-        fits_file (str): The path to the FITS file.
-        ext (int): The fits extension
-        key (str): The keyword to edit.
-        newvalue: The new value to set for the keyword.
-        """
-        # Open the FITS file for editing
-        hdulist = fits.open(fits_file, mode='update')
-        # Get the header (primary header in this example)
-        header = hdulist[ext].header
-        # Check if the key exists in the header
-        if key in header:
-            # Update the value for the specified key
-            header[key] = newvalue
-            print(f"Updated header keyword '{key}' to '{newvalue}'.")
-        else:
-            print(f"Header keyword '{key}' not found.")
-        # Save the changes
-        hdulist.flush()
-        hdulist.close()
-
-    def edit_hduclas3(self):
-        # get all the subdirectories in root dir
-        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
-        # print(subdir_lst)
-        for subdir in subdir_lst:
-            regname = f'{subdir.split(".")[0].split("_")[-1]}'
-            for inst in self.insts:
-                self.edit_header(f'{inst}-obj-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
-            for inst in ['mos1S001', 'mos2S002']:
-                self.edit_header(f'{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
-            
-            self.edit_header(f'{subdir}/pnS003-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'RATE')
-            self.edit_header(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
-    
-    def xspec2spex(self):
-        """
-        trafo works for mos
-        ogip2spex works for pn in pipeline
-        
-        """
-        
-        # get all the subdirectories in root dir
-        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
-        # print(subdir_lst)
-        for subdir in subdir_lst:
-            os.system(f'rm {subdir}/trafo*.sh')
-            os.system(f'rm {subdir}/*.spo')
-            os.system(f'rm {subdir}/*.res')
-
-            regname = f'{subdir.split(".")[0].split("_")[-1]}'
-            replace_dict = {'REGNAME':regname, 'SRCNAME':self.srcname2, 'PATH':subdir}
-            with open(f'{self.pipelinepath}/sample_models/trafo/trafo_epic.sh') as f:
-                text = f.read()
-            with open(f'{self.pipelinepath}/sample_models/trafo/ogip2spex.sh') as f:
-                text2 = f.read()
-
-            ### trafo ###
-            def replace_text(text, oldv, newv):
-                return text.replace(oldv, newv)
-            
-            for key, value in replace_dict.items():
-                text = replace_text(text, key, value)
-            with open(f'{subdir}/trafo_epic.sh', 'w') as f:
-                f.write(text)
-            ### for pn oot ###
-            for key, value in replace_dict.items():
-                text2 = replace_text(text2, key, value)
-            with open(f'{subdir}/trafo_pnS003-oot.sh', 'w') as f:
-                f.write(text2)
-            
-            
-        with open(f'{self.rootdir}/run_epic_trafo.sh', 'w') as f:
-            f.write(f''' ### run in spex env ###
-for f in */trafo_epic.sh
-do
-sh $f
-done
-''')    
-        with open(f'{self.rootdir}/run_pn_trafo.sh', 'w') as f:
-            f.write(f''' ### run in base env ###
-for f in */trafo_pn*.sh
-do
-sh $f
-done
-''')
-
-        
-        print(f'cd {self.rootdir}\n sh run_all_trafo.sh')
-                    
 
 
 if __name__ == '__main__':

@@ -217,3 +217,5 @@ thaw 12,15
 
         fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg5', nH, reds) 
         fit_annu.edit_run_xcm('sample_data_2T.xcm', '2T')
+
+    

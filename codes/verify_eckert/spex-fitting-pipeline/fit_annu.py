@@ -7,8 +7,6 @@ import os
 from glob import glob
 import pandas as pd
 
-
-
 class FitAnnu(FitFrame):
     def gen_text(self, appendix):
         self.bkg_dict = self.load_bkgpar()

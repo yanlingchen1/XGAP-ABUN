@@ -1,1 +1,0 @@
-ogip2spex --phafile PHAFILE --bkgfile BKGFILE --rmffile RMFFILE --arffile ARFFILE --spofile SPOFILE.spo --resfile SPOFILE.res
