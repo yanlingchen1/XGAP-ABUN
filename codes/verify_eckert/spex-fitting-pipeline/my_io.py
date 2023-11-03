@@ -104,7 +104,7 @@ class IO:
 
         print(f"Data saved to {output_file}")
 
-    def tidy_dict2df(self, output_dict, appendix, bigkeys = ['T', 'Z', 'n']):
+    def tidy_dict2df(self, output_dict, appendix, bigkeys = ['n', 'T', 'Z']):
 
         """
         input output_dict
@@ -117,7 +117,7 @@ class IO:
         output_dict['rlo'] = []
 
         # read mcmc errors
-        par_files = glob(f'{self.savepath}/logs/annu_reg*_chain1000_par{appendix}.log')
+        par_files = glob(f'{self.savepath}/logs/annu-reg*-{appendix}_error.log')
         par_files = np.array(par_files)[sort_files(par_files)]
         for regnum, file in enumerate(par_files):
             output_dict[f'reg'].append(f'reg{regnum}')
@@ -134,31 +134,14 @@ class IO:
                     errlo = 999
                     errhi = 999
                 else:
-                    start_idx = next((index for index, line in enumerate(lines) if '(90%)' in line), None)
-                    errlo = lines[int(start_idx+1+i)].split('(')[-1].split(',')[0]
-                    errhi = lines[int(start_idx+1+i)].split('(')[-1].split(',')[-1][:-2]
-
-                output_dict[f'{bigkeys[i]}-errlo'].append(abs(float(errlo)))
-                output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
-
-        # read value
-        files = glob(f'{self.savepath}/logs/annu_reg*_freepar{appendix}.log')
-        files = np.array(files)[sort_files(files)]
-        for file in files:
-            with open(file) as f:
-                text = f.read()
-            pattern = r'([+-]?[\d]*\.?[\d]+(?:[eE][-+]?\d+)?)\s+\+/-'
-            values = re.findall(pattern, text)
-            for i in range(len(bigkeys)):
-                output_dict[f'{bigkeys[i]}-value'].append(float(values[i]))
-
-        # # read in bkg ICM row
-        # file = glob(f'{self.savepath}/logs/bkg_bkg_freepar.log')[0]
-        # with open(file) as f:
-        #     lines = f.readlines()[25:28]
-        #     for i, line in enumerate(lines):
-        #         value = line.split('+/-')[0].split()[-1]
-        #         output_dict[f'{bigkeys[i]}-value'].append(float(value))
+                    for line in lines:
+                        if 'Errors' in line:
+                            errlo = line.split('Errors:')[-1].split(',')[0]
+                            errhi = line.split('Errors:')[-1].split(',')[-1]
+                            value = line.split('Errors:')[0].split(' ')[-1]
+                            output_dict[f'{bigkeys[i]}-value'].append(float(value))
+                            output_dict[f'{bigkeys[i]}-errlo'].append(abs(float(errlo)))
+                            output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
 
         # define rlo column
         output_dict['rlo'] = np.insert(np.array(output_dict['rhi'][:-1]), 0, 0)
@@ -170,8 +153,8 @@ class IO:
     def tidy_outputs(self, appendix, bigkeys = ['T', 'Z', 'n'], reson_vrange = {'T':[0,5] , 'Z':[0,2] ,'n':[0,1e-2]}):
         '''
         Get all the annuli logged parameter to a csv
-        1. read mcmc err from *_chain1000_par.log
-        2. read value from *freepar.log
+        1. read mcmc err from annu-reg*_MDL_error.out
+        2. read value from annu-reg*_MDL_freepar.out
 
         Output
         ----------
@@ -318,13 +301,13 @@ class IO:
         subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
         # print(subdir_lst)
         for subdir in subdir_lst:
-            os.system(f'rm {subdir}/trafo*.sh')
-            os.system(f'rm {subdir}/*.spo')
-            os.system(f'rm {subdir}/*.res')
+            # os.system(f'rm {subdir}/trafo*.sh')
+            # os.system(f'rm {subdir}/*.spo')
+            # os.system(f'rm {subdir}/*.res')
 
             regname = f'{subdir.split(".")[0].split("_")[-1]}'
             replace_dict = {'REGNAME':regname, 'SRCNAME':self.srcname2, 'PATH':subdir}
-            with open(f'{self.pipelinepath}/sample_models/trafo/trafo_epic.sh') as f:
+            with open(f'{self.pipelinepath}/sample_models/trafo/trafo_epic_loadallbkg.sh') as f:
                 text = f.read()
             with open(f'{self.pipelinepath}/sample_models/trafo/ogip2spex.sh') as f:
                 text2 = f.read()
@@ -335,7 +318,7 @@ class IO:
             
             for key, value in replace_dict.items():
                 text = replace_text(text, key, value)
-            with open(f'{subdir}/trafo_epic.sh', 'w') as f:
+            with open(f'{subdir}/trafo_epic_loadallbkg.sh', 'w') as f:
                 f.write(text)
             ### for pn oot ###
             for key, value in replace_dict.items():
@@ -346,7 +329,7 @@ class IO:
             
         with open(f'{self.rootdir}/run_epic_trafo.sh', 'w') as f:
             f.write(f''' ### run in spex env ###
-for f in */trafo_epic.sh
+for f in */trafo_epic_loadallbkg.sh
 do
 sh $f
 done
@@ -360,7 +343,7 @@ done
 ''')
 
         
-        print(f'cd {self.rootdir}\n sh run_all_trafo.sh')
+        print(f'cd {self.rootdir}\n sh run_*_trafo.sh')
                     
 
 

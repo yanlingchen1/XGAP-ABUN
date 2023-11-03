@@ -36,10 +36,9 @@ class FitFrame(IO):
         self.inst_dict = self.get_backscal()
     
     def add_gen_par(self, file):
-        replace_dict = {'BS-PN':self.inst_dict['pnS003'], 'SDSSTG3460': self.srcname2, 'bkg': self.regname, 'PATH': self.subdir}
+        replace_dict = {'BS-PN':self.inst_dict['pnS003'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir}
         for key, v in replace_dict.items():
             file = rep(file, key, f'{v}') 
-            print(file)
         return file
 
     def add_oot_com(self, file, appendix):
@@ -80,5 +79,9 @@ class FitFrame(IO):
         for key, v in replace_dict.items():
             file = rep(file, key, f'{v}') 
         return file
+
+
+    
+
 
     

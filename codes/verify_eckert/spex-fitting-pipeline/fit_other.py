@@ -11,15 +11,21 @@ class FitOther(FitFrame):
     def fit_oot(self):
         # Alter the inputs in sample_oot.com
         with open(f'{self.pipeline_path}/sample_models/oot/fit_oot.com') as f:
-            lines = f.readlines()
-        newlines = self.add_gen_par(lines)
+            lines = f.read()
+
+        lines = lines.replace('REGNAME', self.regname)
+        lines = self.add_gen_par(lines)
         with open(f'{self.savepath}/bins/oot-{self.regname}.com', 'w') as newf:
-            for line in newlines:
-                newf.write(f'{line}\n')
+            newf.write(f'{lines}\n')
 
         # Begin fitting
         os.chdir(self.savepath)
-        os.system(f'''spex<<EOT
+        os.system(f'''
+rm logs/oot-{self.regname}* 
+rm dats/oot-{self.regname}* 
+rm figs/oot-{self.regname}* 
+source /Users/eusracenorth/miniconda3/envs/spex/opt/spex/spex-activate.sh
+spex<<EOT
 log exe bins/oot-{self.regname}
 quit
 EOT''')
@@ -50,7 +56,9 @@ rm oot-{self.regname}.ps
 
         # Begin fitting
         os.chdir(self.savepath)
-        os.system(f'''spex<<EOT
+        os.system(f'''
+source /Users/eusracenorth/miniconda3/envs/spex/opt/spex/spex-activate.sh
+spex<<EOT
 log exe bins/bkg-{self.regname}
 quit
 EOT''')

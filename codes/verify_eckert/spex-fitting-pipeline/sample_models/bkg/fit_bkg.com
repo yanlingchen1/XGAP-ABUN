@@ -1,3 +1,6 @@
+var calc new
+var calc qc
+
 # save com
 log save bins/bkg-bkg_2nd
 log output logs/bkg-bkg

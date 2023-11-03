@@ -37,7 +37,8 @@ EOT
             with fits.open(rmfname) as f:
                 output_dict['elo'] = f[2].data['E_MIN']
                 output_dict['ehi'] = f[2].data['E_MAX']
-            # read the rate from smoothed qpb pi
+            # read the rate from smoothed qpb pi, 
+            # normalize this to per arcmin2
             with fits.open(filename) as f:
                 output_dict['rate'] = f[1].data['RATE']/self.inst_dict[inst]
             df = pd.DataFrame(output_dict)
@@ -84,6 +85,7 @@ pl ldat
 quit
 EOT
 ps2pdf atable_{inst}_{self.regname}.ps
+rm atable_{inst}_{self.regname}.ps
 mv atable_{inst}_{self.regname}.pdf {self.savepath}/figs
 mv atable_{inst}_{self.regname}.qdp {self.savepath}/dats
 mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
@@ -107,7 +109,7 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
                 exp = float(f[1].header['EXPOSURE'])
                 ctr = mdl_df.iloc[:, 4]
                 # read skybkg file
-                skycts = mdl_df.iloc[:,5] * bkg_instdict[inst] * exp
+                skycts = mdl_df.iloc[:,5] * bkg_instdict[inst] / self.inst_dict[inst] * exp
                 skyerr = np.where(skycts>1, np.sqrt(skycts), skycts)
                 ## since in mos qpb counts and counts stat err are saved
                 ## in pn qpb rate and rate stat err are saved
@@ -126,5 +128,6 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
                 f[1].header['HDUCLAS3'] = 'RATE'
                 f[1].header['TUNIT2'] = 'counts/s'
                 f[1].header['TUNIT3'] = 'counts/s'
+                f[1].header['BACKSCAL'] = 1.00
                 f.flush()  
 
