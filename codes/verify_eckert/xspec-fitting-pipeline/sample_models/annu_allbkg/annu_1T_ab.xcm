@@ -83,26 +83,21 @@ free oot:1-14
 fit 200 1e-2
 setp energy
 pl dat rat
-ipl
-pl dat
-wenv annu_REGNAME_ab_MDL
-exit
 log none
-save all bins/annu_REGNAME_ab_2nd_MDL.xcm
-log >logs/annu_REGNAME_ab_allpar_MDL.log
+save all bins/annu_REGNAME_MDL_ab_2nd.xcm
+log >logs/annu_REGNAME_MDL_ab_allpar.log
 sho par
 log none
-log >logs/annu_REGNAME_ab_chain1000_fit_MDL.log
+log >logs/annu_REGNAME_MDL_ab_chain1000_fit.log
 chain length 1000
-chain run annu_REGNAME_ab_chain1000_MDL.out
+chain run annu_REGNAME_MDL_ab_chain1000.out
 log none
-log >logs/annu_REGNAME_ab_chain1000_par_MDL.log
+log >logs/annu_REGNAME_MDL_ab_chain1000_par.log
 err m1:4,m1:5,m1:7
 log none
-log >logs/annu_REGNAME_ab_freepar_MDL.log
+log >logs/annu_REGNAME_MDL_ab_freepar.log
 sho fre
 log none
-cpd annu_REGNAME_ab_MDL.ps/ocps
+cpd annu_REGNAME_MDL_ab.ps/ocps
 setp rebin 3 30
 pl lda ra
-exit

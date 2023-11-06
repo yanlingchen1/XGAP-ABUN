@@ -35,7 +35,7 @@ ign 2:1.2-1.85
 ign 3:1.2-1.55
 ign bad
 
-@PIPPATH/sample_models/annu_qpb/annu_2T_mdl.xcm
+@PIPPATH/sample_models/annu_qpb/annu_MDL_mdl.xcm
 
 
 #### skybkg ####
@@ -103,18 +103,18 @@ pl dat
 wenv annu_REGNAME_MDL
 exit
 log none
-save all bins/annu_REGNAME_2nd_MDL.xcm
-log >logs/annu_REGNAME_allpar_MDL.log
+save all bins/annu_REGNAME_MDL_2nd.xcm
+log >logs/annu_REGNAME_MDL_allpar.log
 sho par
 log none
-log >logs/annu_REGNAME_chain1000_fit_MDL.log
+log >logs/annu_REGNAME_MDL_chain1000_fit.log
 chain length 1000
-chain run annu_REGNAME_chain1000_MDL.out
+chain run annu_REGNAME_MDL_chain1000.out
 log none
-log >logs/annu_REGNAME_chain1000_par_MDL.log
+log >logs/annu_REGNAME_MDL_chain1000_par.log
 err 12,13,15,icm2:7
 log none
-log >logs/annu_REGNAME_freepar_MDL.log
+log >logs/annu_REGNAME_MDL_freepar.log
 sho fre
 log none
 cpd annu_REGNAME_MDL.ps/ocps
