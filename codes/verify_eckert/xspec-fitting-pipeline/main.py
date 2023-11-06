@@ -1,7 +1,7 @@
 from glob import glob
 from my_io import IO
 from fit_other import FitOther
-from fit_annu import FitAnnu
+from fit_annu_allbkg import FitAnnu
 from datetime import datetime
 
 def main():
@@ -73,7 +73,7 @@ def main():
     # io_instance.tidy_outputs_2nd('', 'refit_Z_uc')
 
     #### allbkg, 1T ####
-    fit_annu.fit_allbkg_1T()
+    fit_annu.fit_annu('1T')
 
 if __name__ == "__main__":
     main()

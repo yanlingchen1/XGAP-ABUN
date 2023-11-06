@@ -13,7 +13,7 @@ import os
 from glob import glob
 import pandas as pd
 
-class FitAnnu_qpb(FitFrame):
+class FitAnnu(FitFrame):
     def fit_annu(self, mdl):
         # Alter the inputs in sample_annu.xcm
         with open(f'{self.pipeline_path}/sample_models/annu_qpb/annu_{mdl}.xcm') as f:
@@ -23,8 +23,8 @@ class FitAnnu_qpb(FitFrame):
         lines = lines.replace('MDL', mdl)
         #### general ####
         lines = self.add_gen_par(lines)
-        #### annu ####
-        lines = self.add_annu_xcm(lines)
+        #### oot ####
+        lines = self.add_oot_xcm(lines)
         #### backscal ####
         lines = self.add_backscal(lines)
         #### skybkg ####

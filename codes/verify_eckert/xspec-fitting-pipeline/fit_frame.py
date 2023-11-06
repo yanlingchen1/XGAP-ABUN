@@ -11,6 +11,9 @@ This class shelter all the same function in both fitting functions
 The fitting class should inherit from this class. 
 """
 
+def rep(file, oldv, newv):
+    return file.replace(oldv, newv)
+
 class FitFrame(IO):
     def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts = ['mos1S001', 'mos2S002', 'pnS003']):
         super().__init__(date, rootdir, srcname1, srcname2, insts)
@@ -52,29 +55,26 @@ class FitFrame(IO):
         outdict['spf-pn-n'] = judge_spf(outdict['spf-pn-n'])
         return dict
 
-    def rep(file, oldv, newv):
-        return file.replace(oldv, newv)
-
     def add_gen_par(self, file):
         replace_dict = {'BS-PN':self.inst_dict['pnS003'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir, 'PIPPATH':self.pipeline_path}
         for key, v in replace_dict.items():
-            file = self.rep(file, key, f'{v}') 
+            file = rep(file, key, f'{v}') 
         return file
     
     def add_oot_xcm(self, file):
         #### oot ####
         value_data = []
-        with open(f'{self.savepath}/logs/oot_{self.regname}_par.log', 'r') as file:
-            lines = file.readlines()
-        for line in lines:
-            if line.startswith('# '):
-                if re.search(r'\d', line): 
-                    columns = line.split()
-                    if 'frozen' in line:
-                        value = columns[-2]
-                    else:
-                        value = columns[-3]
-                    value_data.append(value)
+        with open(f'{self.savepath}/logs/oot_{self.regname}_par.log', 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                if line.startswith('# '):
+                    if re.search(r'\d', line): 
+                        columns = line.split()
+                        if 'frozen' in line:
+                            value = columns[-2]
+                        else:
+                            value = columns[-3]
+                        value_data.append(value)
 
         # Write the Value data
         replace_dict = {}
@@ -86,7 +86,7 @@ class FitFrame(IO):
 
         # Alter the inputs
         for key, v in replace_dict.items():
-            file = self.rep(file, key, f'{v}') 
+            file = rep(file, key, f'{v}') 
         return file
     
     def add_backscal(self, file):
@@ -100,14 +100,14 @@ class FitFrame(IO):
 
         # Alter the inputs in sample_oot.com
         for key, v in replace_dict.items():
-            file = self.rep(file, key, f'{v}') 
+            file = rep(file, key, f'{v}') 
         return file
 
     def add_gen_bkgpar(self, file):
         replace_dict = {'LHB-n':self.bkg_dict['lhb-n'], 'GH-n':self.bkg_dict['gh-n'], 'GH-t':self.bkg_dict['gh-t'], 'CXB-n':self.bkg_dict['cxb-n'], 
 'SP-M1':self.bkg_dict['sp-m1-n'], 'SP-M2':self.bkg_dict['sp-m2-n'], 'SP-PN':self.bkg_dict['sp-pn-n']}
         for key, v in replace_dict.items():
-            file = self.rep(file, key, f'{v}') 
+            file = rep(file, key, f'{v}') 
         return file
 
     
