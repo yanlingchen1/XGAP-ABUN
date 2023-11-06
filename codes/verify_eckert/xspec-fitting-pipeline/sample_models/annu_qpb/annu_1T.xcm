@@ -30,7 +30,7 @@ ign 2:1.2-1.85
 ign 3:1.2-1.55
 ign bad
 
-@PIPPATH/sample_models/annu_qpb/annu_1T_mdl.xcm
+@PIP/sample_models/annu_qpb/annu_1T_mdl.xcm
 
 #### skybkg ####
 # extract region area

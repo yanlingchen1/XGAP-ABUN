@@ -28,7 +28,6 @@ class FitAnnu(FitFrame):
         #### backscal ####
         lines = self.add_backscal(lines)
 
-
         with open(f'{self.savepath}/bins/annu_{self.regname}_{mdl}_ab.xcm', 'w') as newf:
             newf.write(f'{lines}\n')
 

@@ -56,7 +56,7 @@ class FitFrame(IO):
         return dict
 
     def add_gen_par(self, file):
-        replace_dict = {'BS-PN':self.inst_dict['pnS003'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir, 'PIPPATH':self.pipeline_path}
+        replace_dict = {'BS-PN':self.inst_dict['pnS003'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir, 'PIP':self.pipeline_path}
         for key, v in replace_dict.items():
             file = rep(file, key, f'{v}') 
         return file
