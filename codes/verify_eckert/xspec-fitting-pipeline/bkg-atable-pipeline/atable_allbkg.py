@@ -19,7 +19,7 @@ class AtableBKG(FitFrame):
         for inst in self.inst_dict.keys():
             os.system(f'''
 bkgsmooth<<EOT
-read {self.subdir}/{inst}-back-{self.srcname2}_bkg.pi
+read {self.subdir}/{inst}-back-{self.srcname2}_{self.regname}.pi
 savgol 140 5
 write {self.subdir}/{inst}-back-smoothed_savgol-140-5.pi
 quit
@@ -31,7 +31,7 @@ EOT
     def gen_qpbmdltxt(self):
         for inst in self.inst_dict.keys():
             filename = f'{self.subdir}/{inst}-back-smoothed_savgol-140-5.pi'
-            rmfname = f'{self.subdir}/{inst}-{self.srcname2}_bkg.rmf'
+            rmfname = f'{self.subdir}/{inst}-{self.srcname2}_{self.regname}.rmf'
             output_dict = {}
             # read the rate from smoothed qpb pi
             with fits.open(rmfname) as f:
@@ -50,13 +50,13 @@ EOT
         for inst in self.inst_dict.keys():
             os.system(f'''
 xspec<<EOT
-data {self.subdir}/../{self.srcname2}_bkg/{inst}-obj-{self.srcname2}_bkg.pi	
-res 1:1 {self.subdir}/../{self.srcname2}_bkg/{inst}-{self.srcname2}_bkg.rmf
-arf 1:1 {self.subdir}/../{self.srcname2}_bkg/{inst}-{self.srcname2}_bkg.arf
+data {self.subdir}/{inst}-obj-{self.srcname2}_{self.regname}.pi	
+res 1:1 {self.subdir}/{inst}-{self.srcname2}_{self.regname}.rmf
+arf 1:1 {self.subdir}/{inst}-{self.srcname2}_{self.regname}.arf
 res 2:1 {self.subdir}/../{inst.split("S")[0]}-diag.rsp
 mo const*const*(apec+tbabs*(apec+pow))
 {mod_spl}
-mo 2:spf_qpb const*const*(atable{{{self.subdir}/../{self.srcname2}_bkg/{inst}-back-smoothed_savgol-140-5.mdl}}+pow)
+mo 2:spf_qpb const*const*(atable{{{self.subdir}/{inst}-back-smoothed_savgol-140-5.mdl}}+pow)
 {mod_spl}
 ## set inst const
 new 1 {self.inst_dict[inst]}
@@ -103,20 +103,20 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
             #### calculate the poisson error ####
             # read qpb file
             with fits.open(qpb_file) as f:
-                qpberr = f[1].data['STAT_ERR']
+                qpberr = f[1].data['STAT_ERR']/self.inst_dict[inst]
                 srcheader = f[1].header
             with fits.open(output_file, mode = 'update') as f:
                 exp = float(f[1].header['EXPOSURE'])
                 ctr = mdl_df.iloc[:, 4]
                 # read skybkg file
-                skycts = mdl_df.iloc[:,5] * bkg_instdict[inst] / self.inst_dict[inst] * exp
-                skyerr = np.where(skycts>1, np.sqrt(skycts), skycts)
+                skycts = mdl_df.iloc[:,5] * bkg_instdict[inst] * exp
+                skyerr = np.where(skycts>1, np.sqrt(skycts), skycts)/bkg_instdict[inst]
                 ## since in mos qpb counts and counts stat err are saved
                 ## in pn qpb rate and rate stat err are saved
                 if 'mos' in inst:
-                    err = np.sqrt(skyerr**2 + qpberr**2)/bkg_instdict[inst]/exp
+                    err = np.sqrt(skyerr**2 + qpberr**2)/exp
                 elif 'pn' in inst:
-                    err = np.sqrt((skyerr/exp)**2 + qpberr**2)/bkg_instdict[inst]
+                    err = np.sqrt((skyerr/exp)**2 + qpberr**2)
                 columns = [
                     fits.Column(name='CHANNEL', format='J', array=mdl_df.iloc[:, 0]),
                     fits.Column(name='RATE', format='E', array=ctr),
