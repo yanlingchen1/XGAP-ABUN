@@ -80,9 +80,9 @@ class FitFrame(IO):
         replace_dict = {}
         for i, name in enumerate(["POW1-g", "POW1-n",  "POW2-g", "POW2-n",  "CIE1-t", "CIE1-abun", "CIE1-reds", "CIE1-n",  "CIE2-t", "CIE2-abun", "CIE2-reds", "CIE2-n"]):
             if '-n' in name:
-                replace_dict[name] = value_data[i]
+                replace_dict[name] = value_data[i+2]
             else:
-                replace_dict[name] = value_data[i]
+                replace_dict[name] = value_data[i+2]
 
         # Alter the inputs
         for key, v in replace_dict.items():

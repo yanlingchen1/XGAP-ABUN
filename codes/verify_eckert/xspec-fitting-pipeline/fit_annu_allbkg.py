@@ -35,7 +35,7 @@ class FitAnnu(FitFrame):
 #         os.chdir(self.savepath)
 #         os.system(f'''
 # xspec<<EOT
-# @bins/annu_{self.regname}.xcm
+# @bins/annu_{self.regname}_ab.xcm
 # EOT''')
 
 #         os.system(f'''ps2pdf annu_{self.regname}_{mdl}_ab.ps
