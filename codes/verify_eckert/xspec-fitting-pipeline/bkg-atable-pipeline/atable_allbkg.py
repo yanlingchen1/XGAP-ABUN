@@ -131,3 +131,20 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
                 f[1].header['BACKSCAL'] = 1.00
                 f.flush()  
 
+    #### check the sum bkg file in xspec in every subdir ####
+    def qpb2txt(self):
+        output_dict = {}
+        # read the elo ehi from bkg txt file
+        bkgpath = f'{self.rootdir}/{self.srcname2}_bkg'
+        for inst in self.insts:
+            df_e = pd.read_csv(f'{bkgpath}/{inst}-back-smoothed_savgol-140-5.txt', header = None, delim_whitespace=True)
+            output_dict['elo'] = df_e.iloc[:,0]
+            output_dict['ehi'] = df_e.iloc[:,1]
+            # read the rate from qpb file
+            qpbfile = f'{self.savepath}/dats/atable_{inst}_{self.regname}.qdp'
+            df_r = pd.read_csv(qpbfile, skiprows=3, header=None, delim_whitespace=True)
+            output_dict['rate'] = df_r.iloc[:,4]
+            df = pd.DataFrame(output_dict)
+            df.to_csv(f'{self.savepath}/dats/atable_{inst}_{self.regname}.txt', index = False, header = None, sep = ' ')
+            os.system(f'ftflx2tab infile={self.savepath}/dats/atable_{inst}_{self.regname}.txt modelname={inst.split("S")[0]}_ab outfile={self.subdir}/atable_{inst}_{self.regname}.mdl nspec=1 additive=yes redshift=no xunit=keV clobber=yes')
+

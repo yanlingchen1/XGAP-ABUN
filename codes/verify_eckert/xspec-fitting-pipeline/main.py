@@ -43,7 +43,7 @@ def main():
     # fit_other.fit_bkg()
     # io_instance.tidy_bkgpar()
 
-    # fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg0', nH, reds) 
+    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg6', nH, reds) 
     # for i in range(13):
     #     fit_other.update_inst_dict(f'reg{i}')
         # fit_annu.update_inst_dict(f'reg{i}')
@@ -72,6 +72,8 @@ def main():
     # fit_annu.refit_1T_Z_uc()
     # io_instance.tidy_outputs_2nd('', 'refit_Z_uc')
 
+    #### allbkg, 1T ####
+    fit_annu.fit_allbkg_1T()
 
 if __name__ == "__main__":
     main()

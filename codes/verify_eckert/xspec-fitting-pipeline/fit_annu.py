@@ -198,6 +198,23 @@ thaw 12,15
         os.system(sav_text)
         print(f'annu fitting for {self.regname} has finished!')
     
+    def fit_annu(self, mdl):
+        # Alter the inputs in sample_annu.com
+        with open(f'{self.pipeline_path}/sample_models/sample_data_{mdl}.com') as f:
+            lines = f.read()
+            
+        lines = lines.replace('MDL', mdl)
+        #### general ####
+        lines = self.add_gen_par(lines)
+        #### oot ####
+        lines = self.add_oot_com(lines, '')
+        #### backscal ####
+        lines = self.add_backscal(lines)
+
+        with open(f'{self.savepath}/bins/annu-{self.regname}-{mdl}.com', 'w') as newf:
+            newf.write(lines)
+        print(f'annu fitting for {self.regname} has finished!')
+
     if __name__ == "__main__":
         from fit_annu import FitAnnu
         date = 231019

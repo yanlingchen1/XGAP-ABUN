@@ -21,28 +21,7 @@ class FitOther(FitFrame):
 
         # Begin fitting
         os.chdir(self.savepath)
-        os.system(f'''xspec<<EOT
-log >logs/oot_{self.regname}_fit.log
-@bins/oot_{self.regname}.xcm
-new 1 {self.inst_dict['pnS003']}
-new 2 1
-free 1,2
-fit 100 1e-3
-setp energy
-pl dat rat
-ipl
-pl dat
-wenv oot_{self.regname}
-exit
-log none
-save all bins/oot_{self.regname}_2nd.xcm
-log >logs/oot_{self.regname}_par.log
-sho par
-log none
-cpd oot_{self.regname}.ps/ocps
-setp rebin 3 20
-pl lda ra
-exit
+        os.system(f'''
 EOT''')
         os.system(f'''
 ps2pdf oot_{self.regname}.ps
