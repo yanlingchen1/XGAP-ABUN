@@ -51,3 +51,5 @@ class FitFrame(IO):
         outdict['spf-m2-n'] = judge_spf(outdict['spf-m2-n'])
         outdict['spf-pn-n'] = judge_spf(outdict['spf-pn-n'])
         return outdict
+
+    

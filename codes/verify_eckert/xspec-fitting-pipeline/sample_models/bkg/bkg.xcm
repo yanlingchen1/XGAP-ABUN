@@ -1,0 +1,28 @@
+log >logs/bkg_REGNAME_fit.log
+#### skybkg ####
+# extract region area
+new 1 BS-M1
+new 14 BS-M2
+new 27 BS-PN
+new 7 NH
+new icm:6 REDS
+### fit ###
+fit 200 1e-2
+setp energy
+pl dat rat
+ipl
+pl dat
+wenv bkg_REGNAME
+exit
+log none
+save all bins/bkg_REGNAME_2nd.xcm
+log >logs/bkg_REGNAME_allpar.log
+sho par
+log none
+log >logs/bkg_REGNAME_freepar.log
+sho fre
+log none
+cpd bkg_REGNAME.ps/ocps
+setp rebin 3 100
+pl lda ra
+exit

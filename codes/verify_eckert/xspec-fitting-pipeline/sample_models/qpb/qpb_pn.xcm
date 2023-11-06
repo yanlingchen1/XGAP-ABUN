@@ -1,0 +1,58 @@
+log >logs/qpb_pn_REGNAME_fit.log
+statistic cstat
+abun aspl
+data 1:1 PATH/pnS003-back-SRCNAME2_REGNAME.pi
+response 1:1 PATH/../pn-diag.rsp
+ign **-0.5 14.-** 7.-9.2 1.2-1.55
+@bins/qpb_pn.xcm
+statistic cstat
+abun aspl
+data 1:1 path/pnS003-back-SRCNAME2_REGNAME.pi
+response 1:1 path/../pn-diag.rsp
+ign **-0.5 14.-** 7.-9.2 1.2-1.55
+new 1 BS-PN
+free 1
+save all bins/qpb_pn_REGNAME_mdl.xcm
+thaw 2-40
+# free gaussian lines
+free 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38
+free 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39
+free 10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40
+# set brem
+new 2 0.4
+new 3 1e-5
+# set bknpow
+new 4 0.5
+new 5 2
+new 6 0.3
+new 7 1e-5
+sho par 
+fit 100 1e-3
+free 2-7
+sho par
+thaw 10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40
+fit 100 1e-3
+sho par
+log none
+# save output data
+ipl
+setp energy
+pl dat
+wenv qpb_pn_REGNAME
+exit
+# save exe file
+save all bins/qpb_pn_REGNAME_2nd.xcm
+# save par
+log >logs/qpb_pn_REGNAME_par.log
+sho par
+log none
+log >logs/qpb_pn_REGNAME_freepar.log
+sho fre
+log none
+setplot energy
+setpl rebin 20 1000
+plot ld ra
+cpd qpb_pn_REGNAME.ps/ocps
+pl
+exit
+
