@@ -30,7 +30,7 @@ class FitAnnu(FitFrame):
         #### skybkg ####
         lines = self.add_gen_bkgpar(lines)
 
-        with open(f'{self.savepath}/bins/annu_{self.regname}.xcm', 'w') as newf:
+        with open(f'{self.savepath}/bins/annu_{self.regname}_{mdl}_qp.xcm', 'w') as newf:
             newf.write(f'{lines}\n')
 
         # Begin fitting
@@ -40,12 +40,12 @@ xspec<<EOT
 @bins/annu_{self.regname}.xcm
 EOT''')
 
-        os.system(f'''ps2pdf annu_{self.regname}_{mdl}.ps
-rm annu_{self.regname}_{mdl}.ps
-mv annu_{self.regname}_{mdl}.pdf figs
-mv annu_{self.regname}_{mdl}.pco dats
-mv annu_{self.regname}_{mdl}.qdp dats 
-mv annu_{self.regname}_chain1000_{mdl}.out logs''')
+        os.system(f'''ps2pdf annu_{self.regname}_{mdl}_qp.ps
+rm annu_{self.regname}_{mdl}_qp.ps
+mv annu_{self.regname}_{mdl}_qp.pdf figs
+mv annu_{self.regname}_{mdl}_qp.pco dats
+mv annu_{self.regname}_{mdl}_qp.qdp dats 
+mv annu_{self.regname}_chain1000_{mdl}_qp.out logs''')
         print(f'annu fitting for {self.regname} has finished!')
 
 

@@ -16,7 +16,7 @@ import pandas as pd
 class FitAnnu(FitFrame):
     def fit_annu(self, mdl):
         # Alter the inputs in sample_annu.xcm
-        with open(f'{self.pipeline_path}/sample_models/annu_qpb/annu_{mdl}.xcm') as f:
+        with open(f'{self.pipeline_path}/sample_models/annu_allbkg/annu_{mdl}_ab.xcm') as f:
             lines = f.read()
 
         #### MDL #####
@@ -29,7 +29,7 @@ class FitAnnu(FitFrame):
         lines = self.add_backscal(lines)
 
 
-        with open(f'{self.savepath}/bins/annu_{self.regname}.xcm', 'w') as newf:
+        with open(f'{self.savepath}/bins/annu_{self.regname}_{mdl}_ab.xcm', 'w') as newf:
             newf.write(f'{lines}\n')
 
 #         # Begin fitting
@@ -39,12 +39,12 @@ class FitAnnu(FitFrame):
 # @bins/annu_{self.regname}.xcm
 # EOT''')
 
-#         os.system(f'''ps2pdf annu_{self.regname}_{mdl}.ps
-# rm annu_{self.regname}_{mdl}.ps
-# mv annu_{self.regname}_{mdl}.pdf figs
-# mv annu_{self.regname}_{mdl}.pco dats
-# mv annu_{self.regname}_{mdl}.qdp dats 
-# mv annu_{self.regname}_chain1000_{mdl}.out logs''')
+#         os.system(f'''ps2pdf annu_{self.regname}_{mdl}_ab.ps
+# rm annu_{self.regname}_{mdl}_ab.ps
+# mv annu_{self.regname}_{mdl}_ab.pdf figs
+# mv annu_{self.regname}_{mdl}_ab.pco dats
+# mv annu_{self.regname}_{mdl}_ab.qdp dats 
+# mv annu_{self.regname}_chain1000_{mdl}_ab.out logs''')
 #         print(f'annu fitting for {self.regname} has finished!')
 
 
