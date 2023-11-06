@@ -1,4 +1,5 @@
 log >logs/bkg_REGNAME_fit.log
+@PIP/sample_models/bkg/bkg_mdl.xcm
 #### skybkg ####
 # extract region area
 new 1 BS-M1

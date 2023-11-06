@@ -7,7 +7,7 @@ backgrnd 1 PATH/pnS003-back-SRCNAME2_REGNAME.pi
 ign 1.1-1.6
 ign bad
 ign **-0.5,5.0-**
-@PIPPATH/sample_models/oot/oot_mdl.xcm
+@PIP/sample_models/oot/oot_mdl.xcm
 new 1 BS-PN
 new 2 1
 free 1,2

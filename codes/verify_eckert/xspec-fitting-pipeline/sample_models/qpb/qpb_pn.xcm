@@ -4,7 +4,7 @@ abun aspl
 data 1:1 PATH/pnS003-back-SRCNAME2_REGNAME.pi
 response 1:1 PATH/../pn-diag.rsp
 ign **-0.5 14.-** 7.-9.2 1.2-1.55
-@bins/qpb_pn.xcm
+@PIP/sample_models/qpb/qpb_pn_mdl.xcm
 statistic cstat
 abun aspl
 data 1:1 path/pnS003-back-SRCNAME2_REGNAME.pi

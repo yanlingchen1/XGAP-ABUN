@@ -4,7 +4,7 @@ data 1:1 path/mos1S001-back-SDSSTG828_bkg.pi
 response 1:1 path/../mos1-diag.rsp
 ign **-0.5 8.-** 1.2-1.85
 
-@PIPPATH/sample_models/qpb/qpb_mos1_mdl.xcm
+@PIP/sample_models/qpb/qpb_mos1_mdl.xcm
 new 1 BS-M1
 free 1
 save all bins/qpb_mos1_REGNAME_mdl.xcm
