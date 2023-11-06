@@ -1,17 +1,21 @@
 statistic cstat
+# allbkg
 data 1:1 PATH/mos1S001-obj-SRCNAME2_REGNAME-grp.pi
-response  1:1 PATH/mos1S001-SRCNAME2_REGNAME.rmf
-arf 1:1 PATH/mos1S001-SRCNAME2_REGNAME.arf
-
+response 1:1 PATH/../mos1-diag.rsp
 data 2:2 PATH/mos2S002-obj-SRCNAME2_REGNAME-grp.pi
-response  2:2 PATH/mos2S002-SRCNAME2_REGNAME.rmf
-arf 2:2 PATH/mos2S002-SRCNAME2_REGNAME.arf
-
+response 2:2 PATH/../mos2-diag.rsp
 data 3:3 PATH/pnS003-obj-SRCNAME2_REGNAME-grp.pi
-response  3:3 PATH/pnS003-SRCNAME2_REGNAME.rmf
+response 3:3 PATH/../pn-diag.rsp
+# icm
+response  4:1 PATH/mos1S001-SRCNAME2_REGNAME.rmf
+arf 4:1 PATH/mos1S001-SRCNAME2_REGNAME.arf
+response  4:2 PATH/mos2S002-SRCNAME2_REGNAME.rmf
+arf 4:2 PATH/mos2S002-SRCNAME2_REGNAME.arf
 response  4:3 PATH/pnS003-SRCNAME2_REGNAME.rmf
-arf 3:3 PATH/pnS003-SRCNAME2_REGNAME.arf
 arf 4:3 PATH/pnS003-SRCNAME2_REGNAME.arf
+# oot
+response  5:3 PATH/pnS003-SRCNAME2_REGNAME.rmf
+arf 5:3 PATH/pnS003-SRCNAME2_REGNAME.arf
 
 ign 1:0.0-0.6,7.0-** 
 ign 2:0.0-0.6,7.0-**
@@ -21,49 +25,51 @@ ign 3:0.0-0.6,7.0-**
 ign 1:1.2-1.85
 ign 2:1.2-1.85
 ign 3:1.2-1.55
+ign 3: 
 ign bad
 
-@PIP/sample_models/annu_allbkg/annu_1T_ab_mdl.xcm
+
+@SAV/bins/annu_REGNAME_MDL_ab_mdl.xcm
 
 #### areas #####
-new m1:1 BS-M1
-new m2:1 BS-M2
-new pn:1 BS-PN
-free m1:1,m2:1,pn:1
+new icm:1 BS-M1
+new icm:8 BS-M2
+new icm:15 BS-PN
+free icm:1,8,15
 #### insts #####
-new m1:2 1
-new m2:2 1
-new pn:2 1
-free m1:2,m2:2,pn:2
+new icm:2 1
+new icm:9 1
+new icm:16 1
+free icm:2,9,16
 #### nh ####
-new m1:3 NH
-new m2:3=m1:3
-new pn:3=m1:3
-free m1:3
+new icm:3 NH
+new icm:10=icm:3
+new icm:17=icm:3
+free icm:3
 #### reds ####
-new m1:6 REDS
-new m2:6=m1:6
-new pn:6=m1:6
-free m1:6
+new icm:6 REDS
+new icm:13=icm:6
+new icm:20=icm:6
+free icm:6
 #### ICM ####
-new m1:4 1
-new m1:5 0.3
-new m1:7 1e-4
-new m2:4=m1:4
-new m2:5=m1:5
-new m2:7=m1:7
-new pn:4=m1:4
-new pn:5=m1:5
-new pn:7=m1:7
-thaw m1:4,m1:5,m1:7
+new icm:4 1
+new icm:5 0.3
+new icm:7 1e-4
+new icm:11=icm:4
+new icm:18=icm:4
+new icm:12=icm:5
+new icm:19=icm:5
+new icm:14=icm:7
+new icm:21=icm:7
+thaw icm:4,icm:5,icm:7
 #### allbkg ####
-new m1:8 1
-new m2:8 1
-new pn:8 1
-free m1:8,m2:8,pn:8
+new m1_bg:1 1
+new m2_bg:1 1
+new pn_bg:1 1
+free m1_bg:1,m2_bg:1,pn_bg:1
 #### oot ####
-new oot:1=pn:1
-new oot:2=0.063*pn:2
+new oot:1=icm:15
+new oot:2=0.063*icm:16
 new oot:3 POW1-g
 new oot:4 POW1-n
 new oot:5 POW2-g
@@ -93,7 +99,7 @@ chain length 1000
 chain run annu_REGNAME_MDL_ab_chain1000.out
 log none
 log >logs/annu_REGNAME_MDL_ab_chain1000_par.log
-err m1:4,m1:5,m1:7
+err icm:4,icm:5,icm:7
 log none
 log >logs/annu_REGNAME_MDL_ab_freepar.log
 sho fre

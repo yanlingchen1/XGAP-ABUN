@@ -27,14 +27,14 @@ nH = nH_dict[srcname2]
 reds = reds_dict[srcname2]
 ab = AtableBKG(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
 
-for i in range(13):
-    ab.update_inst_dict(f'reg{i}')
-    # ab.bkgsmooth()
-    # ab.gen_qpbmdltxt()
-    ab.atable_allbkg()
-    ab.qdp2ogip()
-
-# #### check the sum bkg file in xspec in every subdir ####
 # for i in range(13):
 #     ab.update_inst_dict(f'reg{i}')
-#     ab.qpb2txt()
+#     # ab.bkgsmooth()
+#     # ab.gen_qpbmdltxt()
+#     ab.atable_allbkg()
+#     ab.qdp2ogip()
+
+#### check the sum bkg file in xspec in every subdir ####
+for i in range(13):
+    ab.update_inst_dict(f'reg{i}')
+    ab.qpb2txt()
