@@ -34,12 +34,6 @@ thaw 10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40
 fit 100 1e-3
 sho par
 log none
-# save output data
-ipl
-setp energy
-pl dat
-wenv qpb_pn_REGNAME
-exit
 # save exe file
 save all bins/qpb_pn_REGNAME_2nd.xcm
 # save par
@@ -54,5 +48,4 @@ setpl rebin 20 1000
 plot ld ra
 cpd qpb_pn_REGNAME.ps/ocps
 pl
-exit
 

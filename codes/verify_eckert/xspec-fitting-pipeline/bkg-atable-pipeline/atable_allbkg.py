@@ -17,9 +17,19 @@ import pandas as pd
 class AtableBKG(FitFrame):
     def bkgsmooth(self):
         for inst in self.inst_dict.keys():
-            os.system(f'''
+            if 'pn' in inst:
+                sellim = (90, 3000)
+            elif 'mos' in inst:
+                sellim = (65, 2300)
+            else:
+                raise ValueError('Wrong inst name!')
+            if os.path.isfile(f'{self.subdir}/{inst}-back-smoothed_savgol-140-5.pi'):
+                continue
+            else:
+                os.system(f'''
 bkgsmooth<<EOT
 read {self.subdir}/{inst}-back-{self.srcname2}_{self.regname}.pi
+select {sellim[0]} {sellim[1]}
 savgol 140 5
 write {self.subdir}/{inst}-back-smoothed_savgol-140-5.pi
 quit
@@ -38,29 +48,31 @@ EOT
                 output_dict['elo'] = f[2].data['E_MIN']
                 output_dict['ehi'] = f[2].data['E_MAX']
             # read the rate from smoothed qpb pi, 
-            # normalize this to per arcmin2
             with fits.open(filename) as f:
-                output_dict['rate'] = f[1].data['RATE']/self.inst_dict[inst]
+                output_dict['rate'] = f[1].data['RATE']
             df = pd.DataFrame(output_dict)
             df.to_csv(f'{self.subdir}/{inst}-back-smoothed_savgol-140-5.txt', index = False, header = None, sep = ' ')
             os.system(f'ftflx2tab infile={self.subdir}/{inst}-back-smoothed_savgol-140-5.txt modelname={inst.split("S")[0]}_qpb outfile={self.subdir}/{inst}-back-smoothed_savgol-140-5.mdl nspec=1 additive=yes redshift=no xunit=keV clobber=yes')
 
     def atable_allbkg(self):
+        self.bkg_dict = self.load_bkgpar()
         mod_spl = '\n' * 20
         for inst in self.inst_dict.keys():
             os.system(f'''
 xspec<<EOT
-data {self.subdir}/{inst}-obj-{self.srcname2}_{self.regname}.pi	
+data {self.subdir}/{inst}-back-{self.srcname2}_{self.regname}.pi
+none	
 res 1:1 {self.subdir}/{inst}-{self.srcname2}_{self.regname}.rmf
 arf 1:1 {self.subdir}/{inst}-{self.srcname2}_{self.regname}.arf
 res 2:1 {self.subdir}/../{inst.split("S")[0]}-diag.rsp
 mo const*const*(apec+tbabs*(apec+pow))
 {mod_spl}
-mo 2:spf_qpb const*const*(atable{{{self.subdir}/{inst}-back-smoothed_savgol-140-5.mdl}}+pow)
+mo 2:spf_qpb const*const*(pow)+atable{{{self.subdir}/{inst}-back-smoothed_savgol-140-5.mdl}}
 {mod_spl}
 ## set inst const
 new 1 {self.inst_dict[inst]}
 new spf_qpb:1=1
+new spf_qpb:2=2
 new 3 0.11
 new 6 {self.bkg_dict["lhb-n"]}
 new 7 {self.nH}
@@ -68,8 +80,9 @@ new 8 {self.bkg_dict["gh-t"]}
 new 11 {self.bkg_dict["gh-n"]}
 new 12 1.46
 new 13 {self.bkg_dict["cxb-n"]}
-new spf_qpb:4 0.7
-new spf_qpb:5 0
+new spf_qpb:3 0.7
+new spf_qpb:4 0
+new spf_qpb:5 1
 save all {self.savepath}/bins/atable_{inst}_{self.regname}.xcm
 ipl
 wenv atable_{inst}_{self.regname}
@@ -85,6 +98,8 @@ pl ldat
 quit
 EOT
 ps2pdf atable_{inst}_{self.regname}.ps
+pdftk atable_{inst}_{self.regname}.pdf cat 2 output 1.pdf
+mv 1.pdf atable_{inst}_{self.regname}.pdf
 rm atable_{inst}_{self.regname}.ps
 mv atable_{inst}_{self.regname}.pdf {self.savepath}/figs
 mv atable_{inst}_{self.regname}.qdp {self.savepath}/dats
@@ -92,7 +107,6 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
 ''')
 
     def qdp2ogip(self):
-        bkg_instdict = {'mos1S001': 93.632, 'mos2S002': 127.285, 'pnS003': 118.604}
         for inst in self.inst_dict.keys():
             output_file = f'{self.subdir}/{inst}-allbkg-{self.srcname2}_{self.regname}.pi'
             qpb_file = f'{self.subdir}/{inst}-back-{self.srcname2}_{self.regname}.pi'
@@ -103,14 +117,14 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
             #### calculate the poisson error ####
             # read qpb file
             with fits.open(qpb_file) as f:
-                qpberr = f[1].data['STAT_ERR']/self.inst_dict[inst]
+                qpberr = f[1].data['STAT_ERR']
                 srcheader = f[1].header
             with fits.open(output_file, mode = 'update') as f:
                 exp = float(f[1].header['EXPOSURE'])
                 ctr = mdl_df.iloc[:, 4]
                 # read skybkg file
-                skycts = mdl_df.iloc[:,5] * bkg_instdict[inst] * exp
-                skyerr = np.where(skycts>1, np.sqrt(skycts), skycts)/bkg_instdict[inst]
+                skycts = mdl_df.iloc[:,5] * exp
+                skyerr = np.where(skycts>1, np.sqrt(skycts), 0)
                 ## since in mos qpb counts and counts stat err are saved
                 ## in pn qpb rate and rate stat err are saved
                 if 'mos' in inst:
@@ -132,7 +146,8 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
                 f.flush()  
 
     #### check the sum bkg file in xspec in every subdir ####
-    def qpb2txt(self):
+    def qdp2txt(self):
+        self.bkg_dict = self.load_bkgpar()
         output_dict = {}
         # read the elo ehi from bkg txt file
         bkgpath = f'{self.rootdir}/{self.srcname2}_bkg'

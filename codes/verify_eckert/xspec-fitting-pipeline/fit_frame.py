@@ -23,7 +23,6 @@ class FitFrame(IO):
         self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/xspec-fitting-pipeline'
         self.nH = nH
         self.reds = reds
-        self.bkg_dict = self.load_bkgpar()
 
     def get_backscal(self):
         inst_dict = {}

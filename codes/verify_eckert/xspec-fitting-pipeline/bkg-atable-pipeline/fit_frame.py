@@ -17,7 +17,6 @@ class FitFrame(IO):
         self.regname = regname
         self.subdir = f'{rootdir}/{srcname2}_{regname}'
         self.inst_dict = self.get_backscal()
-        self.bkg_dict = self.load_bkgpar()
         self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/xspec-fitting-pipeline'
         self.nH = nH
         self.reds = reds

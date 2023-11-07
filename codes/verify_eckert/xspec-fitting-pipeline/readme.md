@@ -12,7 +12,6 @@ brew install ghostscript
 1. Subdir with names of '{src}_reg*' '{src}_bkg'
 2. In every subdir, EPIC (incl. MOS & PN) spectrums and their rmf, arf, qpb, for pn, oot spec is required. 
 
-
 ## Output files
 A new subdir named fit_result in every annuli subdir is created. The output files will be saved there
 1. pn oot fit results. 'pn-oot-fit-results.csv'
@@ -21,16 +20,21 @@ A new subdir named fit_result in every annuli subdir is created. The output file
 3. bkg fit results. 'bkg-fit-results.csv'
 4. data fit results. 'data-1stfit-results.csv'
 
-
 ## Steps
+
+### IO
 0. Check the files. 
-1. Fit the pn oot spectrum. 
-2. Fit the qpb spectrum.
-3. Fit the bkg spectrum.
-4. Fit the data spectrum.
+### bkg
+1. Smooth the bkg back spectrum.
+2. Fit the sky bkg.
+### fit annu
+3. Smooth back spectrums of annulus.
+4. Fit the pn oot spectrums. 
+
+5. Fit the annulus spectrum.
     1) Determine the backscal of the spectrums. 
     2) use chain+err command for the parameters.
-5. Sanity check of the data fit results. 
+6. Sanity check of the data fit results. 
     1) If the abun fit has >75% uncertainties, freeze the abun to 0.3 and fit again. -> 'data-2ndfit-results.csv'
     
 

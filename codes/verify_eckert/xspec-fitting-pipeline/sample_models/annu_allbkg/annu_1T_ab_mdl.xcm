@@ -4,11 +4,11 @@ xsect vern
 cosmo 70 0 0.73
 xset delta 0.01
 systematic 0
-model  1:m1_bg atable{PATH/atable_mos1S001_reg6.mdl}
+model  1:m1_bg atable{PATH/atable_mos1S001_REGNAME.mdl}
               1       0.01          0          0      1e+20      1e+24
-model  2:m2_bg atable{PATH/atable_mos2S002_reg6.mdl}
+model  2:m2_bg atable{PATH/atable_mos2S002_REGNAME.mdl}
               1       0.01          0          0      1e+20      1e+24
-model  3:pn_bg atable{PATH/atable_pnS003_reg6.mdl}
+model  3:pn_bg atable{PATH/atable_pnS003_REGNAME.mdl}
               1       0.01          0          0      1e+20      1e+24
 model  4:icm constant*constant*TBabs*apec
               1       0.01          0          0      1e+10      1e+10

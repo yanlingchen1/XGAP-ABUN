@@ -8,7 +8,7 @@ def main():
     # # define date of fitting 
     # current_date = datetime.now()
     # date = current_date.strftime("%y%m%d")
-    date = 231019
+    date = 231107
 
     ## Some mandatory parameters
     nH_dict = {'SDSSTG3460':0.024, 'SDSSTG9647':0.0201, 'SDSSTG828':0.0303, 'RGH80':0.0131}
@@ -23,7 +23,7 @@ def main():
     # reds = reds_dict[srcname2]
 
     #### IDxxx ####
-    for srcnum in ['3460']: # , '9647', '828'
+    for srcnum in ['9647', '828']: # '3460', '9647', '828'
         srcname1 = f'ID{srcnum}'
         srcname2 = f'SDSSTG{srcnum}'
         root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
@@ -36,26 +36,22 @@ def main():
     # io_instance.make_output_dir()
     # io_instance.check_files()
     
-    # ## fit the spectrums
+    # # ## fit the sky bkg
     fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds) 
     # fit_other.fit_oot()
-    # fit_other.fit_qpb_pn()
     # fit_other.fit_bkg()
     # io_instance.tidy_bkgpar()
 
-    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'reg6', nH, reds) 
+    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
+    
     # for i in range(13):
     #     fit_other.update_inst_dict(f'reg{i}')
-        # fit_annu.update_inst_dict(f'reg{i}')
     #     fit_other.fit_oot()
+    #     fit_annu.update_inst_dict(f'reg{i}')
+    #     #### allbkg, 1T ####
+    #     fit_annu.fit_annu('1T')
 
-    # fit_other.fit_qpb_mos(1)
-    # fit_other.fit_qpb_mos(2)
-    # print(fit_other.get_backscal())
-    #     fit_annu.fit_1T()
-        # fit_annu.fit_2T_fixT2()
-        # fit_annu.fit_gadem()
-
+    io_instance.tidy_outputs('1T')
 
     # # #### for GADEM model ####
     # bigkeys = ['T', 'Tsig', 'Z', 'n']
@@ -72,8 +68,8 @@ def main():
     # fit_annu.refit_1T_Z_uc()
     # io_instance.tidy_outputs_2nd('', 'refit_Z_uc')
 
-    #### allbkg, 1T ####
-    fit_annu.fit_annu('1T')
+    # #### allbkg, 1T ####
+    # fit_annu.fit_annu('1T')
 
 if __name__ == "__main__":
     main()

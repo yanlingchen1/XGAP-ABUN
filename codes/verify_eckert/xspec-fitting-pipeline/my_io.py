@@ -118,7 +118,7 @@ class IO:
         output_dict['rlo'] = []
 
         # read mcmc errors
-        par_files = glob(f'{self.savepath}/logs/annu_reg*_chain1000_par{appendix}.log')
+        par_files = glob(f'{self.savepath}/logs/annu_reg*_{appendix}_chain1000_par.log')
         par_files = np.array(par_files)[sort_files(par_files)]
         for regnum, file in enumerate(par_files):
             output_dict[f'reg'].append(f'reg{regnum}')
@@ -135,7 +135,8 @@ class IO:
                     errlo = 999
                     errhi = 999
                 else:
-                    start_idx = next((index for index, line in enumerate(lines) if '(90%)' in line), None)
+                    start_idx = next((index for index, line in enumerate(lines) if 'Parameter' in line), None)
+                    
                     errlo = lines[int(start_idx+1+i)].split('(')[-1].split(',')[0]
                     errhi = lines[int(start_idx+1+i)].split('(')[-1].split(',')[-1][:-2]
 
@@ -143,7 +144,7 @@ class IO:
                 output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
 
         # read value
-        files = glob(f'{self.savepath}/logs/annu_reg*_freepar{appendix}.log')
+        files = glob(f'{self.savepath}/logs/annu_reg*_{appendix}_freepar.log')
         files = np.array(files)[sort_files(files)]
         for file in files:
             with open(file) as f:
@@ -209,7 +210,7 @@ class IO:
             df[f'{bigkey}-status'] = status
 
         # Save the final DataFrame to a CSV file
-        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar{appendix}.csv"
+        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_{appendix}_mypar.csv"
         df.to_csv(output_file, index=False)
         
         print(f"Annuli data saved to {output_file} !")
@@ -225,15 +226,15 @@ class IO:
         '''
         
         # load the 1st para csv
-        df = pd.read_csv(f'{self.savepath}/csvs/{self.srcname2}_annuli_mypar{appendix}.csv')
+        df = pd.read_csv(f'{self.savepath}/csvs/{self.srcname2}_annuli_{appendix}_mypar.csv')
         for regname in df['reg'][df['Z-status'] == 'u']:
             regnum = int(regname.split('g')[-1])
 
             # read mcmc errors
-            file = f'{self.savepath}/logs/annu_{regname}_chain1000_par{appendix}_{appendix2}.log'
+            file = f'{self.savepath}/logs/annu_{regname}_{appendix}_chain1000_par_{appendix2}.log'
             with open(file) as f:
                 lines = f.readlines()
-                start_idx = next((index for index, line in enumerate(lines) if '(90%)' in line), None)
+                start_idx = next((index for index, line in enumerate(lines) if 'Confidence Range' in line), None)
                 lines = lines[int(start_idx+1):int(start_idx+1+len(bigkeys))]
                 for i, line in enumerate(lines):
                     errlo = line.split('(')[-1].split(',')[0][1:]
@@ -245,7 +246,7 @@ class IO:
 
 
             # read value
-            file = f'{self.savepath}/logs/annu_{regname}_freepar{appendix}_{appendix2}.log'
+            file = f'{self.savepath}/logs/annu_{regname}_{appendix}_freepar_{appendix2}.log'
             with open(file) as f:
                 text = f.read()
             pattern = r'([+-]?[\d]*\.?[\d]+(?:[eE][-+]?\d+)?)\s+\+/-'
@@ -255,7 +256,7 @@ class IO:
             df[f'Z-value'][regnum] = 0.3
 
         # Save the DataFrame to a CSV file
-        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_mypar{appendix}_{appendix2}.csv"
+        output_file = f"{self.savepath}/csvs/{self.srcname2}_annuli_{appendix}_mypar_{appendix2}.csv"
         df.to_csv(output_file, index=False)
 
         print(f"Annuli data saved to {output_file} !")

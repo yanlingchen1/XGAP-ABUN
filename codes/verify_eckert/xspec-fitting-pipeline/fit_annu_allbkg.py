@@ -15,6 +15,7 @@ import pandas as pd
 
 class FitAnnu(FitFrame):
     def fit_annu(self, mdl):
+        self.bkg_dict = self.load_bkgpar()
         # Alter the inputs in sample_annu.xcm
         with open(f'{self.pipeline_path}/sample_models/annu_allbkg/annu_{mdl}_ab.xcm') as f:
             lines = f.read()
@@ -28,34 +29,36 @@ class FitAnnu(FitFrame):
         #### backscal ####
         lines = self.add_backscal(lines)
 
-        with open(f'{self.savepath}/bins/annu_{self.regname}_{mdl}_ab.xcm', 'w') as newf:
+        with open(f'{self.savepath}/bins/annu_{self.regname}_{mdl}.xcm', 'w') as newf:
             newf.write(f'{lines}\n')
 
         with open(f'{self.pipeline_path}/sample_models/annu_allbkg/annu_{mdl}_ab_mdl.xcm') as f:
             lines = f.read()
-        lines = lines.replace('PATH', self.subdir)
-        with open(f'{self.savepath}/bins/annu_{self.regname}_{mdl}_ab_mdl.xcm', 'w') as newf:
+        lines = self.add_gen_par(lines)
+        with open(f'{self.savepath}/bins/annu_{self.regname}_{mdl}_mdl.xcm', 'w') as newf:
             newf.write(f'{lines}\n')
 
-#         # Begin fitting
-#         os.chdir(self.savepath)
-#         os.system(f'''
-# xspec<<EOT
-# @bins/annu_{self.regname}_{mdl}_ab.xcm
-# ipl
-# pl dat
-# wenv annu_{self.regname}_{mdl}_ab
-# exit
-# exit
-# EOT''')
+        # Begin fitting
+        os.chdir(self.savepath)
+        os.system(f'''
+xspec<<EOT
+@bins/annu_{self.regname}_{mdl}.xcm
+ipl
+pl dat
+wenv annu_{self.regname}_{mdl}
+exit
+exit
+EOT''')
 
-#         os.system(f'''ps2pdf annu_{self.regname}_{mdl}_ab.ps
-# rm annu_{self.regname}_{mdl}_ab.ps
-# mv annu_{self.regname}_{mdl}_ab.pdf figs
-# mv annu_{self.regname}_{mdl}_ab.pco dats
-# mv annu_{self.regname}_{mdl}_ab.qdp dats 
-# mv annu_{self.regname}_chain1000_{mdl}_ab.out logs''')
-#         print(f'annu fitting for {self.regname} has finished!')
+        os.system(f'''ps2pdf annu_{self.regname}_{mdl}.ps
+pdftk annu_{self.regname}_{mdl}.pdf cat 2 output 1.pdf
+mv 1.pdf annu_{self.regname}_{mdl}.pdf
+rm annu_{self.regname}_{mdl}.ps
+mv annu_{self.regname}_{mdl}.pdf figs
+mv annu_{self.regname}_{mdl}.pco dats
+mv annu_{self.regname}_{mdl}.qdp dats 
+mv annu_{self.regname}_{mdl}_chain1000.out logs''')
+        print(f'annu fitting for {self.regname} has finished!')
 
 
 
