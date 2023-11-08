@@ -8,9 +8,9 @@ correct the rosat.pi & rosat.rsp before use ogip2spex or trafo.
 pyspextools
 
 # Steps
-change the path to the path you want
-run both reset_pi.ipynb and reset-res.ipynb
-To test, run run_ogip2spex_rosat_test.sh 
+1. change the path to the path you want
+2. run both reset_pi.ipynb and reset-res.ipynb
+3. To test, run run_ogip2spex_rosat_test.sh 
 
 # Note
 reset_pi.ipynb: change POISSERR from F to T in [1] extension
