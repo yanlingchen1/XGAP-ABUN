@@ -108,7 +108,7 @@ par 3 3 norm couple 1 3 norm
 par 3 3 t couple 1 3 t
 par 3 3 02:30 couple 1 3 02:30 
 
-### set REGNAME-MDL in pn ###
+### set oot in pn ###
 par 3 4 norm v CIE1-n
 par 3 4 t v CIE1-t
 par 3 5 norm v CIE2-n
@@ -120,6 +120,9 @@ par 3 7 gamm v POW2-g
 par 3 4:7 norm s f
 par 3 4:5 t s f
 par 3 6:7 gamm s f
+
+### set distance ###
+distance sector 3 REDS z
 
 ##### fit #####
 calc
@@ -150,17 +153,20 @@ plot ry 1E-4:1.
 pl x log
 pl y log
 pl ry 1e-6:1
+plot view default f
+pl view x 0.1 0.9
 plot frame new
 plot frame 2
 plot type chi
 plot uy rel
 plot view default f
 plot view y 0:0.3
-pl view x 0.075:0.925
+pl view x 0.1:0.9
 plot cap id disp f
 plot cap ut disp f
 plot cap lt disp f
 plot ry -5:5
+plot rx 0.5:7.0
 plot frame 1
 plot view default f
 plot view y 0.3:0.9

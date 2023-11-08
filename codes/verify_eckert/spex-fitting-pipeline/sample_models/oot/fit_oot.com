@@ -55,6 +55,9 @@ log close output
 
 # make plot
 pl ry 1e-6:1
+plot rx 0.5:7.0
+plot view default f
+pl view x 0.1:0.9
 plot frame new
 plot frame 2
 plot type chi
@@ -66,6 +69,7 @@ plot cap id disp f
 plot cap ut disp f
 plot cap lt disp f
 plot ry -3:3
+plot rx 0.5:7.0
 plot frame 1
 plot view default f
 plot view y 0.3:0.9

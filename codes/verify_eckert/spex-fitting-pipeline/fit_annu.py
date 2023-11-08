@@ -17,7 +17,7 @@ class FitAnnu(FitFrame):
         #### general ####
         lines = self.add_gen_par(lines)
         #### oot ####
-        lines = self.add_oot_com(lines, '')
+        lines = self.add_oot_com(lines)
         #### backscal ####
         lines = self.add_backscal(lines)
 
@@ -36,8 +36,8 @@ log exe bins/annu-{self.regname}-{mdl}
 quit
 EOT''')
         os.system(f'''
-ps2pdf annu-{self.regname}.ps
-mv annu-{self.regname}.pdf figs/annu-{self.regname}-{mdl}.pdf
-rm annu-{self.regname}.ps
+ps2pdf annu-{self.regname}-{mdl}.ps
+mv annu-{self.regname}-{mdl}.pdf figs/annu-{self.regname}-{mdl}.pdf
+rm annu-{self.regname}-{mdl}.ps
 ''')
         print(f'annu fitting for {self.regname} has finished!')

@@ -282,10 +282,8 @@ class IO:
         # print(subdir_lst)
         for subdir in subdir_lst:
             regname = f'{subdir.split(".")[0].split("_")[-1]}'
-            for inst in self.insts:
-                self.edit_header(f'{inst}-obj-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
             for inst in ['mos1S001', 'mos2S002']:
-                self.edit_header(f'{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+                self.edit_header(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
             
             self.edit_header(f'{subdir}/pnS003-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'RATE')
             self.edit_header(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')

@@ -9,7 +9,7 @@ def main():
     # # define date of fitting 
     # current_date = datetime.now()
     # date = current_date.strftime("%y%m%d")
-    date = 231019
+    date = 231107
 
     ## Some mandatory parameters
     nH_dict = {'SDSSTG3460':0.024, 'SDSSTG9647':0.0201, 'SDSSTG828':0.0303, 'RGH80':0.0131}
@@ -35,14 +35,17 @@ def main():
 
     # # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2)
+    # io_instance.make_output_dir()
     # io_instance.edit_hduclas3()
     # io_instance.xspec2spex()
+
+
     fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
     fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    for i in range(1,13):
-        # fit_other.update_inst_dict(f'reg{i}')
+    for i in range(1,6):
+        fit_other.update_inst_dict(f'reg{i}')
+        fit_other.fit_oot()
         fit_annu.update_inst_dict(f'reg{i}')
-        # fit_other.fit_oot()
         fit_annu.fit_annu('1T')
 
 

@@ -41,9 +41,9 @@ class FitFrame(IO):
             file = rep(file, key, f'{v}') 
         return file
 
-    def add_oot_com(self, file, appendix):
+    def add_oot_com(self, file):
         value_data = []
-        with open(f'{self.savepath}/logs/oot-{self.regname}{appendix}_freepar.out', 'r') as f:
+        with open(f'{self.savepath}/logs/oot-{self.regname}_freepar.out', 'r') as f:
             lines = f.readlines()
         for line in lines:
             if 'thawn' in line:

@@ -13,7 +13,6 @@ class FitOther(FitFrame):
         with open(f'{self.pipeline_path}/sample_models/oot/fit_oot.com') as f:
             lines = f.read()
 
-        lines = lines.replace('REGNAME', self.regname)
         lines = self.add_gen_par(lines)
         with open(f'{self.savepath}/bins/oot-{self.regname}.com', 'w') as newf:
             newf.write(f'{lines}\n')
