@@ -1,0 +1,5 @@
+statistic cstat
+abun aspl
+data 1:1 path/mos1S001-back-SDSSTG828_bkg.pi
+response 1:1 path/../mos1-diag.rsp
+ign **-0.5 8.-** 1.2-1.85

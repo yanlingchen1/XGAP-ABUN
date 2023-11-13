@@ -3,6 +3,7 @@ An automatic SPEX spectral fitting package.
 Aiming to fit all the annuli of the source automatically. 
 Design for X-COP samples.
 
+
 # Getting started
 
 ## Dependencies

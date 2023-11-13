@@ -1,0 +1,28 @@
+statistic cstat
+data 1:1 pnS003-obj-oot-SDSSTG3460_bkg-grp.pi
+response  1:1 pnS003-SDSSTG3460_bkg.rmf
+arf 1:1 pnS003-SDSSTG3460_bkg.arf
+resp 2:1 ../pn-diag.rsp
+ign 1.1-1.6
+ign bad
+ign **-0.5,5.0-**
+
+mo const*const*(pow+pow+apec+apec)
+mo 2:pn-bg atable{pnS003-back-smoothed_savgol-140-5.mdl}
+
+@SAV/bins/oot_REGNAME_ab_mdl.xcm
+new 1 BS-PN
+new 2 1
+free 1,2
+free pn-bg:1 
+fit 100 1e-3
+setp energy
+pl dat rat
+log none
+save all bins/oot_bkg_2nd.xcm
+log >logs/oot_bkg_par.log
+sho par
+log none
+cpd oot_bkg.ps/ocps
+setp rebin 3 20
+pl lda ra

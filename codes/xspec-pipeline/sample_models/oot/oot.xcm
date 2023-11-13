@@ -1,0 +1,24 @@
+log >logs/oot_REGNAME_fit.log
+statistic cstat
+data 1:1 PATH/pnS003-obj-oot-SRCNAME2_REGNAME-grp.pi
+response  1:1 PATH/pnS003-SRCNAME2_REGNAME.rmf
+arf 1:1 PATH/pnS003-SRCNAME2_REGNAME.arf
+backgrnd 1 PATH/pnS003-back-SRCNAME2_REGNAME.pi
+ign 1.1-1.6
+ign bad
+ign **-0.5,5.0-**
+@PIP/sample_models/oot/oot_mdl.xcm
+new 1 BS-PN
+new 2 1
+free 1,2
+fit 100 1e-3
+setp energy
+pl dat rat
+log none
+save all bins/oot_REGNAME_2nd.xcm
+log >logs/oot_REGNAME_par.log
+sho par
+log none
+cpd oot_REGNAME.ps/ocps
+setp rebin 3 20
+pl lda ra

@@ -1,0 +1,108 @@
+log >logs/annu_REGNAME_MDL_fit.log
+statistic cstat
+data 1:1 PATH/mos1S001-obj-SRCNAME2_REGNAME-grp.pi
+response  1:1 PATH/mos1S001-SRCNAME2_REGNAME.rmf
+response  3:1 PATH/../mos1-diag.rsp
+arf 1:1 PATH/mos1S001-SRCNAME2_REGNAME.arf
+backgrnd 1 PATH/mos1S001-back-SRCNAME2_REGNAME.pi
+
+data 2:2 PATH/mos2S002-obj-SRCNAME2_REGNAME-grp.pi
+response  1:2 PATH/mos2S002-SRCNAME2_REGNAME.rmf
+response  3:2 PATH/../mos2-diag.rsp
+arf 1:2 PATH/mos2S002-SRCNAME2_REGNAME.arf
+backgrnd 2 PATH/mos2S002-back-SRCNAME2_REGNAME.pi
+
+data 3:3 PATH/pnS003-obj-SRCNAME2_REGNAME-grp.pi
+response  1:3 PATH/pnS003-SRCNAME2_REGNAME.rmf
+response  2:3 PATH/pnS003-SRCNAME2_REGNAME.rmf
+response  3:3 PATH/../pn-diag.rsp
+arf 1:3 PATH/pnS003-SRCNAME2_REGNAME.arf
+arf 2:3 PATH/pnS003-SRCNAME2_REGNAME.arf
+backgrnd 3 PATH/pnS003-back-SRCNAME2_REGNAME.pi
+
+ign 1:0.0-0.6,7.0-** 
+ign 2:0.0-0.6,7.0-**
+ign 3:0.0-0.6,7.0-**
+
+# ign instrumental lines
+ign 1:1.2-1.85
+ign 2:1.2-1.85
+ign 3:1.2-1.55
+ign bad
+
+@PIP/sample_models/annu_qpb/annu_MDL_mdl.xcm
+
+#### skybkg ####
+# extract region area
+new 1 BS-M1
+new 18 BS-M2
+new 35 BS-PN
+new 7 NH
+#### insts #####
+new 2 1
+new 19 1
+new 36 1
+free 2,19,36
+#### LHB ####
+new 6 LHB-n
+free 3,6
+#### GH ####
+new 8 GH-t
+new 11 GH-n
+free 8,11
+#### cxb ####
+new 17 CXB-n
+free 16,17
+#### spf ####
+new spf:6 SP-M1
+new spf:12 SP-M2
+new spf:18 SP-PN
+free spf:6,12,18
+#### icm ####
+new 14 REDS
+free 14
+thaw 13
+#### oot ####
+new oot:1=1
+new oot:2=0.063*p2
+new oot:3 POW1-g
+new oot:4 POW1-n
+new oot:5 POW2-g
+new oot:6 POW2-n
+new oot:7 CIE1-t
+new oot:8 CIE1-abun
+new oot:9 CIE1-reds
+new oot:10 CIE1-n
+new oot:11 CIE2-t
+new oot:12 CIE2-abun
+new oot:13 CIE2-reds
+new oot:14 CIE2-n
+free oot:1-14
+
+### fit ###
+fit 200 1e-2
+setp energy
+pl dat rat
+ipl
+pl dat
+wenv annu_REGNAME_MDL
+exit
+log none
+save all bins/annu_REGNAME_MDL_2nd.xcm
+log >logs/annu_REGNAME_MDL_allpar.log
+sho par
+log none
+log >logs/annu_REGNAME_MDL_chain1000_fit.log
+chain length 1000
+chain run annu_REGNAME_MDL_chain1000.out
+log none
+log >logs/annu_REGNAME_MDL_chain1000_par.log
+err 12,13,15
+log none
+log >logs/annu_REGNAME_MDL_freepar.log
+sho fre
+log none
+cpd annu_REGNAME_MDL.ps/ocps
+setp rebin 3 30
+pl lda ra
+exit

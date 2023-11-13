@@ -1,0 +1,21 @@
+trafo<<EOT
+1
+1
+1
+1
+n
+PHAFILE
+y
+BKGFILE
+y
+RMFFILE
+n
+1e-5 5e-3
+1
+y
+ARFFILE
+0
+SPOFILE
+SPOFILE
+EOT
+

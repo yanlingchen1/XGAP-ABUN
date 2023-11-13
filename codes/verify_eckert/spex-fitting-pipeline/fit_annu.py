@@ -26,18 +26,18 @@ class FitAnnu(FitFrame):
 
         # Begin fitting
         os.chdir(self.savepath)
-        os.system(f'''
-rm logs/annu-{self.regname}* 
-rm dats/annu-{self.regname}* 
-rm figs/annu-{self.regname}* 
-source /Users/eusracenorth/miniconda3/envs/spex/opt/spex/spex-activate.sh    
-spex<<EOT
-log exe bins/annu-{self.regname}-{mdl}
-quit
-EOT''')
-        os.system(f'''
-ps2pdf annu-{self.regname}-{mdl}.ps
-mv annu-{self.regname}-{mdl}.pdf figs/annu-{self.regname}-{mdl}.pdf
-rm annu-{self.regname}-{mdl}.ps
-''')
-        print(f'annu fitting for {self.regname} has finished!')
+#         os.system(f'''
+# rm logs/annu-{self.regname}* 
+# rm dats/annu-{self.regname}* 
+# rm figs/annu-{self.regname}* 
+# source /Users/eusracenorth/miniconda3/envs/spex/opt/spex/spex-activate.sh    
+# spex<<EOT
+# log exe bins/annu-{self.regname}-{mdl}
+# quit
+# EOT''')
+#         os.system(f'''
+# ps2pdf annu-{self.regname}-{mdl}.ps
+# mv annu-{self.regname}-{mdl}.pdf figs/annu-{self.regname}-{mdl}.pdf
+# rm annu-{self.regname}-{mdl}.ps
+# ''')
+#         print(f'annu fitting for {self.regname} has finished!')
