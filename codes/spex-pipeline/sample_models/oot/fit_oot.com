@@ -11,34 +11,33 @@ log output logs/oot-REGNAME
 data PATH/pnS003-oot-SRCNAME2_REGNAME PATH/pnS003-oot-SRCNAME2_REGNAME
 
 # bin data
-ignore 0.:0.5 unit keV
-ignore 5.:100. unit keV
+ignore instrument 1 reg 1 0.:0.5 unit keV
+ignore instrument 1 reg 1 2.:100. unit keV
+
+ignore instrument 1 reg 2 0.:1. unit keV
+ignore instrument 1 reg 2 7.:100. unit keV
 
 # ignore the instrumental lines
-ign 1.2:1.55 unit keV
+ign instrument 1 reg 1 1.2:1.55 unit keV
+ign instrument 1 reg 2 1.2:1.55 unit keV
 
 # obin will run into segmentation error
 # obin 0.5:5. unit kev
 
 bin 1:10000 20
 
-plot dev cps oot-REGNAME.ps
-pl type dat
-plot rx 0.4:10.
-plot ry 1E-4:10.
-pl x log
-pl y log
-
 com cie
 com cie
 com pow
 com pow
 
-par -1 1 norm v 10.287
+par -1 1 norm v BS-PN
 par 1 1 norm v 0.1
 par 1 2 norm v 0.1
 par 1 3 norm v 0.1
 par 1 4 norm v 0.1
+
+sect copy 1
 
 calc
 fit
@@ -53,6 +52,13 @@ par sho
 log close output
 
 # make plot
+pl dev xs
+pl set all
+pl type dat
+plot rx 0.4:10.
+plot ry 1E-4:10.
+pl x log
+pl y log
 pl ry 1e-6:1
 plot rx 0.5:7.0
 plot view default f
@@ -78,6 +84,7 @@ pl
 pl close 1
 
 # save plot data
+pl dev null
 pl type data
 pl x lin
 pl y lin

@@ -2,8 +2,8 @@
 #!/bin/bash
 heainit
 sasinit21
-source /data/yanling/XGAP-ABUN/data/data/RGH80/reduction/set_chips_on.txt
-source /data/yanling/XGAP-ABUN/data/data/RGH80/reduction/set_sas.txt
+source /data/yanling/XGAP-ABUN/data/data/ID828/reduction/SDSSTG828/set_chips_on.txt
+source /data/yanling/XGAP-ABUN/data/data/ID828/reduction/SDSSTG828/set_sas.txt
 #### MOS ####
 export M1=mos1S001
 export M2=mos2S002
@@ -49,7 +49,7 @@ cp $inst-bkgregtsky.fits sas20-pn-test/$inst-bkg_region-det.fits
 for PAT in 0 4
 do
 pn-spectra prefix='S003' caldb=/data/yanling/sas20/esas-caldb region=spec_reg/R500_01-pnS003.reg mask=1 elow=700 ehigh=1200 pattern=4 quad1=1 quad2=1 quad3=1 quad4=1 2>&1 | tee R500_01/logs/pnspectra_$PAT.log
-pn_back prefix=S003 caldb=/data/yanling/sas20/esas-caldb diag=0 elow=700 ehigh=1200 pattern=4 quad1=1 quad2=1 quad3=1 quad4=1 2>&1 | tee pnback_$PAT.log
+pn_back prefix=S003 caldb=/data/yanling/sas20/esas-caldb diag=0 elow=700 ehigh=1200 pattern=4 quad1=1 quad2=1 quad3=1 quad4=1 2>&1 | tee R500_01/logs/pnback_$PAT.log
 
 mkdir R500_01/img/pn_$PAT
 mkdir R500_01/diagnose/pn_$PAT
@@ -57,7 +57,7 @@ mkdir R500_01/diagnose/pn_$PAT
 mv $inst*-700-1200* R500_01/img/pn_$PAT
 mv $inst-obj.pi R500_01/R500_01/$inst-obj-$PAT-SDSSTG828_R500_01.pi
 mv $inst-obj-oot.pi R500_01/R500_01/$inst-obj-oot-$PAT-SDSSTG828_R500_01.pi
-mv $inst-bkg.pi R500_01/R500_01/$inst-back-$PAT-SDSSTG828_R500_01.pi
+mv $inst-back.pi R500_01/R500_01/$inst-back-$PAT-SDSSTG828_R500_01.pi
 mv $inst*.qdp R500_01/diagnose/pn_$PAT
 mv $inst*imt* R500_01/img/pn_$PAT
 mv $inst*.arf R500_01/R500_01/$inst-$PAT-SDSSTG828_R500_01.arf

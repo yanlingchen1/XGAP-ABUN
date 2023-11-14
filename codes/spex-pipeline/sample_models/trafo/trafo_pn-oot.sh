@@ -1,0 +1,33 @@
+source /Users/eusracenorth/miniconda3/envs/spex/opt/spex/spex-activate.sh
+trafo<<EOT
+1
+2
+100000
+2
+1 1
+1
+n
+PATH/pnS003-obj-oot-0-SRCNAME_REGNAME.pi
+y
+PATH/pnS003-allbkg-SRCNAME_REGNAME.pi
+y
+PATH/pnS003-0-SRCNAME_REGNAME.rmf
+1
+y
+PATH/pnS003-0-SRCNAME_REGNAME.arf
+0
+2 2
+1
+n
+PATH/pnS003-obj-oot-4-SRCNAME_REGNAME.pi
+y
+PATH/pnS003-allbkg-SRCNAME_REGNAME.pi
+y
+PATH/pnS003-4-SRCNAME_REGNAME.rmf
+1
+y
+PATH/pnS003-4-SRCNAME_REGNAME.arf
+0
+PATH/pnS003-oot-SRCNAME_REGNAME
+PATH/pnS003-oot-SRCNAME_REGNAME
+EOT

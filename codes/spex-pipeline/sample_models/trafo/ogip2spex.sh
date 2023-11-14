@@ -1,1 +1,0 @@
-ogip2spex --phafile PATH/pnS003-obj-oot-SRCNAME_REGNAME.pi --bkgfile PATH/pnS003-back-SRCNAME_REGNAME.pi --rmffile PATH/pnS003-SRCNAME_REGNAME.rmf --arffile PATH/pnS003-SRCNAME_REGNAME.arf --spofile PATH/pnS003-oot-SRCNAME_REGNAME.spo --resfile PATH/pnS003-oot-SRCNAME_REGNAME.res

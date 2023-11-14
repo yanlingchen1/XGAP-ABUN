@@ -309,7 +309,7 @@ class IO:
             replace_dict = {'REGNAME':regname, 'SRCNAME':self.srcname2, 'PATH':subdir}
             with open(f'{self.pipelinepath}/sample_models/trafo/trafo_epic_loadallbkg.sh') as f:
                 text = f.read()
-            with open(f'{self.pipelinepath}/sample_models/trafo/ogip2spex.sh') as f:
+            with open(f'{self.pipelinepath}/sample_models/trafo/trafo_pn-oot.sh') as f:
                 text2 = f.read()
 
             ### trafo ###
@@ -341,7 +341,6 @@ do
 sh $f
 done
 ''')
-
         
         print(f'cd {self.rootdir}\n sh run_*_trafo.sh')
                     

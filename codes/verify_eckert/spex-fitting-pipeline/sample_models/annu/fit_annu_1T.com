@@ -185,6 +185,7 @@ plot dev cps annu-REGNAME-MDL.ps
 pl
 pl close 2
 # save plot data 
+pl dev null
 pl type data
 pl x lin
 pl y lin

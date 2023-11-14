@@ -20,16 +20,21 @@ ignore instrument 1 reg 1 7.:100. unit keV
 ignore instrument 1 reg 2 0.:0.5 unit keV
 ignore instrument 1 reg 2 7.:100. unit keV
 ignore instrument 1 reg 3 0.:0.5 unit keV
-ignore instrument 1 reg 3 7.:100. unit keV
+ignore instrument 1 reg 3 2.:100. unit keV
+ignore instrument 1 reg 5 0.:1.0 unit keV
+ignore instrument 1 reg 5 7.:100. unit keV
 
 # ignore the instrumental lines
 ign instrument 1 reg 1 1.2:1.85 unit keV
 ign instrument 1 reg 2 1.2:1.85 unit keV
 ign instrument 1 reg 3 1.2:1.55 unit keV
 ign instrument 1 reg 3 5.:100. unit keV
+ign instrument 1 reg 5 1.2:1.55 unit keV
+ign instrument 1 reg 5 5.:100. unit keV
 
 # ignore the reg4
 ign instrument 1 reg 4 0.:100. unit keV
+ign instrument 1 reg 6 0.:100. unit keV
 
 # # obin will run into segmentation error
 # obin region 1 0.3:7. unit kev
@@ -38,9 +43,10 @@ ign instrument 1 reg 4 0.:100. unit keV
 
 ## vbin to avoid 0 cts channel in ratio
 ## to solve pattern caused by 0cts channel-bkg
-vbin inst 1 reg 1 0.3:7.0 2 2 un k
-vbin inst 1 reg 2 0.3:7.0 2 1 un k
-vbin inst 1 reg 3 0.3:7.0 2 1 un k
+vbin inst 1 reg 1 0.5:7.0 2 2 un k
+vbin inst 1 reg 2 0.5:7.0 2 1 un k
+vbin inst 1 reg 3 0.5:7.0 2 1 un k
+vbin inst 1 reg 5 0.5:7.0 2 1 un k
 
 # bin instrument 1 region 1 1:10000 20
 # bin instrument 1 region 3 1:10000 20
@@ -68,22 +74,31 @@ com rel 3 1,2
 sect copy 1
 
 
-## inst pn ##
+## inst pn pat0 ##
 sect copy 1
 # set REGNAME-MDL= cie+cie+pow+pow #
 # REGNAME-MDL norm here 0.063*REGNAME-MDLfittingpar #
 
-## pn oot ##
+## pn oot pat0 ##
 sect new
 com 4 cie
 com 4 cie
 com 4 pow
 com 4 pow
 
+## inst pn pat4 ##
+sect copy 1
+# set REGNAME-MDL= cie+cie+pow+pow #
+# REGNAME-MDL norm here 0.063*REGNAME-MDLfittingpar #
+
+## pn oot pat4 ##
+sect copy 4
+
 ### set region area ###
 par -1 1 norm v BS-M1
 par -1 2 norm v BS-M2
 par -1 3 norm v BS-PN
+par -1 5 norm v BS-PN
 
 ### reg 1: mos1###
 abun aspl
@@ -105,11 +120,14 @@ par 1 3 06 s t
 # couple reds #
 par 2 1 z couple 1 1 z
 par 3 1 z couple 1 1 z
+par 5 1 z couple 1 1 z
 # couple hot #
 par 2 2 nh couple 1 2 nh
 par 2 2 t couple 1 2 t
 par 3 2 nh couple 1 2 nh
 par 3 2 t couple 1 2 t
+par 5 2 nh couple 1 2 nh
+par 5 2 t couple 1 2 t
 
 # couple icm #
 par 2 3 norm couple 1 3 norm
@@ -118,6 +136,9 @@ par 2 3 06:30 couple 1 3 06:30
 par 3 3 norm couple 1 3 norm
 par 3 3 t couple 1 3 t
 par 3 3 06:30 couple 1 3 06:30 
+par 5 3 norm couple 1 3 norm
+par 5 3 t couple 1 3 t
+par 5 3 06:30 couple 1 3 06:30 
 
 ### set oot in pn ###
 par 4 1 norm v CIE1-n
@@ -132,8 +153,22 @@ par 4 1:4 norm s f
 par 4 1:2 t s f
 par 4 3:4 gamm s f
 
+### set oot in pn ###
+par 6 1 norm v CIE1-n
+par 6 1 t v CIE1-t
+par 6 2 norm v CIE2-n
+par 6 2 t v CIE2-t
+par 6 3 norm v POW1-n
+par 6 3 gamm v POW1-g
+par 6 4 norm v POW2-n
+par 6 4 gamm v POW2-g
+par 6 1:4 norm s f
+par 6 1:2 t s f
+par 6 3:4 gamm s f
+
 ### set distance ###
 distance sector 1:3 REDS z
+distance sector 5 REDS z
 
 ##### fit #####
 calc
@@ -156,6 +191,7 @@ error 1 3 norm:06
 log close output
 
 ##### make plot ####
+pl dev xs
 pl set all
 pl type dat
 pl x log
