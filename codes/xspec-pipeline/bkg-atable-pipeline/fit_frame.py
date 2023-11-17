@@ -17,14 +17,15 @@ class FitFrame(IO):
         self.regname = regname
         self.subdir = f'{rootdir}/{srcname2}_{regname}'
         self.inst_dict = self.get_backscal()
-        self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/xspec-fitting-pipeline'
+        self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/xspec-fitting-pipeline'
         self.nH = nH
         self.reds = reds
 
     def get_backscal(self):
         inst_dict = {}
         for name in self.insts:
-            f = fits.open(f'{self.subdir}/{name}-back-{self.srcname2}_{self.regname}.pi')
+            specfile = glob(f'{self.subdir}/{name}-back-*{self.srcname2}_{self.regname}.pi')[0]
+            f = fits.open(specfile)
             inst_dict[name] = np.round(f[1].header['BACKSCAL'] * (0.05/60) ** 2, 3)
         return inst_dict
 

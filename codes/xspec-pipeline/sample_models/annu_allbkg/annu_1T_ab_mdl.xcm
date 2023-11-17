@@ -1,5 +1,5 @@
 method leven 10 0.01
-abun aspl
+abund aspl
 xsect vern
 cosmo 70 0 0.7
 xset delta 0.01
@@ -8,9 +8,11 @@ model  1:m1_bg atable{PATH/atable_mos1S001_REGNAME.mdl}
               1       0.01          0          0      1e+20      1e+24
 model  2:m2_bg atable{PATH/atable_mos2S002_REGNAME.mdl}
               1       0.01          0          0      1e+20      1e+24
-model  3:pn_bg atable{PATH/atable_pnS003_REGNAME.mdl}
+model  3:pn_bg1 atable{PATH/atable_pnS003_REGNAME.mdl}
               1       0.01          0          0      1e+20      1e+24
-model  4:icm constant*constant*TBabs*apec
+model  4:pn_bg2 atable{PATH/atable_pnS003_REGNAME.mdl}
+              1       0.01          0          0      1e+20      1e+24
+model  5:icm constant*constant*TBabs*apec
               1       0.01          0          0      1e+10      1e+10
               1       0.01          0          0      1e+10      1e+10
               1      0.001          0          0     100000      1e+06
@@ -32,7 +34,14 @@ model  4:icm constant*constant*TBabs*apec
 = icm:p5
 = icm:p6
 = icm:p7
-model  5:oot constant*constant(powerlaw + powerlaw + apec + apec)
+= icm:p1
+= icm:p2
+= icm:p3
+= icm:p4
+= icm:p5
+= icm:p6
+= icm:p7
+model  6:oot constant*constant(powerlaw + powerlaw + apec + apec)
               1       0.01          0          0      1e+10      1e+10
               1       0.01          0          0      1e+10      1e+10
               1       0.01         -3         -2          9         10
@@ -47,4 +56,18 @@ model  5:oot constant*constant(powerlaw + powerlaw + apec + apec)
               1     -0.001          0          0          5          5
               0      -0.01     -0.999     -0.999         10         10
               1       0.01          0          0      1e+20      1e+24
+= oot:p1
+= oot:p2
+= oot:p3
+= oot:p4
+= oot:p5
+= oot:p6
+= oot:p7
+= oot:p8
+= oot:p9
+= oot:p10
+= oot:p11
+= oot:p12
+= oot:p13
+= oot:p14
 bayes off

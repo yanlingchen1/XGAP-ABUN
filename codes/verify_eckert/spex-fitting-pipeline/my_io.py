@@ -147,7 +147,8 @@ class IO:
         # define rlo column
         output_dict['rlo'] = np.insert(np.array(output_dict['rhi'][:-1]), 0, 0)
         # Create a Pandas DataFrame from the extracted data
-        print(output_dict['n-errlo'])
+        for name in output_dict.keys():
+            print(len(output_dict[name]))
         df = pd.DataFrame(output_dict)
 
         return df

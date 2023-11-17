@@ -35,21 +35,25 @@ ign bad
 new icm:1 BS-M1
 new icm:8 BS-M2
 new icm:15 BS-PN
-free icm:1,8,15
+new icm:22 BS-PN
+free icm:1,8,15,22
 #### insts #####
 new icm:2 1
 new icm:9 1
 new icm:16 1
-free icm:2,9,16
+new icm:23 1
+free icm:2,9,16,23
 #### nh ####
 new icm:3 NH
 new icm:10=icm:3
 new icm:17=icm:3
+new icm:24=icm:3
 free icm:3
 #### reds ####
 new icm:6 REDS
 new icm:13=icm:6
 new icm:20=icm:6
+new icm:27=icm:6
 free icm:6
 #### ICM ####
 new icm:4 1
@@ -57,16 +61,20 @@ new icm:5 0.3
 new icm:7 1e-4
 new icm:11=icm:4
 new icm:18=icm:4
+new icm:25=icm:4
 new icm:12=icm:5
 new icm:19=icm:5
+new icm:26=icm:5
 new icm:14=icm:7
 new icm:21=icm:7
+new icm:28=icm:7
 thaw icm:4,icm:5,icm:7
 #### allbkg ####
 new m1_bg:1 1
 new m2_bg:1 1
-new pn_bg:1 1
-free m1_bg:1,m2_bg:1,pn_bg:1
+new pn_bg1:1 1
+new pn_bg2:1 1
+free m1_bg:1,m2_bg:1,pn_bg1:1,pn_bg2:1
 #### oot ####
 new oot:1=icm:15
 new oot:2=0.063*icm:16
@@ -83,7 +91,20 @@ new oot:12 CIE2-abun
 new oot:13 CIE2-reds
 new oot:14 CIE2-n
 free oot:1-14
-
+new oot:15=oot:1
+new oot:16=oot:2
+new oot:17=oot:3
+new oot:18=oot:4
+new oot:19=oot:5
+new oot:20=oot:6
+new oot:21=oot:7
+new oot:22=oot:8
+new oot:23=oot:9
+new oot:24=oot:10
+new oot:25=oot:11
+new oot:26=oot:12
+new oot:27=oot:13
+new oot:28=oot:14
 
 ### fit ###
 fit 200 1e-2

@@ -57,6 +57,19 @@ model  constant*constant(apec + TBabs(apec + powerlaw))
 = p11
 = p12
 = p13
+= p1
+= p2
+= p3
+= p4
+= p5
+= p6
+= p7
+= p8
+= p9
+= p10
+= p11
+= p12
+= p13
 model  2:m1_bg constant*constant*powerlaw + atable{PATH/mos1S001-back-smoothed_savgol-140-5.mdl}
               1       0.01          0          0      1e+10      1e+10
               1       0.01          0          0      1e+10      1e+10
@@ -69,13 +82,19 @@ model  3:m2_bg constant*constant*powerlaw + atable{PATH/mos2S002-back-smoothed_s
               1       0.01         -3         -2          9         10
               1       0.01          0          0      1e+20      1e+24
               1       0.01          0          0      1e+20      1e+24
-model  4:pn_bg constant*constant*powerlaw + atable{PATH/pnS003-back-smoothed_savgol-140-5.mdl}
+model  4:pn_bg1 constant*constant*powerlaw + atable{PATH/pnS003-back-smoothed_savgol-140-5.mdl}
               1       0.01          0          0      1e+10      1e+10
               1       0.01          0          0      1e+10      1e+10
               1       0.01         -3         -2          9         10
               1       0.01          0          0      1e+20      1e+24
               1       0.01          0          0      1e+20      1e+24
-model  5:oot constant*constant(powerlaw + powerlaw + apec + apec)
+model  5:pn_bg2 constant*constant*powerlaw + atable{PATH/pnS003-back-smoothed_savgol-140-5.mdl}
+              1       0.01          0          0      1e+10      1e+10
+              1       0.01          0          0      1e+10      1e+10
+              1       0.01         -3         -2          9         10
+              1       0.01          0          0      1e+20      1e+24
+              1       0.01          0          0      1e+20      1e+24
+model  6:oot constant*constant(powerlaw + powerlaw + apec + apec)
               1       0.01          0          0      1e+10      1e+10
               1       0.01          0          0      1e+10      1e+10
               1       0.01         -3         -2          9         10
@@ -90,7 +109,21 @@ model  5:oot constant*constant(powerlaw + powerlaw + apec + apec)
               1     -0.001          0          0          5          5
               0      -0.01     -0.999     -0.999         10         10
               1       0.01          0          0      1e+20      1e+24
-model  6:icm constant*constant*TBabs*apec
+= oot:p1
+= oot:p2
+= oot:p3
+= oot:p4
+= oot:p5
+= oot:p6
+= oot:p7
+= oot:p8
+= oot:p9
+= oot:p10
+= oot:p11
+= oot:p12
+= oot:p13
+= oot:p14
+model  7:icm constant*constant*TBabs*apec
               1       0.01          0          0      1e+10      1e+10
               1       0.01          0          0      1e+10      1e+10
               1      0.001          0          0     100000      1e+06
@@ -98,6 +131,13 @@ model  6:icm constant*constant*TBabs*apec
               1     -0.001          0          0          5          5
               0      -0.01     -0.999     -0.999         10         10
               1       0.01          0          0      1e+20      1e+24
+= icm:p1
+= icm:p2
+= icm:p3
+= icm:p4
+= icm:p5
+= icm:p6
+= icm:p7
 = icm:p1
 = icm:p2
 = icm:p3

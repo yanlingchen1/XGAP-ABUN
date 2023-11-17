@@ -13,7 +13,6 @@ data PATH/pnS003-oot-SRCNAME2_REGNAME PATH/pnS003-oot-SRCNAME2_REGNAME
 # bin data
 ignore instrument 1 reg 1 0.:0.5 unit keV
 ignore instrument 1 reg 1 2.:100. unit keV
-
 ignore instrument 1 reg 2 0.:1. unit keV
 ignore instrument 1 reg 2 7.:100. unit keV
 

@@ -15,19 +15,19 @@ def main():
     nH_dict = {'SDSSTG3460':0.024, 'SDSSTG9647':0.0201, 'SDSSTG828':0.0303, 'RGH80':0.0131}
     reds_dict = {'SDSSTG3460':0.043, 'SDSSTG9647':0.023, 'SDSSTG828':0.046, 'RGH80':0.037}
 
-    # #  Some basic prefixes
-    # ### RGH80 ####
-    # srcname1 = ''
-    # srcname2 = 'RGH80'
-    # root_dir = f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/RGH80/eckert/0105860101"
+    #  Some basic prefixes
+    ### RGH80 ####
+    srcname1 = ''
+    srcname2 = 'RGH80'
+    root_dir = f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/RGH80/eckert/0105860101"
 
 
-    #### IDxxx ####
-    # for srcnum in ['9647', '828']: # '3460', '9647', '828'
-    srcnum = '3460'
-    srcname1 = f'ID{srcnum}'
-    srcname2 = f'SDSSTG{srcnum}'
-    root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
+    # #### IDxxx ####
+    # # for srcnum in ['9647', '828']: # '3460', '9647', '828'
+    # srcnum = '3460'
+    # srcname1 = f'ID{srcnum}'
+    # srcname2 = f'SDSSTG{srcnum}'
+    # root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
 
     ## CAUTIOUS: {nH in spex} = 1e-2*{nH in xspec}
     nH = nH_dict[srcname2] * 1e-2 
@@ -40,13 +40,13 @@ def main():
     #     # io_instance.xspec2spex()
 
 
-    fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    for i in range(13):
-        fit_other.update_inst_dict(f'reg{i}')
-        fit_other.fit_oot()
-        fit_annu.update_inst_dict(f'reg{i}')
-        fit_annu.fit_annu('1T')
+    # fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
+    # fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
+    # for i in range(13):
+    #     fit_other.update_inst_dict(f'reg{i}')
+    #     fit_other.fit_oot()
+    #     fit_annu.update_inst_dict(f'reg{i}')
+    #     fit_annu.fit_annu('1T')
     io_instance.tidy_outputs('1T')
 
 if __name__ == "__main__":

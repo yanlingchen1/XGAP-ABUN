@@ -8,7 +8,7 @@ def main():
     # # define date of fitting 
     # current_date = datetime.now()
     # date = current_date.strftime("%y%m%d")
-    date = 231107
+    date = 231115
 
     ## Some mandatory parameters
     nH_dict = {'SDSSTG3460':0.024, 'SDSSTG9647':0.0201, 'SDSSTG828':0.0303, 'RGH80':0.0131}
@@ -23,10 +23,10 @@ def main():
     # reds = reds_dict[srcname2]
 
     #### IDxxx ####
-    for srcnum in ['3460', '9647', '828']: # '3460', '9647', '828'
+    for srcnum in ['3460']: # '3460', '9647', '828'
         srcname1 = f'ID{srcnum}'
         srcname2 = f'SDSSTG{srcnum}'
-        root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
+        root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/reduction/R500_01")[0]
         nH = nH_dict[srcname2]
         reds = reds_dict[srcname2]
 
@@ -34,6 +34,7 @@ def main():
         io_instance = IO(date, root_dir, srcname1, srcname2)
         io_instance.make_output_dir()
         io_instance.check_files()
+        io_instance.edit_headers()
         
         # # ## fit the sky bkg
         fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds) 
@@ -43,12 +44,11 @@ def main():
 
         fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
         
-        for i in range(13):
-            # fit_other.update_inst_dict(f'reg{i}')
-            # fit_other.fit_oot()
-            #### allbkg, 1T ####
-            fit_annu.update_inst_dict(f'reg{i}')
-            fit_annu.fit_annu('1T')
+        # fit_other.update_inst_dict(f'reg{i}')
+        # fit_other.fit_oot()
+        # #### allbkg, 1T ####
+        # fit_annu.update_inst_dict(f'reg{i}')
+        # fit_annu.fit_annu('1T')
 
         io_instance.tidy_outputs('1T')
 

@@ -1,0 +1,423 @@
+<html><head>
+<title>HEASARC: X-Ray Background Tool v3.0: Calculate Average X-Ray Background Count Rates from RASS Maps</title>
+<style type="text/css"><!--
+table.AstroMatches {
+   empty-cells: show;
+}
+th.AstroMatches {
+   background-color: #ccccff;
+}
+--></style>
+<link rel="stylesheet" type="text/css" href="/docs/css/reset.css" media="projection, screen">
+<link rel="stylesheet" type="text/css" href="/docs/css/base.css" media="projection, screen">
+<link rel="stylesheet" type="text/css" href="/docs/css/dropdown.css" media="projection, screen">
+<link rel="stylesheet" type="text/css" href="/docs/css/AstroTheme.css" media="projection, screen">
+<script async="" src="https://www.google-analytics.com/analytics.js"></script><script src="/docs/js/jquery.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/docs/portal.css">
+<link rel="stylesheet" type="text/css" href="/docs/print.css" media="print">
+<link rel="stylesheet" type="text/css" href="/docs/css/asd.css" media="projection, screen">
+<script type="text/javascript" src="/scripts/overlib.js"><!-- overLIB (c) Erik Bosrup --></script>
+
+<!-- Google Analytics -->
+	<script type="text/javascript" language="javascript" id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NASA"></script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-CSLL4ZEK4L"></script>
+
+<meta http-equiv="origin-trial" content="AymqwRC7u88Y4JPvfIF2F37QKylC04248hLCdJAsh8xgOfe/dVJPV3XS3wLFca1ZMVOtnBfVjaCMTVudWM//5g4AAAB7eyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjk1MTY3OTk5LCJpc1RoaXJkUGFydHkiOnRydWV9"></head>
+
+<body>
+<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>
+
+	<div id="page-wrapper">
+    	<div id="page">
+<div class="navigation">
+ 
+
+            <div id="nasaHeader">
+                <div>
+                    <a href="https://www.nasa.gov" class="imageLink"><img class="logo" src="/Images/portal_new/nasa_header_logo1.gif" alt="NASA Logo, National Aeronautics and Space Administration" width="140" height="98"></a>
+                </div><!-- class="nasaLogo" -->
+
+               <div id="headerTxtWrapper">
+                    <h1><a href="https://www.nasa.gov">National Aeronautics and Space Administration</a></h1>
+                    <h2><a href="https://www.nasa.gov/goddard/">Goddard Space Flight Center</a></h2>
+
+
+	   <h3><a href="https://science.gsfc.nasa.gov/">Sciences and Exploration</a></h3>
+
+               </div><!-- headerTxtWrapper -->
+
+               <div id="HEASARCsearchbox">
+
+					<h3>Search:</h3>
+            <form action="/cgi-bin/search/search.pl" method="post" id="HEASARCsearch" name="HEASARCsearch">
+            <input type="text" name="tquery" id="search" value="Search HEASARC website" title="tquery" size="34" class="flt_left" onfocus="if(this.value=='Search HEASARC website') this.value='';">
+            <input type="image" alt="Search" src="/Images/portal_new/search_go.jpg" onclick="this.form.submit();" class="flt_left">
+            <input type="hidden" value="search.quick" id="fuseaction" name="fuseaction">
+            </form>
+            <div class="divClear"></div>
+		      <p style="font-size:10px;margin-top:1px"><a href="/cgi-bin/search/search.pl">[Advanced Search]</a></p>
+
+<br>
+<div style="margin-top:5px;"></div>
+<form name="QuickLinksForm" action=""><font size="-2">
+<label for="QuickLinksMenu"><a class="menu" href="/docs/corp/goto_text.html"><u>HEASARC Quick Links</u></a></label></font><br>
+<select class="Menu" name="QuickLinksMenu" size="1" id="QuickLinksMenu" style="display: inline-block;">
+<option class="MenuColorHEADER" value="/" selected="">---Quick Links---</option>
+<option class="MenuColorHEADER" value="/docs/archive.html">---Archive Interfaces---</option>
+<option value="/cgi-bin/argus/argus.pl">Argus: proposal info</option>
+<option value="/docs/archive.html">Browse: search HEASARC archives</option>
+<option value="/vo/">NVO DataScope</option>
+<option value="https://skyview.gsfc.nasa.gov/">SkyView: virtual observatory</option>
+<option value="/xamin">Xamin: powerful archive search</option>
+<option class="MenuColorHEADER" value="/docs/software.html">---Software &amp; Tools---</option>
+<option value="/docs/heasarc/caldb/caldb_intro.html">CalDB: Calibration database</option>
+<option value="/cgi-bin/Tools/convcoord/convcoord.pl">Coordinate Converter</option>
+<option value="/cgi-bin/Tools/energyconv/energyConv.pl">Energy Converter</option>
+<option value="/docs/heasarc/fits.html">FITS: standard data format</option>
+<option value="/docs/software/fitsio/fitsio.html">FITSIO: FITS subroutine library</option>
+<option value="/docs/software/ftools/ftools_menu.html">FTOOLS: general s/w for FITS files</option>
+<option value="/docs/software/ftools/fv.html">fv: FITS file editor</option>
+<option value="/hera/">Hera: remote data analysis service</option>
+<option value="/cgi-bin/Tools/HEXTErock/HEXTErock.pl">HEXTErock</option>
+<option value="/cgi-bin/Tools/w3nh/w3nh.pl">nH: Column Density</option>
+<option value="/RPS/">RPS proposal submission</option>
+<option value="/xte_weather/">RXTE ASM weather map</option>
+<option value="/cgi-bin/Tools/DateConv/dateconv.pl">Time/Date Converter (xTime)</option>
+<option value="/cgi-bin/Tools/timeline/timeline.pl">Timeline (RXTE, Swift, &amp; HETE-2)</option>
+<option value="/cgi-bin/Tools/viewing/viewing.pl">Viewing: possible obs. times</option>
+<option value="/cgi-bin/Tools/w3pimms/w3pimms.pl">WebPIMMS: flux/count converter</option>
+<option value="/webspec/webspec.html">WebSpec: spectral sims</option>
+<option value="/docs/xanadu/xanadu.html">Xanadu: data analysis suite</option>
+<option value="/cgi-bin/Tools/xraybg/xraybg.pl">X-ray Background Tool</option>
+<option value="/cgi-bin/Tools/high_energy_source/high_energy_source.pl">X-ray, Gamma-ray, EUV Source Finder</option>
+<option class="MenuColorHEADER" value="/docs/HHP_heasarc_info.html">---Resources---</option>
+<option value="/docs/heasarc/biblio/pubs/">Bibliography</option>
+<option value="/docs/heasarc/contact.html">Contact Info</option>
+<option value="/docs/heasarc/headates/headates.html">Deadlines (proposals &amp; meeting regist.)</option>
+<option value="/docs/heasarc/headates/heahistory.html">History of High-Energy Astronomy</option>
+<option value="/docs/heasarc/staff/OGIP_staff.html">Staff</option>
+<option value="/docs/heasarc/meetings.html">Upcoming Meetings</option>
+<option value="/docs/heasarc/summer_schools.html">Upcoming Summer Schools</option>
+<option value="/docs/heasarc/whatsnew.html">What's New</option>
+<option class="MenuColorHEADER" value="/docs/outreach.html">---Education &amp; Pub. Outreach---</option>
+<option value="https://apod.nasa.gov/apod/astropix.html">APOD: Astronomy Picture of the Day</option>
+<option value="https://imagine.gsfc.nasa.gov/docs/ask_astro/ask_an_astronomer.html">Ask an Astrophysicist</option>
+<option value="/docs/objects/heapow/heapow.html">HEASARC Picture of the Week</option>
+<option value="/docs/objects/">Images, Spectra, Light Curves</option>
+<option value="https://imagine.gsfc.nasa.gov/">Imagine the Universe!</option>
+<option value="https://starchild.gsfc.nasa.gov/">StarChild (K-8 EPO)</option>
+<option value="/docs/outreach/webstars.html">WebStars: gen. astronomy info/news</option>
+</select>
+<script src="/docs/js/goto_handler.js" type="text/javascript"></script>
+</form>
+
+
+
+</div>
+
+            </div><!-- id=nasaHeader -->
+<div style="margin-top:2px;"></div>
+            <div class="hidden">
+					<a href="#skipping" title="Skip Navigation" accesskey="2">Skip Navigation (press 2)</a>
+			</div>
+</div><!-- end navigation -->
+
+  <div id="banner">
+    <div class="navigation">
+    <!--TOP MENU GOES HERE -->
+    <div id="siteMenuTop">
+      <ul id="menuTopNav">
+	<li><a href="/" class="siteMenuTop-frst-itm">HEASARC Home</a></li>
+	<li><a href="/docs/observatories.html">Observatories</a></li>
+	<li><a href="/docs/archive.html" class="">Archive</a></li>
+	<li><a href="/docs/heasarc/caldb/caldb_intro.html" class="">Calibration</a></li>
+	<li><a href="/docs/software.html" class="">Software</a></li>
+	<li class="active"><a href="/docs/tools.html" class="">Tools</a></li>
+	<li><a href="/docs/outreach.html" class="siteMenuTop-last-itm">Students/Teachers/Public</a></li>
+	
+      </ul>
+    </div><!--id="siteMenuTop"-->
+</div><!-- end navigation -->
+    <!--BANNER IMAGE GOES HERE-->
+    <div id="bannerImg">
+      <a href="/docs/tools.html"><img src="/Images/portal_new/toolsbanner_new4.png" alt="HEASARC: Tools" width="952" class="logo"></a>
+    </div><!--id=bannerImg-->
+  </div><!--id=banner-->
+  <div class="divClear"></div>
+  <div class="navigation">
+    <!--TOP MENU GOES HERE -->
+  <div id="siteMenuBottom">
+    <ul id="menuBottomNav">
+      <li><a href="/Tools/generaltools.html" class="siteMenuBottom-frst-itm" style="min-width:454px;">General Tools</a></li>
+      <li><a href="/Tools/multimissiontools.html" class="" style="min-width:454px;">Multi-Mission Tools</a></li>
+    </ul>
+  </div><!--id="siteMenuBottom"-->
+</div><!-- end navigation -->
+			<div id="content">
+          	<a name="skipping" id="skipping"></a>
+            	<div id="content-wrapper">
+                            <div class="maincontent" id="OneColumn">
+<div class="shim"></div>
+
+                                <div class="full-width-content-item"> 
+<script src="/docs/tagline.js" type="text/javascript" language="JavaScript"></script>
+<table width="100%">
+<tbody><tr><td style="vertical-align:top;">
+<div class="navigation">
+
+<!--<table border=0 WITDH=165 cellpadding=5 cellspacing=1>-->
+<table width="135" class="GraySidebar">
+<tbody><tr><td bgcolor="#666666" onclick="location.href='/Tools/generaltools.html'">
+<a class="menu" style="color:#ffffff;" href="/Tools/generaltools.html">General&nbsp;Tools</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/docs/heasarc/biblio/pubs/'">
+<a class="menu" style="color:#ffffff;" href="/docs/heasarc/biblio/pubs/">&nbsp;&nbsp;&nbsp;Bibliography</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/cgi-bin/Tools/convcoord/convcoord.pl'">
+<a class="menu" style="color:#ffffff;" href="/cgi-bin/Tools/convcoord/convcoord.pl">&nbsp;&nbsp;&nbsp;Coordinate&nbsp;Converter</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/cgi-bin/Tools/energyconv/energyConv.pl'">
+<a class="menu" style="color:#ffffff;" href="/cgi-bin/Tools/energyconv/energyConv.pl">&nbsp;&nbsp;&nbsp;Energy&nbsp;Converter</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='http://fits.gsfc.nasa.gov/fits_verify.html'">
+<a class="menu" style="color:#ffffff;" href="http://fits.gsfc.nasa.gov/fits_verify.html">&nbsp;&nbsp;&nbsp;FITS File Verifier</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/cgi-bin/Tools/w3nh/w3nh.pl'">
+<a class="menu" style="color:#ffffff;" href="/cgi-bin/Tools/w3nh/w3nh.pl">&nbsp;&nbsp;&nbsp;nH Column Density</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/cgi-bin/Tools/DateConv/dateconv.pl'">
+<a class="menu" style="color:#ffffff;" href="/cgi-bin/Tools/DateConv/dateconv.pl">&nbsp;&nbsp;&nbsp;Time/Date&nbsp;Converter</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/cgi-bin/Tools/xraybg/xraybg.pl'">
+<a class="menu" style="color:#ffffff;" href="/cgi-bin/Tools/xraybg/xraybg.pl">&nbsp;&nbsp;&nbsp;X-Ray&nbsp;Background</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/cgi-bin/Tools/high_energy_source/high_energy_source.pl'">
+<a class="menu" style="color:#ffffff;" href="/cgi-bin/Tools/high_energy_source/high_energy_source.pl">&nbsp;&nbsp;&nbsp;X-Ray&nbsp;Source&nbsp;Finder</a>
+</td></tr><tr><td bgcolor="#666666" onclick="location.href='/Tools/multimissiontools.html'">
+<a class="menu" style="color:#ffffff;" href="/Tools/multimissiontools.html">Multi-Mission&nbsp;Tools</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/docs/sciserver/'">
+<img src="/Images/heasarc/icons/new.gif"><a class="menu" style="color:#ffffff;" href="/docs/sciserver/">&nbsp;&nbsp;&nbsp;SciServer</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/hera/'">
+<a class="menu" style="color:#ffffff;" href="/hera/">&nbsp;&nbsp;&nbsp;Hera</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/RPS/'">
+<a class="menu" style="color:#ffffff;" href="/RPS/">&nbsp;&nbsp;&nbsp;RPS</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/cgi-bin/Tools/timeline/timeline.pl'">
+<a class="menu" style="color:#ffffff;" href="/cgi-bin/Tools/timeline/timeline.pl">&nbsp;&nbsp;&nbsp;Timeline Tool</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/Tools/Viewing.html'">
+<a class="menu" style="color:#ffffff;" href="/Tools/Viewing.html">&nbsp;&nbsp;&nbsp;Viewing</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/Tools/w3pimms.html'">
+<a class="menu" style="color:#ffffff;" href="/Tools/w3pimms.html">&nbsp;&nbsp;&nbsp;WebPIMMS</a>
+</td></tr><tr><td bgcolor="#888888" onclick="location.href='/webspec/webspec.html'">
+<a class="menu" style="color:#ffffff;" href="/webspec/webspec.html">&nbsp;&nbsp;&nbsp;WebSpec</a>
+</td></tr>
+<tr><td>
+<img alt="" src="/Images/pixel.gif" width="135" height="1">
+</td></tr>
+</tbody></table>
+
+<!-- ************* END OF PRINTER CSS NAVIGATION ***** -->
+</div>
+
+</td>
+<td valign="top">
+
+
+
+
+<center>
+<h1>X-Ray Background Tool&nbsp;&nbsp;&nbsp;&nbsp;<a href="/Tools/xraybg_help.html"><img alt="[Help]" border="0" src="/Images/Icons/help.gif"></a></h1>
+
+<p>Calculate average X-ray background count rates from the ROSAT All-Sky Survey diffuse background maps.</p>
+<hr width="60%" style="margin-bottom: 12px">
+</center>
+<center>
+
+<table border="0" cellpadding="5"><tbody><tr><td align="center"><table border="" cellpadding="10"><tbody><tr><td bgcolor="#ffffff"><b>Input coordinates in Galactic coordinate system:</b><br>&nbsp;&nbsp;&nbsp;[ 78.6981°, 81.3466° ]<br><b>Cone radius:</b> 1.00°<br><b>Pixel dimensions:</b> 0.200° x 0.200°</td></tr></tbody></table>
+</td></tr>
+<tr><td align="center"><table border="" cellpadding="10"><tbody><tr><td bgcolor="#ccffff" align="left"><font size="+1"><b>Download:</b></font><ul><li><font size="+1"><b><a href="xraybgfits.pl?rates_spectrum=6435496">FITS rates spectrum</a></b></font></li><li><font size="+1"><b><a href="xraybgfits.pl?counts_spectrum=6435496">FITS counts spectrum</a></b></font></li><li><font size="+1"><b><a href="/cgi-bin/W3Browse/startfv.pl?file=/FTP/rosat/calib_data/pspc/cpf/matrices/pspcc_gain1_256.rsp">ROSAT PSPCc response matrix</a></b></font></li></ul></td></tr></tbody></table></td></tr>
+<tr><td align="center"><table width="80%" border="" cellpadding="5"><tbody><tr><th bgcolor="#ffcccc"><a href="/Tools/xraybg_help.html#energy_ranges">Band</a></th><th bgcolor="#ffcccc">X-Ray Background<br>Average Count Rate <font size="-1">(10<sup>-6</sup> counts/sec/arcmin<sup>2</sup>)</font></th><th bgcolor="#ffcccc"><a href="/Tools/xraybg_help.html#integration_area">Integration<br>Area</a><hr>Number of<br>Pixels</th><th bgcolor="#ffcccc"><a href="/Tools/xraybg_help.html#energy_ranges">Combined<br>Bands</a></th><th bgcolor="#ffcccc">X-Ray Background<br>Combined Average Count Rate <font size="-1">(10<sup>-6</sup> counts/sec/arcmin<sup>2</sup>)</font></th><th bgcolor="#ffcccc"><a href="/Tools/xraybg_help.html#integration_area">Integration<br>Area</a><hr>Number of<br>Pixels</th></tr><tr><td align="center" bgcolor="#ffcccc"><b>R1</b></td><td align="center">406.4 ± 10.4</td><td align="center"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td><td align="center" rowspan="2" bgcolor="#ffcccc"><b>R12<br><font size="-1">(1/4 keV)</font></b></td><td align="center" rowspan="2">975.4 ± 15.8</td><td align="center" rowspan="2"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R2</b></td><td align="center">569.0 ± 11.9</td><td align="center"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R4</b></td><td align="center">62.5 ± 3.9</td><td align="center"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td><td align="center" rowspan="2" bgcolor="#ffcccc"><b>R45<br><font size="-1">(3/4 keV)</font></b></td><td align="center" rowspan="2">137.6 ± 5.5</td><td align="center" rowspan="2"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R5</b></td><td align="center">75.1 ± 4.0</td><td align="center"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R6</b></td><td align="center">93.8 ± 4.4</td><td align="center"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td><td align="center" rowspan="2" bgcolor="#ffcccc"><b>R67<br><font size="-1">(1.5 keV)</font></b></td><td align="center" rowspan="2">136.6 ± 5.5</td><td align="center" rowspan="2"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R7</b></td><td align="center">42.8 ± 3.4</td><td align="center"><font size="-1">10944&nbsp;arcmin<sup>2</sup></font><hr><font size="-1">76&nbsp;pixels</font></td></tr></tbody></table></td></tr>
+
+<tr><td align="center"><table border="" cellpadding="5"><tbody><tr><th bgcolor="#ffcccc"><a href="/Tools/xraybg_help.html#energy_ranges">Band</a></th><th bgcolor="#ffcccc">Effective<br>Counts</th><th bgcolor="#ffcccc">Effective<br>Exposure<br><font size="-1">(s*arcmin<sup>2</sup>)</font></th></tr><tr><td align="center" bgcolor="#ffcccc"><b>R1</b></td><td align="center">1655.40 ± 42.25</td><td align="right">3.77744e+06</td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R2</b></td><td align="center">2317.61 ± 48.51</td><td align="right">4.01149e+06</td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R3</b></td><td align="center">201.38 ± 14.18</td><td align="right">4.08253e+06</td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R4</b></td><td align="center">254.59 ± 15.71</td><td align="right">4.20027e+06</td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R5</b></td><td align="center">305.99 ± 16.24</td><td align="right">4.72431e+06</td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R6</b></td><td align="center">382.07 ± 17.76</td><td align="right">4.93347e+06</td></tr><tr><td align="center" bgcolor="#ffcccc"><b>R7</b></td><td align="center">174.20 ± 13.98</td><td align="right">3.63015e+06</td></tr></tbody></table></td></tr><tr><td align="center"><table border="" cellpadding="5"><tbody><tr><th bgcolor="#ffcccc">N<sub>H</sub> Map</th><th bgcolor="#ffcccc">Average N<sub>H</sub><br><font size="-1">(atoms/cm<sup>2</sup>)</font></th><th bgcolor="#ffcccc">Weighted Average N<sub>H</sub><br><font size="-1">(atoms/cm<sup>2</sup>)</font></th></tr><tr><td align="left">HI4PI (using 0.1° radius)</td><td align="center">1.35E+20</td><td align="center">1.34E+20</td></tr></tbody></table></td></tr></tbody></table><p>Note: <a href="/Tools/w3pimms.html">WebPIMMS</a> can be used to convert these count rates to fluxes. <a href="/Tools/xraybg_help.html#webpimms">How?</a></p><hr width="60%">
+<form name="cgiform" method="GET" action="/cgi-bin/Tools/xraybg/xraybg.pl">
+<table border="0">
+
+<tbody><tr><td align="right">
+<b><label for="entry"><a href="/Tools/name_or_coordinates_help.html">Object Name or Coordinates</a>:</label></b>
+</td>
+<td align="left">
+<input name="Entry" id="entry" value="200.0605, 33.14337" size="40" maxlength="500">
+</td></tr>
+
+<tr>
+<td></td>
+<td align="left"><font size="-1">
+Use semicolons to separate multiple object names or coordinate<br>pairs
+(e.g., <font color="blue">Cyg&nbsp;X-1 ; 101.295,&nbsp;-16.699 ; 6&nbsp;45&nbsp;10.8, -16&nbsp;41&nbsp;58</font>)
+</font>
+</td></tr>
+
+<tr><td align="right">
+<b><label for="nr"><a href="/Tools/name_resolver.html">Name Resolver</a>:</label></b>
+</td>
+<td align="left">
+<select name="NR" id="nr">
+<option selected="" value="GRB/SIMBAD+Sesame/NED">GRB, then SIMBAD else VizieR (Sesame), then NED</option>
+   <option value="GRB/NED/SIMBAD+Sesame">GRB, then NED, then SIMBAD else VizieR (Sesame)</option>
+   <option value="GRB">GRB only</option>
+   <option value="NED">NED only</option>
+   <option value="SIMBAD">SIMBAD only</option>
+   <option value="Sesame">VizieR (Sesame) only</option>
+</select>
+</td></tr>
+
+<tr><td align="right">
+<b><label for="coordsys">Coordinate System:</label></b>
+</td>
+<td align="left">
+<select name="CoordSys" id="coordsys">
+   <option selected="" value="J2000">J2000
+   </option><option value="B1950">B1950
+   </option><option value="B1900">B1900
+   </option><option value="Galactic">Galactic
+   </option><option value="Ecliptic">Ecliptic
+</option></select>
+</td></tr>
+
+<tr><td align="right">
+<b><label for="Radius"><a href="/Tools/xraybg_help.html#radius">Radius</a>:</label></b>
+</td>
+<td align="left">
+<input name="radius" id="Radius" size="6" value="1.00" maxlength="6"> <font size="-1">degrees</font>
+</td></tr>
+
+<tr><td align="right">
+<b><a href="/Tools/xraybg_help.html#region">Search Region</a>:</b>
+</td>
+<td align="left">
+<input type="radio" name="region" id="Region_Cone" value="cone" checked="" onclick="this.previous_value = document.cgiform.inner_radius.value; document.cgiform.inner_radius.value = 'n/a'">&nbsp;<label for="Region_Cone">Cone</label><br>
+</td></tr>
+
+<tr>
+<td></td>
+<td align="left">
+<input type="radio" name="region" id="Region_Annulus" value="annulus" onclick="if (document.cgiform.inner_radius.value === 'n/a') { document.cgiform.inner_radius.value = ''; }">&nbsp;<label for="Region_Annulus">Annulus</label>&nbsp;&nbsp;&nbsp;&nbsp;<font size="-1"><b><label for="Inner_Radius"><a href="/Tools/xraybg_help.html#radius">Inner Radius</a>:</label></b>&nbsp;<input name="inner_radius" id="Inner_Radius" size="6" value="n/a" maxlength="6" onfocus="if (this.value === 'n/a') { this.value = ''; }" onblur="if (this.value !== '') { document.cgiform.region[0].checked = false; document.cgiform.region[1].checked = true; }"> degrees</font>
+</td></tr>
+
+<tr><td align="right">
+<b>Results Options:</b>
+</td>
+<td align="left">
+<input type="checkbox" name="results" id="integrate_results" value="integrate"> <label for="integrate_results"><a href="/Tools/xraybg_help.html#integration_area">Integrate Count Rates Over Search Area</a></label>
+</td></tr>
+
+<tr>
+<td></td>
+<td align="left">
+<input type="checkbox" name="output" id="verbose_output" value="verbose"> <label for="verbose_output">Verbose Output</label>
+</td></tr>
+
+<tr>
+<td></td>
+<td align="left">
+<input type="checkbox" checked="" name="spectrum" id="create_spectrum" value="create"> <label for="create_spectrum"><a href="/Tools/xraybg_help.html#xspec">Create XSPEC-compatible FITS Spectrum</a></label>
+</td></tr>
+
+<tr>
+<td></td>
+<td align="left">
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tbody><tr>
+      <td align="left"><input type="checkbox" name="image" id="plot_image" value="plot" onclick="if (document.cgiform.image.checked) { document.cgiform.spectrum.checked = true; } else if (document.cgiform.contour.checked) { document.cgiform.contour.checked = false; }"> <label for="plot_image"><a href="/Tools/xraybg_help.html#image">Plot Using XIMAGE</a></label>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td align="right"><font size="-1"><b><label for="ximage_scaling"><a href="/Tools/xraybg_help.html#scaling">Scaling</a>:</label></b></font>&nbsp;</td>
+      <td align="left">
+        <select name="scaling" id="ximage_scaling">
+          <option selected="" value="hist">Histogram
+          </option><option value="linear">Linear
+          </option><option value="log">Logarithmic
+          </option><option value="sqrt">Square-Root
+        </option></select></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td align="left"><input type="checkbox" name="contour" id="plot_contour" value="plot" onclick="if (document.cgiform.contour.checked &amp;&amp; !document.cgiform.image.checked) { document.cgiform.image.checked = true; document.cgiform.spectrum.checked = true; }"> <font size="-1"><label for="plot_contour"><a href="/Tools/xraybg_help.html#contour">Overlay Contours</a></label></font></td>
+    </tr>
+  </tbody></table>
+</td></tr>
+
+<tr><td colspan="2" align="center"><br></td></tr>
+
+<tr><td colspan="2" align="center">
+<font size="+2" color="red">
+<input type="submit" value="Calculate X-Ray Background Rates">
+</font>&nbsp;&nbsp;&nbsp;&nbsp;<input type="reset" value="Reset">
+</td></tr>
+
+</tbody></table>
+</form>
+</center>
+<hr>
+<strong>References:</strong> <a href="/Tools/xraybg_help.html#references">List...</a>
+<p>
+Software developed and maintained by <a href="/docs/bios/sabol.html">Edward J. Sabol</a> of the HEASARC. Based primarily on the research of
+<a href="/docs/bios/snowden.html">Dr. Steve Snowden</a>. <font size="-1"><a href="/Tools/xraybg_help.html#acks">Additional acknowledgments...</a></font>
+</p><hr>
+<a href="http://heasarc.gsfc.nasa.gov/">HEASARC Home</a> | 
+<a href="/docs/observatories.html">Observatories</a> | 
+<a href="/docs/archive.html">Archive</a> | 
+<a href="/docs/heasarc/caldb/caldb_intro.html">Calibration</a> | 
+<a href="/docs/software.html">Software</a> | 
+<a href="/docs/tools.html">Tools</a> | 
+<a href="/docs/outreach.html">Students/Teachers/Public</a>
+
+<div class="news" align="center">
+ 
+
+</div>
+</td></tr>
+</tbody></table>
+
+<!-- This is portalfooter.html -->
+<!-- Because some pages don't use the header files that include the css, the styles need to be written out here. -->
+</div>
+<!-- full-width-content-item -->
+                         <div class="divClear" style="clear:both;"></div>
+                      </div><!-- id=maincontent -->
+                   </div><!-- id="content-wrapper" -->
+		</div><!-- id="content" -->
+	<div class="divClear" style="clear:both;"></div>
+<div class="navigation">
+<div id="HEASARCfooter" style="background-color:#2E2E2E;height:20px;width:952px;border-top:none;margin:0 auto;margin-top:5px;">
+<table width="100%">
+<tbody><tr><td style="text-align:center;vertical-align:middle;">
+<p style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;margin:0;">A service of the <a href="http://science.gsfc.nasa.gov/660/" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Astrophysics Science Division</a> at <a href="http://www.nasa.gov/" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">NASA/</a><a href="http://www.nasa.gov/goddard" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">GSFC</a>.</p>
+</td></tr>
+</tbody></table>
+</div>
+
+<div id="footer" style="background-color:#2E2E2E;height:98px;width:952px;border-top:2px solid #222222;margin:0 auto;">
+                <div>
+               		<a href="http://www.nasa.gov" class="imageLink" style="display:block;float:left;"><img class="logo" style="border:0;" src="/Images/portal_new/nasa_header_logo1.gif" alt="NASA Logo, National Aeronautics and Space Administration" width="140" height="98"></a>
+                </div><!-- class="nasaLogo" -->
+
+                <div id="footer-signature" style="padding-left:20px;padding-top:19px;float:left;">
+               		<a href="http://www.nasa.gov/goddard/" class="imageLink" style="display:block;float:left;"><img class="logo" style="border:0;" src="/Images/portal_new/goddardsignature2.png" alt="Goddard Space Flight Center Signature Logo" width="172" height="68"></a>
+                </div>
+                <div class="nasafootlinks" style="float:left;height:84px;margin-left:15px;padding-left:0px;padding-top:14px;width:295px;">
+                	<ul style="list-style:none;padding:0;margin:0;">
+                		<li style="margin-bottom:2px;color:#B2B2B2;font-size:11px;font-family:Arial,Helvetica,sans-serif;">HEASARC Director: Dr. Andy Ptak</li>
+                		<li style="margin-bottom:2px;color:#B2B2B2;font-size:11px;font-family:Arial,Helvetica,sans-serif;">NASA Official: Phil Newman</li>
+                		<li style="margin-bottom:2px;color:#B2B2B2;font-size:11px;font-family:Arial,Helvetica,sans-serif;">Web Curator: <a href="mailto:john.d.myers@nasa.gov">J.D. Myers</a></li>
+	        		
+                	</ul>
+                </div><!-- nasafootlinks -->
+                <div class="nasafootlinks" id="footerRight" style="float:left;height:84px;margin-left:15px;padding-left:0px;padding-top:14px;width:295px;">
+                	<ul style="list-style:none;padding:0;margin:0;">
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;"><a href="http://science.nasa.gov/astrophysics/" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">NASA Astrophysics</a></li>
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;"><a href="/docs/faq.html" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">FAQ/Comments/Feedback</a></li>
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;"><a href="/docs/outreach.html" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Education Resources</a></li>
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;"><a href="/docs/plugins.html" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Find helper applications like Adobe Acrobat</a></li>
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;"><a target="_blank" href="http://www.nasa.gov/about/highlights/HP_Privacy.html" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Privacy Policy &amp; Important Notices</a></li>
+                	</ul>
+                </div><!-- nasafootlinks -->
+</div><!-- id=footer -->
+</div><!-- class=navigation -->
+</div><!-- id=page -->
+</div><!-- id=page-wrapper -->
+
+
+<!-- This file is a placeholder for files that include /docs/corpfooter.html -->
+
+
+</body></html>

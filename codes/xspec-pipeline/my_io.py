@@ -34,7 +34,14 @@ class IO:
         os.makedirs(f'{savepath}/dats', exist_ok = True)
         return savepath
     
-
+    def edit_headers(self):
+        files = glob(f'{self.rootdir}/*grp.pi')
+        for file in files:
+            with fits.open(file, mode = 'update') as f:
+                head = f[1].header
+                head['RESPFILE']='NONE'
+                f.flush()
+                
     def check_files(self):
         '''
         Iterate among the subdir in main source dir 

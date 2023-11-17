@@ -1,0 +1,7 @@
+for filename in *.png; do
+    # Extract the SDSSTG{NUM} from the filename
+    sdsstg_num=$(echo "$filename" | grep -o 'SDSSTG[0-9]*')
+
+    # Write to the CSV file
+    echo "$sdsstg_num," >> "$output_file"
+done
