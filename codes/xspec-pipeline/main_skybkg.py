@@ -24,24 +24,25 @@ def main():
 
         srcname1 = f'ID{srcnum}'
         srcname2 = f'SDSSTG{srcnum}'
-        root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
+        if glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}"):
+            root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
 
 
-        # # io issues
-        io_instance = IO(date, root_dir, srcname1, srcname2)
-        fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds) 
-        fit_other.grp_spec()
-        fit_other.edit_headers()
-        io_instance.make_output_dir()
-        # io_instance.check_files()
-        
-        
-        # # ## fit the sky bkg, after fit the qpb in bkgatablepiipeline
-        fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-        fit_other.grp_spec()
-        fit_other.fit_oot()
-        fit_other.fit_bkg()
-        io_instance.tidy_bkgpar()
+            # # io issues
+            io_instance = IO(date, root_dir, srcname1, srcname2)
+            fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds) 
+            fit_other.grp_spec()
+            fit_other.edit_headers()
+            io_instance.make_output_dir()
+            # io_instance.check_files()
+            
+            
+            # # ## fit the sky bkg, after fit the qpb in bkgatablepiipeline
+            fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
+            fit_other.grp_spec()
+            fit_other.fit_oot()
+            fit_other.fit_bkg()
+            io_instance.tidy_bkgpar()
 
 
 if __name__ == "__main__":

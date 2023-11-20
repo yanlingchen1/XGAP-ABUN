@@ -24,18 +24,19 @@ def main():
 
         srcname1 = f'ID{srcnum}'
         srcname2 = f'SDSSTG{srcnum}'
-        root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
+        if glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}"):
+            root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
 
 
-        # fit source 
-        fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
-        fit_other.update_inst_dict(REGNAME)
-        fit_other.fit_oot()
-        #### allbkg, 1T ####
-        fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
-        # fit_annu.update_inst_dict(REGNAME)
-        fit_annu.fit_annu('1T')
-        fit_annu.fit_annu('GDEM')
+            # fit source 
+            fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
+            fit_other.update_inst_dict(REGNAME)
+            fit_other.fit_oot()
+            #### allbkg, 1T ####
+            fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
+            # fit_annu.update_inst_dict(REGNAME)
+            fit_annu.fit_annu('1T')
+            fit_annu.fit_annu('GDEM')
 
 
 if __name__ == "__main__":
