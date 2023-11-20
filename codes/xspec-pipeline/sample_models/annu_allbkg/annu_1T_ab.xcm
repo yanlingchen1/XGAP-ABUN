@@ -1,13 +1,13 @@
 statistic cstat
 # allbkg
 data 1:1 PATH/mos1S001-obj-SRCNAME2_REGNAME-grp.pi
-response 1:1 PATH/../mos1-diag.rsp
+response 1:1 PATH/../../../mos1-diag.rsp
 data 2:2 PATH/mos2S002-obj-SRCNAME2_REGNAME-grp.pi
-response 2:2 PATH/../mos2-diag.rsp
+response 2:2 PATH/../../../mos2-diag.rsp
 data 3:3 PATH/pnS003-0-obj-SRCNAME2_REGNAME-grp.pi
-response 3:3 PATH/../pn-diag.rsp
+response 3:3 PATH/../../../pn-diag.rsp
 data 4:4 PATH/pnS003-4-obj-SRCNAME2_REGNAME-grp.pi
-response 4:4 PATH/../pn-diag.rsp
+response 4:4 PATH/../../../pn-diag.rsp
 # icm
 response  5:1 PATH/mos1S001-SRCNAME2_REGNAME.rmf
 arf 5:1 PATH/mos1S001-SRCNAME2_REGNAME.arf
