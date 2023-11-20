@@ -24,6 +24,7 @@ def main():
 
         srcname1 = f'ID{srcnum}'
         srcname2 = f'SDSSTG{srcnum}'
+        print(f'/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}')
         root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
 
 
