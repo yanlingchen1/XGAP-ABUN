@@ -17,12 +17,6 @@ def main():
 
     REGNAME = 'R500-01'
     # ##  Some basic prefixes
-    # ### RGH80 ####
-    # srcname1 = ''
-    # srcname2 = 'RGH80'
-    # root_dir = f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/RGH80/eckert/0105860101"
-    # nH = nH_dict[srcname2]
-    # reds = reds_dict[srcname2]
 
     #### IDxxx ####
     for srcnum in ['3460']: # '3460', '9647', '828'

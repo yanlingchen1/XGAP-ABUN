@@ -10,15 +10,12 @@ reds_dict = {'SDSSTG3460':0.043, 'SDSSTG9647':0.023, 'SDSSTG828':0.046, 'RGH80':
 
 REGNAME = 'R500-01'
 # ##  Some basic prefixes
-# ## RGH80 ####
-# srcname1 = ''
-# srcname2 = 'RGH80'
-# root_dir = f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/RGH80/eckert/0105860101"
-# nH = nH_dict[srcname2]
-# reds = reds_dict[srcname2]
 
 #### IDxxx ####
-for srcnum in ['3460']: # '3460', '828', '9647'
+datadir = '/data/yanling/XGAP-ABUN/data/alldata/XGAP'
+srcnums = [name.split('/')[-1].split('G')[-1] for name in glob(f'{datadir}/SDSSTG*')]
+
+for srcnum in srcnums: 
     srcname1 = f'ID{srcnum}'
     srcname2 = f'SDSSTG{srcnum}'
     root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
