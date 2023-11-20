@@ -18,6 +18,7 @@ for i, srcnum in enumerate(f['ID']):
 
     srcname1 = f'ID{srcnum}'
     srcname2 = f'SDSSTG{srcnum}'
+    print(srcname1, srcname2)
     root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
 
     # # # io issues
