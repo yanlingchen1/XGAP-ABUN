@@ -20,7 +20,7 @@ class FitFrame(IO):
         self.regname = regname
         self.subdir = f'{rootdir}/{srcname2}_{regname}/{srcname2}_{regname}'
         self.inst_dict = self.get_backscal()
-        self.pipeline_path = 
+        self.pipeline_path = f'/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/xspec-pipeline'
         self.nH = nH
         self.reds = reds
 
