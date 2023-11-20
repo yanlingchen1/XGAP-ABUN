@@ -25,9 +25,9 @@ arf 6:3 PATH/pnS003-4-SRCNAME2_REGNAME.arf
 response  6:4 PATH/pnS003-0-SRCNAME2_REGNAME.rmf
 arf 6:4 PATH/pnS003-4-SRCNAME2_REGNAME.arf
 
-ign 1:0.0-0.6,7.0-** 
-ign 2:0.0-0.6,7.0-**
-ign 3:0.0-0.6,2.0-**
+ign 1:0.0-0.7,7.0-** 
+ign 2:0.0-0.7,7.0-**
+ign 3:0.0-0.7,2.0-**
 ign 4:0.0-1.0,5.0-**
 
 # ign instrumental lines

@@ -15,11 +15,11 @@ plot ry 1E-4:10.
 pl x log
 pl y log
 
-ignore instrument 1 reg 1 0.:0.5 unit keV
+ignore instrument 1 reg 1 0.:0.7 unit keV
 ignore instrument 1 reg 1 7.:100. unit keV
-ignore instrument 1 reg 2 0.:0.5 unit keV
+ignore instrument 1 reg 2 0.:0.7 unit keV
 ignore instrument 1 reg 2 7.:100. unit keV
-ignore instrument 1 reg 3 0.:0.5 unit keV
+ignore instrument 1 reg 3 0.:0.7 unit keV
 ignore instrument 1 reg 3 2.:100. unit keV
 ignore instrument 1 reg 5 0.:1.0 unit keV
 ignore instrument 1 reg 5 5.:100. unit keV
