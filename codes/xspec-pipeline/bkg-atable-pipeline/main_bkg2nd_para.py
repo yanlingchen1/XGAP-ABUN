@@ -14,7 +14,7 @@ def fit_source(srcnum, nH, reds):
     srcname1 = f'ID{srcnum}'
     srcname2 = f'SDSSTG{srcnum}'
     root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
-
+    REGNAME = 'R500-01'
     ## after fit oot and bkg in skybkg region in xspec pipeline
     ab = AtableBKG(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
     ab.bkgsmooth()
