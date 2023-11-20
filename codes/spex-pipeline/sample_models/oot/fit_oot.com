@@ -37,6 +37,7 @@ par 1 3 norm v 0.1
 par 1 4 norm v 0.1
 
 sect copy 1
+par -1 2 norm v BS-PN
 
 calc
 fit

@@ -34,12 +34,15 @@ ign instrument 1 reg 5 1.2:1.55 unit keV
 ign instrument 1 reg 4 0.:100. unit keV
 ign instrument 1 reg 6 0.:100. unit keV
 
+
+
 ## vbin to avoid 0 cts channel in ratio
 ## to solve pattern caused by 0cts channel-bkg
 vbin inst 1 reg 1 0.5:7.0 2 2 un k
 vbin inst 1 reg 2 0.5:7.0 2 1 un k
 vbin inst 1 reg 3 0.5:2.0 2 1 un k
 vbin inst 1 reg 5 1.0:5.0 2 1 un k
+
 
 # alter the data color 
 # mos1-white, mos2-red, pn-green same as xspec
@@ -49,7 +52,6 @@ pl set 3
 pl data col 03
 pl set 5
 pl data col 04
-
 #### icm ####
 ## inst mos1 ##
 com reds
@@ -98,6 +100,10 @@ par 1 2 nh v NH
 par 1 2 nh s f
 par 1 2 t s f
 # icm #
+par 1 3 logt v 0
+par 1 3 sup v 10
+par 1 3 sig v 0.5
+par 1 3 sig s t
 par 1 3 norm v 10
 par 1 3 t v 1
 par 1 3 06:30 v 0.3
