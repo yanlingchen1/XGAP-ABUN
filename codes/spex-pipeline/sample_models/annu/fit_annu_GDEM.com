@@ -167,6 +167,19 @@ distance sector 1:3 REDS z
 distance sector 5 REDS z
 
 ##### fit #####
+# 1 thaw T,n
+par 1 3 sig s f
+par 1 3 26 s f
+calc
+fit
+
+# 2 thaw T,n,Z
+par 1 3 26 s t
+calc
+fit
+
+# 3 thaw T,n,Z,sig
+par 1 3 sig s t
 calc
 fit
 

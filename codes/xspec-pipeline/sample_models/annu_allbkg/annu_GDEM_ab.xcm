@@ -60,7 +60,7 @@ new icm:8 REDS
 freeze icm:8
 #### ICM ####
 new icm:4 1
-new icm:5 0.3
+new icm:5 0.1
 new icm:6 1e-2
 new icm:7 0.3
 new icm:10 1e-4
@@ -103,7 +103,16 @@ new oot:27=oot:13
 new oot:28=oot:14
 
 ### fit ###
+# 1 fit T,n
+free icm:5,7
 fit 200 1e-2
+# 2 fit T,n,Z
+thaw icm:7
+fit 200 1e-2
+# 3 fit T,n,Z,sig
+thaw icm:5
+fit 200 1e-2
+
 setp energy
 pl dat rat
 log none
