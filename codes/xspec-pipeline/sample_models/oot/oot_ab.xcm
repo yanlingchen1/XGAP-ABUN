@@ -1,3 +1,4 @@
+log >logs/oot_REGNAME_fit.log
 statistic cstat
 data 1:1 PATH/pnS003-obj-oot-0-SRCNAME2_REGNAME-grp.pi
 response  1 PATH/pnS003-0-SRCNAME2_REGNAME.rmf
