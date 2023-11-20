@@ -36,7 +36,6 @@ def main():
 
     # # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2)
-<<<<<<< HEAD
     io_instance.make_output_dir()
     io_instance.edit_hduclas3()
     io_instance.xspec2spex()
@@ -46,19 +45,17 @@ def main():
     #fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
     #fit_annu.fit_annu('1T')
     #io_instance.tidy_outputs('1T')
-=======
     # io_instance.make_output_dir()
     # io_instance.edit_hduclas3()
     # io_instance.xspec2spex()
 
 
     # fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
-    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
+    #fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
     # fit_other.fit_oot()
     # fit_annu.fit_annu('1T')
-    fit_annu.fit_annu('GDEM')
+   # fit_annu.fit_annu('GDEM')
     # io_instance.tidy_outputs('1T')
->>>>>>> 144df19be9e671cb6712096e2ed83fbbd2206d13
     
 if __name__ == "__main__":
     main()

@@ -17,7 +17,7 @@ class FitFrame(IO):
     def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts = ['mos1S001', 'mos2S002', 'pnS003-0', 'pnS003-4']):
         super().__init__(date, rootdir, srcname1, srcname2, insts)
         self.regname = regname
-        self.subdir = f'{rootdir}/{srcname2}_{regname}'
+        self.subdir = f'{rootdir}/{srcname2}_{regname}//{srcname2}_{regname}'
         self.inst_dict = self.get_backscal()
         self.pipeline_path = os.getcwd()
         self.nH = nH
@@ -32,7 +32,7 @@ class FitFrame(IO):
 
     def update_inst_dict(self, new_regname):
         self.regname = new_regname
-        self.subdir = f'{self.rootdir}/{self.srcname2}_{new_regname}'
+        self.subdir = f'{self.rootdir}/{self.srcname2}_{new_regname}/{self.srcname2}_{new_regname}'
         self.inst_dict = self.get_backscal()
     
     def add_gen_par(self, file):

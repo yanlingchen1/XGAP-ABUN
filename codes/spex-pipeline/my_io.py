@@ -25,7 +25,7 @@ class IO:
         self.pipelinepath = os.getcwd()
         
     def make_output_dir(self):
-        savepath = f'{self.rootdir}/fit_spex_{self.date}'
+        savepath = f'{self.rootdir}/fit_spex_{self.date}/fit_spex_{self.date}'
         os.makedirs(savepath, exist_ok=True)
         os.makedirs(f'{savepath}/logs', exist_ok = True)
         os.makedirs(f'{savepath}/bins', exist_ok = True)
@@ -43,7 +43,7 @@ class IO:
         '''
 
         # get all the subdirectories in root dir
-        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
+        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*/{self.srcname2}_*')
 
         # Initialize a list to store missing files
         missing_files = []
@@ -281,7 +281,7 @@ class IO:
 
     def edit_hduclas3(self):
         # get all the subdirectories in root dir
-        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
+        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*/{self.srcname2}_*')
         # print(subdir_lst)
         for subdir in subdir_lst:
             regname = f'{subdir.split(".")[0].split("_")[-1]}'
@@ -300,7 +300,7 @@ class IO:
         """
         
         # get all the subdirectories in root dir
-        subdir_lst = subdir_lst = [subdir for subdir in glob(f'{self.rootdir}/{self.srcname2}_*') if f'{self.rootdir}/{self.srcname2}_bkg' not in subdir]
+        subdir_lst = subdir_lst = [subdir for subdir in glob(f'{self.rootdir}/{self.srcname2}_*/{self.srcname2}_*') if f'{self.rootdir}/{self.srcname2}_bkg/{self.srcname2}_bkg' not in subdir]
         # print(subdir_lst)
         for subdir in subdir_lst:
             # os.system(f'rm {subdir}/trafo*.sh')
