@@ -28,7 +28,7 @@ def fit_source(srcnum, nH, reds):
     ab.gen_qpbmdltxt()
 
 def main():
-    basfile = f'../ESAS/get_nh/basics_allsources.csv'
+    basfile = f'/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/ESAS/get_nh/basics_allsources.csv'
     f = pd.read_csv(basfile)
 
     # Define the number of worker processes (adjust as needed)
