@@ -27,7 +27,7 @@ def main():
         # srcnum = '3460'
         srcname1 = f'ID{srcnum}'
         srcname2 = f'SDSSTG{srcnum}'
-        root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/eckert/{srcname1}/*")[0]
+        root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
         print(root_dir)
     
     ## CAUTIOUS: {nH in spex} = 1e-2*{nH in xspec}
@@ -36,19 +36,15 @@ def main():
 
     # # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2)
-    # io_instance.make_output_dir()
-    # io_instance.edit_hduclas3()
-    # io_instance.xspec2spex()
+    io_instance.make_output_dir()
+    io_instance.edit_hduclas3()
+    io_instance.xspec2spex()
 
 
-    fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    for i in range(13):
-        # fit_other.update_inst_dict(f'reg{i}')
-        # fit_other.fit_oot()
-        fit_annu.update_inst_dict(f'reg{i}')
-        fit_annu.fit_annu('1T')
-    io_instance.tidy_outputs('1T')
+    #fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
+    #fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
+    #fit_annu.fit_annu('1T')
+    #io_instance.tidy_outputs('1T')
     
 if __name__ == "__main__":
     main()
