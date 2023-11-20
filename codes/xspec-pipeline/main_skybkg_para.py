@@ -34,7 +34,7 @@ def main():
     f = pd.read_csv(basfile)
 
     # Define the number of worker processes (adjust as needed)
-    num_workers = 4
+    num_workers = 50
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=num_workers) as executor:
         # Use executor.map to apply the function to each source in parallel
