@@ -31,6 +31,8 @@ def main():
             # fit source 
             fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
             fit_other.update_inst_dict(REGNAME)
+            fit_other.grp_spec()
+            fit_other.edit_headers()
             fit_other.fit_oot()
             #### allbkg, 1T ####
             fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
