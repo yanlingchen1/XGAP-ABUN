@@ -23,7 +23,7 @@ for i, srcnum in enumerate(f['ID']):
     # # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
     io_instance.make_output_dir()
-    io_instance.check_files()
+#    io_instance.check_files()
     io_instance.edit_hduclas3()
 
     # # # # # smooth bkg back pi

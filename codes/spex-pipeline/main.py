@@ -33,13 +33,13 @@ def main():
     ## CAUTIOUS: {nH in spex} = 1e-2*{nH in xspec}
     nH = nH_dict[srcname2] * 1e-2 
     reds = reds_dict[srcname2]
-
+    """
     # # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2)
     io_instance.make_output_dir()
     io_instance.edit_hduclas3()
     io_instance.xspec2spex()
-
+    """
 
     #fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
     #fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
@@ -50,11 +50,11 @@ def main():
     # io_instance.xspec2spex()
 
 
-    # fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
-    #fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
-    # fit_other.fit_oot()
-    # fit_annu.fit_annu('1T')
-   # fit_annu.fit_annu('GDEM')
+    fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
+    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
+    fit_other.fit_oot()
+    fit_annu.fit_annu('1T')
+    fit_annu.fit_annu('GDEM')
     # io_instance.tidy_outputs('1T')
     
 if __name__ == "__main__":

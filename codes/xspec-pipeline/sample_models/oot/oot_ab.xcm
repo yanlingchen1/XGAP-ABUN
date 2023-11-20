@@ -2,12 +2,12 @@ statistic cstat
 data 1:1 PATH/pnS003-obj-oot-0-SRCNAME2_REGNAME-grp.pi
 response  1 PATH/pnS003-0-SRCNAME2_REGNAME.rmf
 arf 1 PATH/pnS003-0-SRCNAME2_REGNAME.arf
-resp 2:1 PATH/../pn-diag.rsp
+resp 2:1 PATH/../../../pn-diag.rsp
 
 data 2:2 PATH/pnS003-obj-oot-4-SRCNAME2_REGNAME-grp.pi
 response  2 PATH/pnS003-4-SRCNAME2_REGNAME.rmf
 arf 2 PATH/pnS003-4-SRCNAME2_REGNAME.arf
-resp 3:2 PATH/../pn-diag.rsp
+resp 3:2 PATH/../../../pn-diag.rsp
 
 ign **-**:1.1-1.6
 ign bad
