@@ -33,6 +33,7 @@ class IO:
     def get_backscal(self):
         inst_dict = {}
         for name in self.insts:
+            print(f'{self.subdir}/{name}-back-{self.srcname2}_{self.regname}.pi')
             specfile = glob(f'{self.subdir}/{name}-back-{self.srcname2}_{self.regname}.pi')[0]
             f = fits.open(specfile)
             inst_dict[name] = np.round(f[1].header['BACKSCAL'] * (0.05/60) ** 2, 3)
