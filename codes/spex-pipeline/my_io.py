@@ -331,14 +331,14 @@ class IO:
             
         with open(f'{self.rootdir}/run_epic_trafo.sh', 'w') as f:
             f.write(f''' ### run in spex env ###
-for f in */trafo_epic_loadallbkg.sh
+for f in */*/trafo_epic_loadallbkg.sh
 do
 sh $f
 done
 ''')    
         with open(f'{self.rootdir}/run_pn_trafo.sh', 'w') as f:
             f.write(f''' ### run in base env ###
-for f in */trafo_pn*.sh
+for f in */*/trafo_pn*.sh
 do
 sh $f
 done
