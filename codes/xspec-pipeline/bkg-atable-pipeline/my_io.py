@@ -22,7 +22,7 @@ class IO:
         self.srcname2 = srcname2
         self.regname = regname
         self.insts = insts
-        self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/bkg-atable-pipeline'
+        self.pipeline_path = f'/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/xspec-pipeline/bkg-atable-pipeline'
         self.savepath = f'{self.rootdir}/fit_{self.date}'
         self.subdir = f'{rootdir}/{srcname2}_{regname}/{srcname2}_{regname}'
         self.inst_dict = self.get_backscal()
