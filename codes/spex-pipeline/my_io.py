@@ -15,14 +15,14 @@ def sort_files(flist):
     return np.argsort(idxlst)
 
 class IO:
-    def __init__(self, date, rootdir, srcname1, srcname2, insts=['mos1S001', 'mos2S002', 'pnS003']):
+    def __init__(self, date, rootdir, srcname1, srcname2, insts=['mos1S001', 'mos2S002', 'pnS003-0', 'pnS003-4']):
         self.date = date
         self.rootdir = rootdir
         self.srcname1 = srcname1
         self.srcname2 = srcname2
         self.insts = insts
         self.savepath = self.make_output_dir()
-        self.pipelinepath = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/spex-fitting-pipeline'
+        self.pipelinepath = os.getcwd()
         
     def make_output_dir(self):
         savepath = f'{self.rootdir}/fit_spex_{self.date}'
@@ -59,9 +59,10 @@ class IO:
                 file_names.append(f'{inst}-back-{self.srcname2}_{regname}.pi')
                 file_names.append(f'{inst}-obj-{self.srcname2}_{regname}-grp.pi')
                 file_names.append(f'{inst}-obj-{self.srcname2}_{regname}.pi')
-                file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}-grp.pi')
-                file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi')
-            
+                file_names.append(f'{subdir}/{inst}-obj-oot-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{subdir}/{inst}-obj-oot-{self.srcname2}_{regname}-grp.pi')
+
+
             for file_name in file_names:
                 if not glob(file_name):
                     missing_files.append(f'{file_name}')
@@ -284,11 +285,12 @@ class IO:
         # print(subdir_lst)
         for subdir in subdir_lst:
             regname = f'{subdir.split(".")[0].split("_")[-1]}'
-            for inst in ['mos1S001', 'mos2S002']:
-                self.edit_header(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
-            
-            self.edit_header(f'{subdir}/pnS003-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'RATE')
-            self.edit_header(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+            for inst in self.insts:
+                if 'mos' in inst:
+                    self.edit_header(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+                else:
+                    self.edit_header(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'RATE')
+                    self.edit_header(f'{subdir}/{inst}-obj-oot-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
     
     def xspec2spex(self):
         """
@@ -298,7 +300,7 @@ class IO:
         """
         
         # get all the subdirectories in root dir
-        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
+        subdir_lst = subdir_lst = [subdir for subdir in glob(f'{self.rootdir}/{self.srcname2}_*') if f'{self.rootdir}/{self.srcname2}_bkg' not in subdir]
         # print(subdir_lst)
         for subdir in subdir_lst:
             # os.system(f'rm {subdir}/trafo*.sh')

@@ -14,12 +14,12 @@ def rep(file, oldv, newv):
     return file.replace(oldv, newv)
 
 class FitFrame(IO):
-    def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts = ['mos1S001', 'mos2S002', 'pnS003']):
+    def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts = ['mos1S001', 'mos2S002', 'pnS003-0', 'pnS003-4']):
         super().__init__(date, rootdir, srcname1, srcname2, insts)
         self.regname = regname
         self.subdir = f'{rootdir}/{srcname2}_{regname}'
         self.inst_dict = self.get_backscal()
-        self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/spex-fitting-pipeline'
+        self.pipeline_path = os.getcwd()
         self.nH = nH
         self.reds = reds
 
@@ -36,7 +36,7 @@ class FitFrame(IO):
         self.inst_dict = self.get_backscal()
     
     def add_gen_par(self, file):
-        replace_dict = {'BS-PN':self.inst_dict['pnS003'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir}
+        replace_dict = {'BS-PN':self.inst_dict['pnS003-0'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir}
         for key, v in replace_dict.items():
             file = rep(file, key, f'{v}') 
         return file
@@ -73,7 +73,7 @@ class FitFrame(IO):
         """
 
         # Write the Value data
-        replace_dict = {"REDS":self.reds, "NH":self.nH, "BS-M1":self.inst_dict['mos1S001'], "BS-M2":self.inst_dict['mos2S002'], "BS-PN":self.inst_dict['pnS003']}
+        replace_dict = {"REDS":self.reds, "NH":self.nH, "BS-M1":self.inst_dict['mos1S001'], "BS-M2":self.inst_dict['mos2S002'], "BS-PN":self.inst_dict['pnS003-0']}
 
         # Alter the inputs in sample_oot.com
         for key, v in replace_dict.items():

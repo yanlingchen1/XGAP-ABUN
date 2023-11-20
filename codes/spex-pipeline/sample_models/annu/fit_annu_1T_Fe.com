@@ -22,24 +22,35 @@ ignore instrument 1 reg 2 7.:100. unit keV
 ignore instrument 1 reg 3 0.:0.5 unit keV
 ignore instrument 1 reg 3 2.:100. unit keV
 ignore instrument 1 reg 5 0.:1.0 unit keV
-ignore instrument 1 reg 5 5.:100. unit keV
+ignore instrument 1 reg 5 7.:100. unit keV
 
 # ignore the instrumental lines
 ign instrument 1 reg 1 1.2:1.85 unit keV
 ign instrument 1 reg 2 1.2:1.85 unit keV
 ign instrument 1 reg 3 1.2:1.55 unit keV
+ign instrument 1 reg 3 5.:100. unit keV
 ign instrument 1 reg 5 1.2:1.55 unit keV
+ign instrument 1 reg 5 5.:100. unit keV
 
 # ignore the reg4
 ign instrument 1 reg 4 0.:100. unit keV
 ign instrument 1 reg 6 0.:100. unit keV
 
+# # obin will run into segmentation error
+# obin region 1 0.3:7. unit kev
+# obin region 2 0.3:7. unit kev
+# obin region 3 0.3:7. unit kev
+
 ## vbin to avoid 0 cts channel in ratio
 ## to solve pattern caused by 0cts channel-bkg
 vbin inst 1 reg 1 0.5:7.0 2 2 un k
 vbin inst 1 reg 2 0.5:7.0 2 1 un k
-vbin inst 1 reg 3 0.5:2.0 2 1 un k
-vbin inst 1 reg 5 1.0:5.0 2 1 un k
+vbin inst 1 reg 3 0.5:7.0 2 1 un k
+vbin inst 1 reg 5 0.5:7.0 2 1 un k
+
+# bin instrument 1 region 1 1:10000 20
+# bin instrument 1 region 3 1:10000 20
+# bin instrument 1 region 5 1:10000 20
 
 # alter the data color 
 # mos1-white, mos2-red, pn-green same as xspec
@@ -47,8 +58,6 @@ pl set 2
 pl data col 02
 pl set 3
 pl data col 03
-pl set 5
-pl data col 04
 
 #### icm ####
 ## inst mos1 ##
@@ -103,6 +112,9 @@ par 1 3 t v 1
 par 1 3 06:30 v 0.3
 par 1 3 07:30 couple 1 3 06
 par 1 3 06 s t
+par 1 3 26 decouple
+par 1 3 26 v 0.3
+par 1 3 26 s t
 
 ### couple par ###
 # couple reds #
@@ -175,7 +187,7 @@ log close output
 ##### error ####
 log out logs/annu-REGNAME-MDL_error
 #icm#
-error 1 3 norm:06
+error 1 3 norm:26
 log close output
 
 ##### make plot ####
