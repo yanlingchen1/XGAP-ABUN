@@ -12,6 +12,7 @@ basfile = f'/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/ESAS/get_nh/basics_all
 f = pd.read_csv(basfile)
 
 for i, srcnum in enumerate(f['ID']): 
+    srcnum = srcnum.split('G')[-1]
     nH = f['nH(1e20cm-2)'][i]
     reds = f['z'][i]
 
