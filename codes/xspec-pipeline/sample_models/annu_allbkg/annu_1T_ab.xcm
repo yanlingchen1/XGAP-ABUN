@@ -129,7 +129,7 @@ log none
 log >logs/annu_REGNAME_MDL_chain1000_par.log
 err icm:4,icm:5,icm:7
 log none
-log >logs/annu_REGNAME_MDL_freezepar.log
+log >logs/annu_REGNAME_MDL_freepar.log
 sho fre
 log none
 cpd annu_REGNAME_MDL.ps/ocps
