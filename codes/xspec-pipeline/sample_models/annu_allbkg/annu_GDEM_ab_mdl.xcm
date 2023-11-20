@@ -12,13 +12,16 @@ model  3:pn_bg1 atable{PATH/atable_pnS003-0_REGNAME.mdl}
               1       0.01          0          0      1e+20      1e+24
 model  4:pn_bg2 atable{PATH/atable_pnS003-4_REGNAME.mdl}
               1       0.01          0          0      1e+20      1e+24
-model  5:icm constant*constant*TBabs*apec
+model  5:icm constant*constant*TBabs*gadem
               1       0.01          0          0      1e+10      1e+10
               1       0.01          0          0      1e+10      1e+10
               1      0.001          0          0     100000      1e+06
-              1       0.01      0.008      0.008         64         64
-              1     -0.001          0          0          5          5
+              4      -0.01       0.01       0.01         10         20
+            0.1       0.01       0.01       0.01        100        100
+              1      -0.01      1e-06      1e-05      1e+19      1e+20
+              1      -0.01          0          0         10         10
               0      -0.01     -0.999     -0.999         10         10
+              2
               1       0.01          0          0      1e+20      1e+24
 = icm:p1
 = icm:p2
@@ -27,6 +30,9 @@ model  5:icm constant*constant*TBabs*apec
 = icm:p5
 = icm:p6
 = icm:p7
+= icm:p8
+= icm:p9
+= icm:p10
 = icm:p1
 = icm:p2
 = icm:p3
@@ -34,6 +40,9 @@ model  5:icm constant*constant*TBabs*apec
 = icm:p5
 = icm:p6
 = icm:p7
+= icm:p8
+= icm:p9
+= icm:p10
 = icm:p1
 = icm:p2
 = icm:p3
@@ -41,6 +50,9 @@ model  5:icm constant*constant*TBabs*apec
 = icm:p5
 = icm:p6
 = icm:p7
+= icm:p8
+= icm:p9
+= icm:p10
 model  6:oot constant*constant(powerlaw + powerlaw + apec + apec)
               1       0.01          0          0      1e+10      1e+10
               1       0.01          0          0      1e+10      1e+10

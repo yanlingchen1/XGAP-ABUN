@@ -33,7 +33,10 @@ model  constant*constant(powerlaw + powerlaw + apec + apec)
 = p12
 = p13
 = p14
-model  2:pn-bg atable{PATH/pnS003-back-smoothed_savgol-140-5.mdl}
+model  2:pn-bg0 atable{PATH/pnS003-0-back-smoothed_savgol-140-5.mdl}
+              1       0.01          0          0      1e+20      1e+24
+              1       0.01          0          0      1e+20      1e+24
+model  3:pn-bg4 atable{PATH/pnS003-4-back-smoothed_savgol-140-5.mdl}
               1       0.01          0          0      1e+20      1e+24
               1       0.01          0          0      1e+20      1e+24
 bayes off

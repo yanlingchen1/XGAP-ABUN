@@ -15,12 +15,12 @@ def rep(file, oldv, newv):
     return file.replace(oldv, newv)
 
 class FitFrame(IO):
-    def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts = ['mos1S001', 'mos2S002', 'pnS003']):
+    def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts = ['mos1S001', 'mos2S002', 'pnS003-0', 'pnS003-4']):
         super().__init__(date, rootdir, srcname1, srcname2, insts)
         self.regname = regname
-        self.subdir = f'{rootdir}/{srcname2}_{regname}'
+        self.subdir = f'{rootdir}/{srcname2}_{regname}/{srcname2}_{regname}'
         self.inst_dict = self.get_backscal()
-        self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/verify_eckert/xspec-fitting-pipeline'
+        self.pipeline_path = os.getcwd()
         self.nH = nH
         self.reds = reds
 
@@ -33,7 +33,7 @@ class FitFrame(IO):
 
     def update_inst_dict(self, new_regname):
         self.regname = new_regname
-        self.subdir = f'{self.rootdir}/{self.srcname2}_{new_regname}'
+        self.subdir = f'{self.rootdir}/{self.srcname2}_{new_regname}/{self.srcname2}_{new_regname}'
         self.inst_dict = self.get_backscal()
 
     def load_bkgpar(self):
@@ -55,7 +55,7 @@ class FitFrame(IO):
         return dict
 
     def add_gen_par(self, file):
-        replace_dict = {'BS-PN':self.inst_dict['pnS003'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir, 'PIP':self.pipeline_path, 'SAV':self.savepath}
+        replace_dict = {'BS-PN':self.inst_dict['pnS003-0'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir, 'PIP':self.pipeline_path, 'SAV':self.savepath}
         print(replace_dict['PIP'])
         for key, v in replace_dict.items():
             file = rep(file, key, f'{v}') 
@@ -80,9 +80,9 @@ class FitFrame(IO):
         replace_dict = {}
         for i, name in enumerate(["POW1-g", "POW1-n",  "POW2-g", "POW2-n",  "CIE1-t", "CIE1-abun", "CIE1-reds", "CIE1-n",  "CIE2-t", "CIE2-abun", "CIE2-reds", "CIE2-n"]):
             if '-n' in name:
-                replace_dict[name] = value_data[i+2]
+                replace_dict[name] = value_data[i+3]
             else:
-                replace_dict[name] = value_data[i+2]
+                replace_dict[name] = value_data[i+3]
 
         # Alter the inputs
         for key, v in replace_dict.items():
@@ -96,7 +96,7 @@ class FitFrame(IO):
         """
 
         # Write the Value data
-        replace_dict = {"REDS":self.reds, "NH":self.nH, "BS-M1":self.inst_dict['mos1S001'], "BS-M2":self.inst_dict['mos2S002'], "BS-PN":self.inst_dict['pnS003']}
+        replace_dict = {"REDS":self.reds, "NH":self.nH, "BS-M1":self.inst_dict['mos1S001'], "BS-M2":self.inst_dict['mos2S002'], "BS-PN":self.inst_dict['pnS003-0']}
 
         # Alter the inputs in sample_oot.com
         for key, v in replace_dict.items():
@@ -110,4 +110,23 @@ class FitFrame(IO):
             file = rep(file, key, f'{v}') 
         return file
 
+    def grp_spec(self):
+        with open(f'{self.subdir}/grp_pha_all.sh', 'w') as newf:
+            for inst in self.insts:
+                specname = f'{inst}-obj-{self.srcname2}_{self.regname}'
+                rmfname = f'{inst}-{self.srcname2}_{self.regname}'
+
+                newf.write(f'ftgrouppha infile={specname}.pi outfile={specname}-grp.pi respfile={rmfname}.rmf grouptype=opt clobber=yes\n')
+                if 'pn' in inst:
+                    newf.write(f'ftgrouppha infile={inst}-obj-oot-{self.srcname2}_{self.regname}.pi outfile={inst}-obj-oot-{self.srcname2}_{self.regname}-grp.pi respfile={rmfname}.rmf grouptype=opt clobber=yes\n')
     
+        os.chdir(self.subdir)
+        os.system(f'sh grp_pha_all.sh')
+
+    def edit_headers(self):
+        files = glob(f'{self.subdir}/*grp.pi')
+        for file in files:
+            with fits.open(file, mode = 'update') as f:
+                head = f[1].header
+                head['RESPFILE']='NONE'
+                f.flush()

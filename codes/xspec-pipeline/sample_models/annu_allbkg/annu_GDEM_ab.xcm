@@ -40,42 +40,29 @@ ign bad
 
 #### areas #####
 new icm:1 BS-M1
-new icm:8 BS-M2
-new icm:15 BS-PN
-new icm:22 BS-PN
-freeze icm:1,8,15,22
+new icm:11 BS-M2
+new icm:21 BS-PN
+new icm:31 BS-PN
+freeze icm:1,11,21,31
 #### insts #####
 new icm:2 1
-new icm:9 1
-new icm:16 1
-new icm:23 1
-freeze icm:2,9,16,23
+new icm:12 1
+new icm:22 1
+new icm:32 1
+freeze icm:2,12,22,32
 #### nh ####
 new icm:3 NH
-new icm:10=icm:3
-new icm:17=icm:3
-new icm:24=icm:3
 freeze icm:3
 #### reds ####
-new icm:6 REDS
-new icm:13=icm:6
-new icm:20=icm:6
-new icm:27=icm:6
-freeze icm:6
+new icm:8 REDS
+freeze icm:8
 #### ICM ####
 new icm:4 1
 new icm:5 0.3
-new icm:7 1e-4
-new icm:11=icm:4
-new icm:18=icm:4
-new icm:25=icm:4
-new icm:12=icm:5
-new icm:19=icm:5
-new icm:26=icm:5
-new icm:14=icm:7
-new icm:21=icm:7
-new icm:28=icm:7
-thaw icm:4,icm:5,icm:7
+new icm:6 1e-2
+new icm:7 0.3
+new icm:10 1e-4
+thaw icm:4,icm:5,icm:7,icm:10
 #### allbkg ####
 new m1_bg:1 1
 new m2_bg:1 1
@@ -83,8 +70,8 @@ new pn_bg1:1 1
 new pn_bg2:1 1
 freeze m1_bg:1,m2_bg:1,pn_bg1:1,pn_bg2:1
 #### oot ####
-new oot:1=icm:15
-new oot:2=0.063*icm:16
+new oot:1=icm:21
+new oot:2=0.063*icm:22
 new oot:3 POW1-g
 new oot:4 POW1-n
 new oot:5 POW2-g
@@ -100,7 +87,7 @@ new oot:14 CIE2-n
 freeze oot:1-14
 new oot:15=oot:1
 new oot:16=oot:2
-new oot:17=oot:3
+new oot:17=oot:3    
 new oot:18=oot:4
 new oot:19=oot:5
 new oot:20=oot:6

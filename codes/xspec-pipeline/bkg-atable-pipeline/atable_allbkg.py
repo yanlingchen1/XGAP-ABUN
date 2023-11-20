@@ -9,12 +9,12 @@ Steps:
 """
 import numpy as np
 import os
-from fit_frame import FitFrame
+from my_io import IO
 from glob import glob
 from astropy.io import fits
 import pandas as pd
 
-class AtableBKG(FitFrame):
+class AtableBKG(IO):
     def bkgsmooth(self):
         for inst in self.inst_dict.keys():
             if 'pn' in inst:
@@ -55,6 +55,15 @@ EOT
             os.system(f'ftflx2tab infile={self.subdir}/{inst}-back-smoothed_savgol-140-5.txt modelname={inst.split("S")[0]}_qpb outfile={self.subdir}/{inst}-back-smoothed_savgol-140-5.mdl nspec=1 additive=yes redshift=no xunit=keV clobber=yes')
 
     def atable_allbkg(self):
+        """
+        Output:
+        dats/atable_{inst}_{self.regname}.qdp
+        dats/atable_{inst}_{self.regname}.pco
+        figs/atable_{inst}_{self.regname}.pdf
+        bins/atable_{inst}_{self.regname}.xcm
+        """
+
+
         self.bkg_dict = self.load_bkgpar()
         mod_spl = '\n' * 20
         for inst in self.inst_dict.keys():
@@ -64,7 +73,7 @@ data {self.subdir}/{inst}-back-{self.srcname2}_{self.regname}.pi
 none	
 res 1:1 {self.subdir}/{inst}-{self.srcname2}_{self.regname}.rmf
 arf 1:1 {self.subdir}/{inst}-{self.srcname2}_{self.regname}.arf
-res 2:1 {self.subdir}/../{inst.split("S")[0]}-diag.rsp
+res 2:1 {self.subdir}/../../../{inst.split("S")[0]}-diag.rsp
 mo const*const*(apec+tbabs*(apec+pow))
 {mod_spl}
 mo 2:spf_qpb const*const*(pow)+atable{{{self.subdir}/{inst}-back-smoothed_savgol-140-5.mdl}}
@@ -110,12 +119,20 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
         """
         CAUTION:
         Now the errors of the *allbkg*pi have been forced to 1e-20
-        
+        ----------------------------
+        Input:
+        {self.subdir}/{inst}-back-{self.srcname2}_{self.regname}.pi
+        {self.savepath}/dats/atable_{inst}_{self.regname}.qdp
+
+        Output:
+        {self.subdir}/{inst}-allbkg-{self.srcname2}_{self.regname}.pi
         """
         bkg_instdict = {'mos1S001': 93.632, 'mos2S002': 127.285, 'pnS003': 118.604}
-        for inst in self.inst_dict.keys():
+        for inst in self.insts:
+            print(inst)
             output_file = f'{self.subdir}/{inst}-allbkg-{self.srcname2}_{self.regname}.pi'
             qpb_file = f'{self.subdir}/{inst}-back-{self.srcname2}_{self.regname}.pi'
+            os.system(f'rm {output_file}')
             os.system(f'cp {qpb_file} {output_file}')
             mdl_file = f'{self.savepath}/dats/atable_{inst}_{self.regname}.qdp'
             mdl_df = pd.read_csv(mdl_file, skiprows=3, header=None, delim_whitespace=True)
@@ -123,28 +140,29 @@ mv atable_{inst}_{self.regname}.pco {self.savepath}/dats
             #### calculate the poisson error ####
             with fits.open(qpb_file) as f:
                 srcheader = f[1].header
-            with fits.open(output_file, mode = 'update') as f:
-                ctr = mdl_df.iloc[:, 4]
-                columns = [
-                    fits.Column(name='CHANNEL', format='J', array=mdl_df.iloc[:, 0]),
-                    fits.Column(name='RATE', format='E', array=ctr),
-                    fits.Column(name='STAT_ERR', format='E', array=np.ones(len(ctr))*1e-20)
-                ]
-                new_bintable = fits.BinTableHDU.from_columns(columns)
-                f[1] = new_bintable
-                f[1].header = srcheader
-                f[1].header['HDUCLAS3'] = 'RATE'
-                f[1].header['TUNIT2'] = 'counts/s'
-                f[1].header['TUNIT3'] = 'counts/s'
-                f[1].header['POISSERR'] = 'T'
-                f.flush()  
+            columns = np.rec.array([np.array(mdl_df.iloc[:, 0]),np.array(mdl_df.iloc[:, 4]),np.ones(len(mdl_df))*1e-20],formats='int32,float32,float32',names='CHANNEL,RATE,STAT_ERR')
+            new_bintable = fits.BinTableHDU.from_columns(columns)
+            newf = fits.open(output_file, mode = 'update')
+            print(output_file)
+            print(columns)
+            newf[1] = new_bintable
+            print(new_bintable)
+            newf[1].header = srcheader
+            newf[1].header['NAXIS1'] = 12
+            newf[1].header['HDUCLAS3'] = 'RATE'
+            newf[1].header['TUNIT2'] = 'counts/s'
+            newf[1].header['TUNIT3'] = 'counts/s'
+            newf[1].header['POISSERR'] = 'T'
+            newf.flush()  
+            newf.close()
+            
 
     #### check the sum bkg file in xspec in every subdir ####
     def qdp2txt(self):
         self.bkg_dict = self.load_bkgpar()
         output_dict = {}
         # read the elo ehi from bkg txt file
-        bkgpath = f'{self.rootdir}/{self.srcname2}_bkg'
+        bkgpath = f'{self.rootdir}/{self.srcname2}_bkg/{self.srcname2}_bkg'
         for inst in self.insts:
             df_e = pd.read_csv(f'{bkgpath}/{inst}-back-smoothed_savgol-140-5.txt', header = None, delim_whitespace=True)
             output_dict['elo'] = df_e.iloc[:,0]

@@ -14,6 +14,8 @@ def main():
     nH_dict = {'SDSSTG3460':0.024, 'SDSSTG9647':0.0201, 'SDSSTG828':0.0303, 'RGH80':0.0131}
     reds_dict = {'SDSSTG3460':0.043, 'SDSSTG9647':0.023, 'SDSSTG828':0.046, 'RGH80':0.037}
 
+
+    REGNAME = 'R500-01'
     # ##  Some basic prefixes
     # ### RGH80 ####
     # srcname1 = ''
@@ -26,31 +28,38 @@ def main():
     for srcnum in ['3460']: # '3460', '9647', '828'
         srcname1 = f'ID{srcnum}'
         srcname2 = f'SDSSTG{srcnum}'
-        root_dir = glob(f"/Users/eusracenorth/Documents/work/XGAP-ABUN/data/{srcname1}/reduction/R500_01")[0]
+        root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
         nH = nH_dict[srcname2]
         reds = reds_dict[srcname2]
 
         # # io issues
         io_instance = IO(date, root_dir, srcname1, srcname2)
-        io_instance.make_output_dir()
-        io_instance.check_files()
-        io_instance.edit_headers()
+        fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds) 
+#        fit_other.grp_spec()
+#        fit_other.edit_headers()
+#        io_instance.make_output_dir()
+        # io_instance.check_files()
         
-        # # ## fit the sky bkg
-        fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds) 
-        # fit_other.fit_oot()
-        # fit_other.fit_bkg()
-        # io_instance.tidy_bkgpar()
-
-        fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
         
-        # fit_other.update_inst_dict(f'reg{i}')
-        # fit_other.fit_oot()
-        # #### allbkg, 1T ####
-        # fit_annu.update_inst_dict(f'reg{i}')
-        # fit_annu.fit_annu('1T')
+        # # ## fit the sky bkg, after fit the qpb in bkgatablepiipeline
+        fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
+        #fit_other.grp_spec()
+        #fit_other.edit_headers()
+        #fit_other.fit_oot()
+        #fit_other.fit_bkg()
+        #io_instance.tidy_bkgpar()
 
-        io_instance.tidy_outputs('1T')
+       # fit source 
+        fit_other.update_inst_dict(REGNAME)
+        #fit_other.fit_oot()
+        #### allbkg, 1T ####
+        fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
+
+        # fit_annu.update_inst_dict(REGNAME)
+        fit_annu.fit_annu('1T')
+        fit_annu.fit_annu('GDEM')
+
+        # io_instance.tidy_outputs('1T')
 
     # # #### for GADEM model ####
     # bigkeys = ['T', 'Tsig', 'Z', 'n']

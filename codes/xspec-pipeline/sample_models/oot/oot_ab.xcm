@@ -1,13 +1,13 @@
 statistic cstat
-data 1:1 PATH/pnS003-obj-oot-0-SDSSTG9647_R500_01-grp.pi
-response  1 PATH/pnS003-0-SDSSTG9647_R500_01.rmf
-arf 1 PATH/pnS003-0-SDSSTG9647_R500_01.arf
+data 1:1 PATH/pnS003-obj-oot-0-SRCNAME2_REGNAME-grp.pi
+response  1 PATH/pnS003-0-SRCNAME2_REGNAME.rmf
+arf 1 PATH/pnS003-0-SRCNAME2_REGNAME.arf
 resp 2:1 PATH/../pn-diag.rsp
 
-data 2:2 PATH/pnS003-obj-oot-4-SDSSTG9647_R500_01-grp.pi
-response  2 PATH/pnS003-4-SDSSTG9647_R500_01.rmf
-arf 2 PATH/pnS003-4-SDSSTG9647_R500_01.arf
-resp 2:2 PATH/../pn-diag.rsp
+data 2:2 PATH/pnS003-obj-oot-4-SRCNAME2_REGNAME-grp.pi
+response  2 PATH/pnS003-4-SRCNAME2_REGNAME.rmf
+arf 2 PATH/pnS003-4-SRCNAME2_REGNAME.arf
+resp 3:2 PATH/../pn-diag.rsp
 
 ign **-**:1.1-1.6
 ign bad
@@ -17,10 +17,10 @@ ign 2:**-1.0,5.0-**
 @SAV/bins/oot_REGNAME_mdl.xcm
 new 1 BS-PN
 new 2 1
-free 1,2
+freeze 1,2
 
-free pn-bg:1 
-free pn-bg:2
+freeze pn-bg0:1 
+freeze pn-bg4:1 
 fit 100 1e-3
 setp energy
 pl dat rat

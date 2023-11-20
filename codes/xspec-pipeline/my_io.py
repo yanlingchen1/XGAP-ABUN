@@ -15,13 +15,14 @@ def sort_files(flist):
     return np.argsort(idxlst)
 
 class IO:
-    def __init__(self, date, rootdir, srcname1, srcname2, insts=['mos1S001', 'mos2S002', 'pnS003']):
+    def __init__(self, date, rootdir, srcname1, srcname2, insts=['mos1S001', 'mos2S002', 'pnS003-0', 'pnS003-4']):
         self.date = date
         self.rootdir = rootdir
         self.srcname1 = srcname1
         self.srcname2 = srcname2
         self.insts = insts
         self.savepath = self.make_output_dir()
+
         
 
     def make_output_dir(self):
@@ -33,14 +34,6 @@ class IO:
         os.makedirs(f'{savepath}/figs', exist_ok = True)
         os.makedirs(f'{savepath}/dats', exist_ok = True)
         return savepath
-    
-    def edit_headers(self):
-        files = glob(f'{self.rootdir}/*grp.pi')
-        for file in files:
-            with fits.open(file, mode = 'update') as f:
-                head = f[1].header
-                head['RESPFILE']='NONE'
-                f.flush()
                 
     def check_files(self):
         '''
@@ -51,7 +44,7 @@ class IO:
         '''
 
         # get all the subdirectories in root dir
-        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*')
+        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*/{self.srcname2}_*')
 
         # Initialize a list to store missing files
         missing_files = []
@@ -67,8 +60,10 @@ class IO:
                 file_names.append(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi')
                 file_names.append(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}-grp.pi')
                 file_names.append(f'{subdir}/{inst}-obj-{self.srcname2}_{regname}.pi')
-                file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}-grp.pi')
-                file_names.append(f'{subdir}/pnS003-obj-oot-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{subdir}/pnS003-0-obj-oot-{self.srcname2}_{regname}-grp.pi')
+                file_names.append(f'{subdir}/pnS003-0-obj-oot-{self.srcname2}_{regname}.pi')
+                file_names.append(f'{subdir}/pnS003-4-obj-oot-{self.srcname2}_{regname}-grp.pi')
+                file_names.append(f'{subdir}/pnS003-4-obj-oot-{self.srcname2}_{regname}.pi')
             
             for file_name in file_names:
                 if not glob(file_name):

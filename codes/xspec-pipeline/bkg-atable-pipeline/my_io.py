@@ -15,24 +15,37 @@ def sort_files(flist):
     return np.argsort(idxlst)
 
 class IO:
-    def __init__(self, date, rootdir, srcname1, srcname2, insts=['mos1S001', 'mos2S002', 'pnS003']):
+    def __init__(self, date, rootdir, srcname1, srcname2, regname, nH, reds, insts=['mos1S001', 'mos2S002', 'pnS003-0', 'pnS003-4']):
         self.date = date
         self.rootdir = rootdir
         self.srcname1 = srcname1
         self.srcname2 = srcname2
+        self.regname = regname
         self.insts = insts
-        self.savepath = self.make_output_dir()
+        self.pipeline_path = '/Users/eusracenorth/Documents/work/XGAP-ABUN/codes/bkg-atable-pipeline'
+        self.savepath = f'{self.rootdir}/fit_{self.date}'
+        self.subdir = f'{rootdir}/{srcname2}_{regname}/{srcname2}_{regname}'
+        self.inst_dict = self.get_backscal()
+        self.nH = nH
+        self.reds = reds
         
 
+    def get_backscal(self):
+        inst_dict = {}
+        for name in self.insts:
+            specfile = glob(f'{self.subdir}/{name}-back-{self.srcname2}_{self.regname}.pi')[0]
+            f = fits.open(specfile)
+            inst_dict[name] = np.round(f[1].header['BACKSCAL'] * (0.05/60) ** 2, 3)
+        return inst_dict
+
     def make_output_dir(self):
-        savepath = f'{self.rootdir}/fit_{self.date}'
-        os.makedirs(savepath, exist_ok=True)
-        os.makedirs(f'{savepath}/logs', exist_ok = True)
-        os.makedirs(f'{savepath}/bins', exist_ok = True)
-        os.makedirs(f'{savepath}/csvs', exist_ok = True)
-        os.makedirs(f'{savepath}/figs', exist_ok = True)
-        os.makedirs(f'{savepath}/dats', exist_ok = True)
-        return savepath
+        os.makedirs(self.savepath, exist_ok=True)
+        os.makedirs(f'{self.savepath}/logs', exist_ok = True)
+        os.makedirs(f'{self.savepath}/bins', exist_ok = True)
+        os.makedirs(f'{self.savepath}/csvs', exist_ok = True)
+        os.makedirs(f'{self.savepath}/figs', exist_ok = True)
+        os.makedirs(f'{self.savepath}/dats', exist_ok = True)
+
     
 
     def check_files(self):
@@ -259,6 +272,94 @@ class IO:
         df.to_csv(output_file, index=False)
 
         print(f"Annuli data saved to {output_file} !")
+
+    def edit_header(self, fits_file, ext, key, newvalue):
+        """
+        Edit a keyword in the FITS header of a given file.
+
+        Parameters:
+        fits_file (str): The path to the FITS file.
+        ext (int): The fits extension
+        key (str): The keyword to edit.
+        newvalue: The new value to set for the keyword.
+        """
+        # Open the FITS file for editing
+        hdulist = fits.open(fits_file, mode='update')
+        # Get the header (primary header in this example)
+        header = hdulist[ext].header
+        # Check if the key exists in the header
+        if key in header:
+            # Update the value for the specified key
+            header[key] = newvalue
+            print(f"Updated header keyword '{key}' to '{newvalue}'.")
+        else:
+            print(f"Header keyword '{key}' not found.")
+        # Save the changes
+        hdulist.flush()
+        hdulist.close()
+
+    def edit_content(self, fits_file, ext):
+        """
+        Edit a keyword in the FITS header of a given file.
+
+        Parameters:
+        fits_file (str): The path to the FITS file.
+        ext (int): The fits extension
+        key (str): The keyword to edit.
+        newvalue: The new value to set for the keyword.
+        """
+        # Open the FITS file for editing
+        hdulist = fits.open(fits_file, mode='update')
+        # Get the header (primary header in this example)
+        dat = hdulist[ext].data
+        # Check if the key exists in the header
+        yerr = dat['STAT_ERR']
+        print(yerr)
+        yerr = np.where(yerr<0, 0, yerr)
+        print(yerr)
+        hdulist[ext].data['STAT_ERR']=yerr
+        # Save the changes
+        hdulist.flush()
+        hdulist.close()
+
+    def edit_hduclas3(self):
+        # get all the subdirectories in root dir
+        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*/{self.srcname2}_*')
+        # print(subdir_lst)
+        for subdir in subdir_lst:
+            regname = f'{subdir.split(".")[0].split("_")[-1]}'
+            for inst in self.insts:
+                self.edit_content(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1)
+                if 'mos' in inst:
+                    self.edit_header(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+                else:
+                    self.edit_header(f'{subdir}/{inst}-back-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'RATE')
+                    self.edit_header(f'{subdir}/{inst}-obj-oot-{self.srcname2}_{regname}.pi',1, 'HDUCLAS3', 'COUNTS')
+
+    def update_inst_dict(self, new_regname):
+        self.regname = new_regname
+        self.subdir = f'{self.rootdir}/{self.srcname2}_{new_regname}/{self.srcname2}_{new_regname}'
+        self.inst_dict = self.get_backscal()
+
+    def load_bkgpar(self):
+        df = pd.read_csv(f'{self.savepath}/csvs/cxb_par.csv')
+        def judge_spf(norm):
+            # ! always set spf to 0 for now
+            return 0
+            # if float(norm) < 1e-6:
+            #     return 0
+            # else:
+            #     return norm
+        outdict = {}
+        for i, name in enumerate(df['Name']):
+            outdict[name] = df['value'][i]
+        
+        outdict['spf-m1-n'] = judge_spf(outdict['spf-m1-n'])
+        outdict['spf-m2-n'] = judge_spf(outdict['spf-m2-n'])
+        outdict['spf-pn-n'] = judge_spf(outdict['spf-pn-n'])
+        return outdict
+
+    
 
 
 if __name__ == '__main__':

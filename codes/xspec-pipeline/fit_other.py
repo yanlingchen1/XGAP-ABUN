@@ -12,16 +12,19 @@ class FitOther(FitFrame):
         """
         if the annu is too small, use oot*sa.xcm, which only include 1 powerlaw
         """
-        if self.regname < 'reg4':
-            print('in sa')
-            # Alter the inputs in sample_oot.xcm
+        if 'reg' in self.regname:
+            if self.regname < 'reg4':
+                print('in sa')
+                # Alter the inputs in sample_oot.xcm
+                with open(f'{self.pipeline_path}/sample_models/oot/oot_ab_sa.xcm') as f:
+                    lines = f.read()
+            else:
+                print('not in sa')
+                with open(f'{self.pipeline_path}/sample_models/oot/oot_ab.xcm') as f:
+                    lines = f.read()
+        else:
             with open(f'{self.pipeline_path}/sample_models/oot/oot_ab_sa.xcm') as f:
                 lines = f.read()
-        else:
-            print('not in sa')
-            with open(f'{self.pipeline_path}/sample_models/oot/oot_ab.xcm') as f:
-                lines = f.read()
-
         lines = self.add_gen_par(lines)
         with open(f'{self.savepath}/bins/oot_{self.regname}.xcm', 'w') as newf:
             newf.write(f'{lines}\n')
