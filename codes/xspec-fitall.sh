@@ -1,4 +1,7 @@
 #!usr/bin/python
+heainit
+conda activate xgap
+spexinit
 print('xspec parallel fitting begins!')
 python xspec-pipeline/bkg-atable-pipeline/main_bkg1st_para.py
 python xspec-pipeline/main_skybkg_para.py
