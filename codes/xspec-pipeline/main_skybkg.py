@@ -38,6 +38,7 @@ def main():
         
         # # ## fit the sky bkg, after fit the qpb in bkgatablepiipeline
         fit_other = FitOther(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
+        fit_other.grp_spec()
         fit_other.fit_oot()
         fit_other.fit_bkg()
         io_instance.tidy_bkgpar()
