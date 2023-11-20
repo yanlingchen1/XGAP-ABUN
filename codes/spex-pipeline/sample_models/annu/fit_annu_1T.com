@@ -101,8 +101,8 @@ par 1 2 t s f
 par 1 3 norm v 10
 par 1 3 t v 1
 par 1 3 06:30 v 0.3
-par 1 3 07:30 couple 1 3 06
-par 1 3 06 s t
+par 1 3 06:30 couple 1 3 26
+par 1 3 26 s t
 
 ### couple par ###
 # couple reds #

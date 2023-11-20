@@ -1,3 +1,5 @@
+log >logs/annu_REGNAME_MDL_fit.log
+
 statistic cstat
 # allbkg
 data 1:1 PATH/mos1S001-obj-SRCNAME2_REGNAME-grp.pi

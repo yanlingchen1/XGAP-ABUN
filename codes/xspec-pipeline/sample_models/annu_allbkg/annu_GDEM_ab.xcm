@@ -1,3 +1,5 @@
+log >logs/annu_REGNAME_MDL_fit.log
+
 statistic cstat
 # allbkg
 data 1:1 PATH/mos1S001-obj-SRCNAME2_REGNAME-grp.pi
@@ -114,7 +116,7 @@ chain length 1000
 chain run annu_REGNAME_MDL_chain1000.out
 log none
 log >logs/annu_REGNAME_MDL_chain1000_par.log
-err icm:4,icm:5,icm:7
+err icm:4,icm:5,icm:7,icm:10
 log none
 log >logs/annu_REGNAME_MDL_freepar.log
 sho fre

@@ -183,7 +183,7 @@ log close output
 ##### error ####
 log out logs/annu-REGNAME-MDL_error
 #icm#
-error 1 3 norm:06
+error 1 3 norm:26
 log close output
 
 ##### make plot ####
