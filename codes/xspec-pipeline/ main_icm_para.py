@@ -15,17 +15,16 @@ def fit_source(srcnum, nH, reds):
     srcname2 = f'SDSSTG{srcnum}'
     root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
 
-    # # # io issues
-    io_instance = IO(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    io_instance.make_output_dir()
-    io_instance.check_files()
-    io_instance.edit_hduclas3()
+    # fit source 
+    fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
+    fit_other.update_inst_dict(REGNAME)
+    fit_other.fit_oot()
 
-    # # # # # smooth bkg back pi
-    ab = AtableBKG(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    io_instance.edit_hduclas3()
-    ab.bkgsmooth()
-    ab.gen_qpbmdltxt()
+    #### allbkg, 1T ####
+    fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
+    # fit_annu.update_inst_dict(REGNAME)
+    fit_annu.fit_annu('1T')
+    fit_annu.fit_annu('GDEM')
 
 def main():
     basfile = f'../ESAS/get_nh/basics_allsources.csv'

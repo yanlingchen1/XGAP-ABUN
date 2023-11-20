@@ -1,16 +1,16 @@
+from atable_allbkg import AtableBKG
 from glob import glob
 from my_io import IO
-from fit_other import FitOther
-from fit_annu_allbkg import FitAnnu
+import pandas as pd
 from datetime import datetime
 import pandas as pd
 import concurrent.futures
+
 
 def fit_source(srcnum, nH, reds):
     current_date = datetime.now()
     date = current_date.strftime("%y%m%d")
 
-    REGNAME = 'R500-01'
     srcname1 = f'ID{srcnum}'
     srcname2 = f'SDSSTG{srcnum}'
     root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
@@ -43,3 +43,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+

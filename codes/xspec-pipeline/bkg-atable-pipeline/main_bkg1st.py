@@ -1,29 +1,23 @@
 from atable_allbkg import AtableBKG
 from glob import glob
 from my_io import IO
+import pandas as pd
 
 date = 231115
 
-## Some mandatory parameters
-nH_dict = {'SDSSTG3460':0.024, 'SDSSTG9647':0.0201, 'SDSSTG828':0.0303, 'RGH80':0.0131}
-reds_dict = {'SDSSTG3460':0.043, 'SDSSTG9647':0.023, 'SDSSTG828':0.046, 'RGH80':0.037}
 
 REGNAME = 'R500-01'
-# ##  Some basic prefixes
 
+basfile = f'../ESAS/get_nh/basics_allsources.csv'
+f = pd.read_csv(basfile)
 
-#### IDxxx ####
-datadir = '/data/yanling/XGAP-ABUN/data/alldata/XGAP'
-srcnums = [name.split('/')[-1].split('G')[-1] for name in glob(f'{datadir}/SDSSTG*')]
+for i, srcnum in enumerate(f['ID']): 
+    nH = f['nH(1e20cm-2)'][i] * 1e-22
+    reds = f['z'][i]
 
-for srcnum in srcnums: 
     srcname1 = f'ID{srcnum}'
     srcname2 = f'SDSSTG{srcnum}'
-    root_dir = glob(f"/{srcname2}")[0]
-
-    # ######### run program ############
-    nH = nH_dict[srcname2]
-    reds = reds_dict[srcname2]
+    root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
 
     # # # io issues
     io_instance = IO(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)

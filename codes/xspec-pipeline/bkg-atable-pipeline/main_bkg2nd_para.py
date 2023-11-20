@@ -1,31 +1,27 @@
+from atable_allbkg import AtableBKG
 from glob import glob
 from my_io import IO
-from fit_other import FitOther
-from fit_annu_allbkg import FitAnnu
+import pandas as pd
 from datetime import datetime
 import pandas as pd
 import concurrent.futures
+
 
 def fit_source(srcnum, nH, reds):
     current_date = datetime.now()
     date = current_date.strftime("%y%m%d")
 
-    REGNAME = 'R500-01'
     srcname1 = f'ID{srcnum}'
     srcname2 = f'SDSSTG{srcnum}'
     root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
 
-    # # # io issues
-    io_instance = IO(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    io_instance.make_output_dir()
-    io_instance.check_files()
-    io_instance.edit_hduclas3()
-
-    # # # # # smooth bkg back pi
-    ab = AtableBKG(date, root_dir, srcname1, srcname2, 'bkg', nH, reds)
-    io_instance.edit_hduclas3()
+    ## after fit oot and bkg in skybkg region in xspec pipeline
+    ab = AtableBKG(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
     ab.bkgsmooth()
     ab.gen_qpbmdltxt()
+    ab.atable_allbkg()
+    ab.qdp2ogip()
+    ab.qdp2txt()
 
 def main():
     basfile = f'../ESAS/get_nh/basics_allsources.csv'
@@ -43,3 +39,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
