@@ -14,7 +14,7 @@ def main():
 
     REGNAME = 'R500-01'
     # ##  Some basic prefixes
-    basfile = f'../ESAS/get_nh/basics_allsources.csv'
+    basfile = f'/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/ESAS/get_nh/basics_allsources.csv'
     f = pd.read_csv(basfile)
 
     for i, srcnum in enumerate(f['ID']): 
