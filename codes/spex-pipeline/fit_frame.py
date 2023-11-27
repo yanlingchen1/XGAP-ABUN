@@ -19,7 +19,7 @@ class FitFrame(IO):
         self.regname = regname
         self.subdir = f'{rootdir}/{srcname2}_{regname}//{srcname2}_{regname}'
         self.inst_dict = self.get_backscal()
-        self.pipeline_path = os.getcwd()
+        self.pipeline_path = self.pipelinepath = '/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/spex-pipeline'
         self.nH = nH
         self.reds = reds
 
