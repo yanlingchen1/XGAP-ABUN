@@ -27,7 +27,7 @@ class FitFrame(IO):
     def get_backscal(self):
         inst_dict = {}
         for name in self.insts:
-            f = fits.open(f'{self.subdir}/{name}-back-{self.srcname2}_{self.regname}.pi')
+            f = fits.open(f'{self.subdir}/{name}-obj-{self.srcname2}_{self.regname}.pi')
             inst_dict[name] = np.round(f[1].header['BACKSCAL'] * (0.05/60) ** 2, 3)
         return inst_dict
 
@@ -55,7 +55,7 @@ class FitFrame(IO):
         return dict
 
     def add_gen_par(self, file):
-        replace_dict = {'BS-PN':self.inst_dict['pnS003-0'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir, 'PIP':self.pipeline_path, 'SAV':self.savepath}
+        replace_dict = {'BS-PN':self.inst_dict['pnS003-4'], 'SRCNAME2': self.srcname2, 'REGNAME': self.regname, 'PATH': self.subdir, 'PIP':self.pipeline_path, 'SAV':self.savepath}
         print(replace_dict['PIP'])
         for key, v in replace_dict.items():
             file = rep(file, key, f'{v}') 
@@ -96,7 +96,7 @@ class FitFrame(IO):
         """
 
         # Write the Value data
-        replace_dict = {"REDS":self.reds, "NH":self.nH, "BS-M1":self.inst_dict['mos1S001'], "BS-M2":self.inst_dict['mos2S002'], "BS-PN":self.inst_dict['pnS003-0']}
+        replace_dict = {"REDS":self.reds, "NH":self.nH, "BS-M1":self.inst_dict['mos1S001'], "BS-M2":self.inst_dict['mos2S002'], "BS-PN":self.inst_dict['pnS003-4']}
 
         # Alter the inputs in sample_oot.com
         for key, v in replace_dict.items():

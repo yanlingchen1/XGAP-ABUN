@@ -101,10 +101,11 @@ par 1 2 nh s f
 par 1 2 t s f
 # icm #
 par 1 3 logt v 0
-par 1 3 sig v 0.5
+par 1 3 sig v 0.1
 par 1 3 sig s t
 par 1 3 norm v 10
 par 1 3 t v 1
+par 1 3 t range 0.1:10.0
 par 1 3 06:30 v 0.3
 par 1 3 06:30 couple 1 3 26
 par 1 3 26 s t

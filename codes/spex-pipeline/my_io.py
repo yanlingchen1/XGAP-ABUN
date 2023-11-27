@@ -22,10 +22,10 @@ class IO:
         self.srcname2 = srcname2
         self.insts = insts
         self.savepath = self.make_output_dir()
-        self.pipelinepath = os.getcwd()
+        self.pipelinepath = '/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/spex-pipeline'
         
     def make_output_dir(self):
-        savepath = f'{self.rootdir}/fit_spex_{self.date}/fit_spex_{self.date}'
+        savepath = f'{self.rootdir}/fit_spex_{self.date}'
         os.makedirs(savepath, exist_ok=True)
         os.makedirs(f'{savepath}/logs', exist_ok = True)
         os.makedirs(f'{savepath}/bins', exist_ok = True)
@@ -343,7 +343,8 @@ do
 sh $f
 done
 ''')
-        
+        os.system(f'{self.rootdir}/run_epic_trafo.sh')
+        os.system(f'{self.rootdir}/run_pn_trafo.sh')
         print(f'cd {self.rootdir}\n sh run_*_trafo.sh')
                     
 
