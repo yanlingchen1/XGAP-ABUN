@@ -193,6 +193,7 @@ log close output
 log out bkg-bkg_allpar
 par sho 
 log close output
+
 #### error #####
 error 
 log out bkg-

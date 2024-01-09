@@ -144,7 +144,7 @@ class IO:
                         output_dict[f'{bigkeys[i]}-errlo'].append(abs(float(errlo)))
                         output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
                         i += 1
-
+                    
         # define rlo column
         output_dict['rlo'] = np.insert(np.array(output_dict['rhi'][:-1]), 0, 0)
         # Create a Pandas DataFrame from the extracted data

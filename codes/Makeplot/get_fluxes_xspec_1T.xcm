@@ -1,0 +1,22 @@
+abun aspl
+mo tbabs*apec
+
+
+
+
+
+
+
+new 1 0
+new 2 TEMP
+new 3 Abun
+new 4 REDS
+new 5 NORM
+log >PATH/logs/get_fluxes_xspec_unabsflux_MDL.log
+flux 0.5 2
+log none
+
+new 1 ABS
+log >PATH/logs/get_fluxes_xspec_absflux_MDL.log
+flux 0.5 2
+log none
