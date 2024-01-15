@@ -12,12 +12,14 @@ def main():
     # date = current_date.strftime("%y%m%d")
     date = 231115
 
-    REGNAME = 'R500-01'
+    REGNAME = 'big1-src'
     # ##  Some basic prefixes
     basfile = f'/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/ESAS/get_nh/basics_allsources.csv'
     f = pd.read_csv(basfile)
-
-    for i, srcnum in enumerate(f['ID'][2:]): 
+    #ids = f['ID'][2:]
+    #ids = xspec_set_app1
+    ids = ['SDSSTG828']
+    for i, srcnum in enumerate(ids): 
         srcnum = srcnum.split('G')[-1]
         nH = f['nH(1e20cm-2)'][i] * 1e-22
         reds = f['z'][i]
@@ -26,7 +28,6 @@ def main():
         srcname2 = f'SDSSTG{srcnum}'
         if glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}"):
             root_dir = glob(f"/data/yanling/XGAP-ABUN/data/alldata/XGAP/{srcname2}")[0]
-
 
             # fit source 
             fit_other = FitOther(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
@@ -38,7 +39,7 @@ def main():
             fit_annu = FitAnnu(date, root_dir, srcname1, srcname2, REGNAME, nH, reds)
             # fit_annu.update_inst_dict(REGNAME)
             fit_annu.fit_annu('1T')
-            fit_annu.fit_annu('GDEM')
+            #fit_annu.fit_annu('GDEM')
 
 
 if __name__ == "__main__":

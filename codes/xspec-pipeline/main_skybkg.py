@@ -12,12 +12,12 @@ def main():
     # date = current_date.strftime("%y%m%d")
     date = 231115
 
-    REGNAME = 'R500-01'
+    REGNAME = 'bkg'
     # ##  Some basic prefixes
     basfile = f'/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/ESAS/get_nh/basics_allsources.csv'
     f = pd.read_csv(basfile)
- 
-    for i, srcnum in enumerate(f['ID'][4:]): 
+    ids = ['SDSSTG828']
+    for i, srcnum in enumerate(ids): 
         srcnum = srcnum.split('G')[-1]
         nH = f['nH(1e20cm-2)'][i] * 1e-22
         reds = f['z'][i]
