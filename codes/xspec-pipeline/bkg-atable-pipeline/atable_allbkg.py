@@ -69,7 +69,7 @@ EOT
         for inst in self.inst_dict.keys():
             os.system(f'''
 xspec<<EOT
-data {self.subdir}/{inst}-back-{self.srcname2}_{self.regname}.pi
+data {self.subdir}/{inst}-{self.srcname2}_{self.regname}.pi
 none	
 res 1:1 {self.subdir}/{inst}-{self.srcname2}_{self.regname}.rmf
 arf 1:1 {self.subdir}/{inst}-{self.srcname2}_{self.regname}.arf

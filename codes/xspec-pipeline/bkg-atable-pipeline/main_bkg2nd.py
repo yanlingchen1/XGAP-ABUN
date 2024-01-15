@@ -6,12 +6,13 @@ import pandas as pd
 date = 231115
 
 ## Some mandatory parameters
-REGNAME = 'R500-01'
+REGNAME = 'big1-src'
 
 basfile = f'/data/yanling/XGAP-ABUN/codes/XGAP-ABUN/codes/ESAS/get_nh/basics_allsources.csv'
 f = pd.read_csv(basfile)
-
-for i, srcnum in enumerate(f['ID'][2:]): 
+ids = f['ID'][2:]
+ids = ['SDSSTG828']
+for i, srcnum in enumerate(ids): 
     srcnum = srcnum.split('G')[-1]
     nH = f['nH(1e20cm-2)'][i]
     reds = f['z'][i]

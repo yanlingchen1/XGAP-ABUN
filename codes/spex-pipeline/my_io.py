@@ -130,6 +130,7 @@ class IO:
 
             with open(file) as f:
                 lines = f.readlines()
+                print(lines)
             if len(lines)> 200:
                 errlo = 999
                 errhi = 999
@@ -140,15 +141,17 @@ class IO:
                         errlo = line.split('Errors:')[-1].split(',')[0]
                         errhi = line.split('Errors:')[-1].split(',')[-1]
                         value = line.split('Errors:')[0].split(':')[-1]
+                        print(errlo, errhi, value)
                         output_dict[f'{bigkeys[i]}-value'].append(float(value))
                         output_dict[f'{bigkeys[i]}-errlo'].append(abs(float(errlo)))
                         output_dict[f'{bigkeys[i]}-errhi'].append(float(errhi))
                         i += 1
-                    
+
         # define rlo column
         output_dict['rlo'] = np.insert(np.array(output_dict['rhi'][:-1]), 0, 0)
         # Create a Pandas DataFrame from the extracted data
         print(output_dict['n-errlo'])
+        print(output_dict)
         df = pd.DataFrame(output_dict)
 
         return df
@@ -179,7 +182,8 @@ class IO:
         
         # tidy para to a dataframe
         df = self.tidy_dict2df(output_dict, appendix, bigkeys = bigkeys)
-
+        print(output_dict)
+        print(df)
         # judge if the value is unconstrained, 
         # add the status columns to df
         for bigkey in bigkeys:

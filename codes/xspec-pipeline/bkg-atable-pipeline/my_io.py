@@ -84,7 +84,7 @@ class IO:
         
         # Check for missing files
         if missing_files:
-            raise ValueError(f"Files are missing. Check {subdir}missing_files.txt")
+            raise ValueError(f"Files are missing. Check {subdir}/logs/missing_files.log")
 
         else:
             print("All required files are present in the directory and its subdirectories.")
@@ -324,8 +324,9 @@ class IO:
         hdulist.close()
 
     def edit_hduclas3(self):
-        # get all the subdirectories in root dir
-        subdir_lst = glob(f'{self.rootdir}/{self.srcname2}_*/{self.srcname2}_*')
+        # get all the subdirectories except name contains allfov in root dir
+        subdirs= glob(f'{self.rootdir}/{self.srcname2}_*/{self.srcname2}_*')
+        subdir_lst = [dir for dir in subdirs if 'allfov' not in os.path.basename(dir)]
         # print(subdir_lst)
         for subdir in subdir_lst:
             regname = f'{subdir.split(".")[0].split("_")[-1]}'

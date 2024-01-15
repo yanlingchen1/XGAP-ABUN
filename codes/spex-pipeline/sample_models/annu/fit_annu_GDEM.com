@@ -21,7 +21,7 @@ ignore instrument 1 reg 2 0.:0.7 unit keV
 ignore instrument 1 reg 2 7.:100. unit keV
 ignore instrument 1 reg 3 0.:0.7 unit keV
 ignore instrument 1 reg 3 2.:100. unit keV
-ignore instrument 1 reg 5 0.:1.0 unit keV
+ignore instrument 1 reg 5 0.:2.0 unit keV
 ignore instrument 1 reg 5 5.:100. unit keV
 
 # ignore the instrumental lines

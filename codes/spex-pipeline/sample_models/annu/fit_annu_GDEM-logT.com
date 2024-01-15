@@ -21,7 +21,7 @@ ignore instrument 1 reg 2 0.:0.7 unit keV
 ignore instrument 1 reg 2 7.:100. unit keV
 ignore instrument 1 reg 3 0.:0.7 unit keV
 ignore instrument 1 reg 3 2.:100. unit keV
-ignore instrument 1 reg 5 0.:1.0 unit keV
+ignore instrument 1 reg 5 0.:2.0 unit keV
 ignore instrument 1 reg 5 5.:100. unit keV
 
 # ignore the instrumental lines
@@ -66,6 +66,7 @@ com rel 3 1,2
 ## inst mos2 ##
 sect copy 1
 
+
 ## inst pn pat0 ##
 sect copy 1
 
@@ -78,6 +79,7 @@ com 4 pow
 
 ## inst pn pat4 ##
 sect copy 1
+
 
 ## pn oot pat4 ##
 sect copy 4
@@ -113,7 +115,6 @@ par 1 3 26 s t
 par 2 1 z couple 1 1 z
 par 3 1 z couple 1 1 z
 par 5 1 z couple 1 1 z
-
 # couple hot #
 par 2 2 nh couple 1 2 nh
 par 2 2 t couple 1 2 t
